@@ -3,7 +3,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { existsSync } from 'node:fs';
 
-import { db } from './src/db.js';
+import { db, backend } from './src/db.js';
 import { setSession, clearSession, getUserId, requireAuth, genCode, isAdminEmail } from './src/auth.js';
 import { sendCode, mailerMode } from './src/mailer.js';
 import { verifySignature, extractOrder } from './src/prodamus.js';
@@ -17,10 +17,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/static', express.static(join(__dirname, 'public')));
 
+// маленький помощник, чтобы ошибки в async-маршрутах не роняли сервер
+const wrap = (fn) => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next);
+
 // ---------- СТРАНИЦЫ ----------
-app.get('/', (req, res) => {
-  res.redirect(getUserId(req) ? '/app' : '/login');
-});
+app.get('/', (req, res) => res.redirect(getUserId(req) ? '/app' : '/login'));
 
 app.get('/login', (req, res) => {
   if (getUserId(req)) return res.redirect('/app');
@@ -32,40 +33,33 @@ app.get('/app', requireAuth('page'), (req, res) => {
 });
 
 // ---------- ВХОД ПО EMAIL-КОДУ ----------
-app.post('/api/auth/request-code', async (req, res) => {
+app.post('/api/auth/request-code', wrap(async (req, res) => {
   const email = String(req.body.email || '').trim().toLowerCase();
-  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
-    return res.status(400).json({ error: 'bad_email' });
-  }
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return res.status(400).json({ error: 'bad_email' });
   const code = genCode();
-  db.putCode(email, code);
+  await db.putCode(email, code);
   const r = await sendCode(email, code);
-  // В dev возвращаем код, чтобы можно было войти без почтового сервера.
   res.json({ ok: true, mode: mailerMode, ...(r.delivered === 'console' ? { devCode: code } : {}) });
-});
+}));
 
-app.post('/api/auth/verify', (req, res) => {
+app.post('/api/auth/verify', wrap(async (req, res) => {
   const email = String(req.body.email || '').trim().toLowerCase();
   const code = String(req.body.code || '').trim();
-  const chk = db.checkCode(email, code);
+  const chk = await db.checkCode(email, code);
   if (!chk.ok) return res.status(401).json({ error: chk.reason });
-  // Первый вход создаёт ученицу автоматически.
-  const user = db.upsertUser({ email });
+  const user = await db.upsertUser({ email });
   setSession(res, user.id);
   res.json({ ok: true });
-});
+}));
 
-app.post('/api/auth/logout', (req, res) => {
-  clearSession(res);
-  res.json({ ok: true });
-});
+app.post('/api/auth/logout', (req, res) => { clearSession(res); res.json({ ok: true }); });
 
 // ---------- ДАННЫЕ КАБИНЕТА ----------
-app.get('/api/me', requireAuth('api'), (req, res) => {
-  const user = db.findUserById(req.userId);
+app.get('/api/me', requireAuth('api'), wrap(async (req, res) => {
+  const user = await db.findUserById(req.userId);
   if (!user) { clearSession(res); return res.status(401).json({ error: 'unauthorized' }); }
 
-  const owned = db.purchasesForUser(user.id);
+  const owned = await db.purchasesForUser(user.id);
   const ownedMap = new Map(owned.map((p) => [p.productId, p]));
 
   const products = db.products.map((p) => {
@@ -73,8 +67,7 @@ app.get('/api/me', requireAuth('api'), (req, res) => {
     return {
       id: p.id, title: p.title, type: p.type, desc: p.desc,
       cover: p.cover, sym: p.sym, slug: p.slug, price: p.price,
-      owned: !!rec,
-      progress: rec ? rec.progress : 0,
+      owned: !!rec, progress: rec ? rec.progress : 0,
     };
   });
 
@@ -86,13 +79,13 @@ app.get('/api/me', requireAuth('api'), (req, res) => {
       started: owned.filter((p) => p.progress > 0 && p.progress < 100).length,
     },
   });
-});
+}));
 
 // ---------- ГАЙДЫ ЗА ВХОДОМ ----------
-app.get('/guide/:slug', requireAuth('page'), (req, res) => {
+app.get('/guide/:slug', requireAuth('page'), wrap(async (req, res) => {
   const product = db.productBySlug(req.params.slug);
   if (!product) return res.status(404).send('Материал не найден');
-  if (!db.hasPurchase(req.userId, product.id)) {
+  if (!(await db.hasPurchase(req.userId, product.id))) {
     return res.redirect('/app?locked=' + encodeURIComponent(product.id));
   }
   const file = join(__dirname, 'guides', product.slug + '.html');
@@ -106,90 +99,92 @@ app.get('/guide/:slug', requireAuth('page'), (req, res) => {
       </div>`);
   }
   res.sendFile(file);
-});
-
-// ---------- ВЕБХУК PRODAMUS ----------
-app.post('/webhook/prodamus', (req, res) => {
-  const data = req.body || {};
-  const sig = verifySignature(data);
-  if (!sig.ok) {
-    console.warn('Prodamus: подпись не прошла', sig.reason);
-    return res.status(400).send('bad signature');
-  }
-  const order = extractOrder(data);
-  if (!order.paid) return res.status(200).send('ignored: not paid');
-  if (!order.email) return res.status(200).send('ignored: no email');
-  if (!order.productId) {
-    console.warn('Prodamus: не удалось определить продукт из заказа', order.orderId);
-    return res.status(200).send('ignored: unknown product');
-  }
-
-  const user = db.upsertUser({ email: order.email });
-  db.addPurchase({ userId: user.id, productId: order.productId, source: 'prodamus', orderId: order.orderId });
-  console.log(`Prodamus: доступ выдан ${order.email} → ${order.productId}`);
-
-  // Prodamus ждёт в ответе тело "success".
-  res.status(200).send('success');
-});
+}));
 
 // ---------- АДМИНКА (для Нати) ----------
 function requireAdmin(kind = 'page') {
-  return (req, res, next) => {
+  return wrap(async (req, res, next) => {
     const uid = getUserId(req);
-    const user = uid ? db.findUserById(uid) : null;
+    const user = uid ? await db.findUserById(uid) : null;
     if (!user || !isAdminEmail(user.email)) {
       if (kind === 'api') return res.status(403).json({ error: 'forbidden' });
       return res.redirect('/login');
     }
     req.userId = uid;
     next();
-  };
+  });
 }
 
 app.get('/admin', requireAdmin('page'), (req, res) => {
   res.sendFile(join(__dirname, 'public', 'admin.html'));
 });
 
-app.get('/api/admin/data', requireAdmin('api'), (req, res) => {
-  const users = db.allUsers().map((u) => ({
-    id: u.id,
-    email: u.email,
-    name: u.name || '',
-    createdAt: u.createdAt,
-    purchases: db.purchasesForUser(u.id).map((p) => ({
-      productId: p.productId,
-      title: (db.productById(p.productId) || {}).title || p.productId,
-      source: p.source,
-      createdAt: p.createdAt,
-    })),
-  }));
+app.get('/api/admin/data', requireAdmin('api'), wrap(async (req, res) => {
+  const list = await db.allUsers();
+  const users = [];
+  for (const u of list) {
+    const purchases = await db.purchasesForUser(u.id);
+    users.push({
+      id: u.id, email: u.email, name: u.name || '', createdAt: u.createdAt,
+      purchases: purchases.map((p) => ({
+        productId: p.productId,
+        title: (db.productById(p.productId) || {}).title || p.productId,
+        source: p.source, createdAt: p.createdAt,
+      })),
+    });
+  }
   res.json({
     products: db.products.map((p) => ({ id: p.id, title: p.title, type: p.type, price: p.price })),
     users,
     totals: { users: users.length, purchases: users.reduce((n, u) => n + u.purchases.length, 0) },
   });
-});
+}));
 
-app.post('/api/admin/grant', requireAdmin('api'), (req, res) => {
+app.post('/api/admin/grant', requireAdmin('api'), wrap(async (req, res) => {
   const email = String(req.body.email || '').trim().toLowerCase();
   const productId = String(req.body.productId || '').trim();
   if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return res.status(400).json({ error: 'bad_email' });
   if (!db.productById(productId)) return res.status(400).json({ error: 'bad_product' });
-  const user = db.upsertUser({ email });
-  db.addPurchase({ userId: user.id, productId, source: 'admin' });
+  const user = await db.upsertUser({ email });
+  await db.addPurchase({ userId: user.id, productId, source: 'admin' });
   res.json({ ok: true });
-});
+}));
 
-app.post('/api/admin/revoke', requireAdmin('api'), (req, res) => {
-  const userId = String(req.body.userId || '').trim();
-  const productId = String(req.body.productId || '').trim();
-  const removed = db.removePurchase(userId, productId);
+app.post('/api/admin/revoke', requireAdmin('api'), wrap(async (req, res) => {
+  const removed = await db.removePurchase(String(req.body.userId || ''), String(req.body.productId || ''));
   res.json({ ok: true, removed });
+}));
+
+// ---------- ВЕБХУК PRODAMUS ----------
+app.post('/webhook/prodamus', wrap(async (req, res) => {
+  const data = req.body || {};
+  const sig = verifySignature(data);
+  if (!sig.ok) { console.warn('Prodamus: подпись не прошла', sig.reason); return res.status(400).send('bad signature'); }
+  const order = extractOrder(data);
+  if (!order.paid) return res.status(200).send('ignored: not paid');
+  if (!order.email) return res.status(200).send('ignored: no email');
+  if (!order.productId) { console.warn('Prodamus: неизвестный продукт', order.orderId); return res.status(200).send('ignored: unknown product'); }
+
+  const user = await db.upsertUser({ email: order.email });
+  await db.addPurchase({ userId: user.id, productId: order.productId, source: 'prodamus', orderId: order.orderId });
+  console.log(`Prodamus: доступ выдан ${order.email} → ${order.productId}`);
+  res.status(200).send('success');
+}));
+
+app.get('/healthz', (req, res) => res.json({ ok: true, backend, mailer: mailerMode }));
+
+// глобальный обработчик ошибок
+app.use((err, req, res, next) => {
+  console.error('Ошибка:', err);
+  if (res.headersSent) return next(err);
+  res.status(500).send('Внутренняя ошибка');
 });
 
-app.get('/healthz', (req, res) => res.json({ ok: true, mailer: mailerMode }));
-
-app.listen(PORT, () => {
-  console.log(`\n  Nati Vastu · кабинет запущен: http://localhost:${PORT}`);
-  console.log(`  Почта: ${mailerMode === 'console' ? 'ДЕМО (код в консоли)' : 'SMTP'}${isDev ? ' · режим DEV' : ''}\n`);
-});
+async function main() {
+  await db.init();
+  app.listen(PORT, () => {
+    console.log(`\n  Nati Vastu · кабинет запущен: http://localhost:${PORT}`);
+    console.log(`  База: ${backend === 'postgres' ? 'Postgres' : 'файл (локально)'} · Почта: ${mailerMode === 'console' ? 'ДЕМО (код в консоли)' : 'SMTP'}${isDev ? ' · DEV' : ''}\n`);
+  });
+}
+main().catch((e) => { console.error('Не удалось запустить:', e); process.exit(1); });

@@ -1,3 +1,9 @@
+# Render Blueprint: поднимает базу Postgres и веб-сервис одним разом
+# и сам связывает DATABASE_URL. Разворачивается через New + → Blueprint.
+databases:
+  - name: kabinet-db
+    plan: free
+
 services:
   - type: web
     name: kabinet-nativastu
@@ -7,10 +13,14 @@ services:
     startCommand: npm start
     healthCheckPath: /healthz
     envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: kabinet-db
+          property: connectionString
       - key: NODE_ENV
         value: production
       - key: SESSION_SECRET
-        generateValue: true          # Render сам сгенерирует секрет
+        generateValue: true          # Render сгенерирует секрет сам
       - key: ADMIN_EMAILS
         value: natiyaguenos@gmail.com
       # Почта (заполнить, когда будет SMTP):
