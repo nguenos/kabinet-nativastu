@@ -39,7 +39,8 @@ app.post('/api/auth/request-code', wrap(async (req, res) => {
   const code = genCode();
   await db.putCode(email, code);
   const r = await sendCode(email, code);
-  res.json({ ok: true, mode: mailerMode, ...(r.delivered === 'console' ? { devCode: code } : {}) });
+  // Код показываем на экране только локально. На проде без SMTP он уходит в логи сервера.
+  res.json({ ok: true, mode: mailerMode, ...(r.delivered === 'console' && isDev ? { devCode: code } : {}) });
 }));
 
 app.post('/api/auth/verify', wrap(async (req, res) => {
