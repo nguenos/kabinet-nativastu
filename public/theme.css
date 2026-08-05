@@ -1,0 +1,27 @@
+@font-face{font-family:'BebasNeueCyrillic';src:url('/static/fonts/bebasneuecyrillic.woff2') format('woff2');font-display:swap;}
+@font-face{font-family:'Salina';font-style:italic;src:url('/static/fonts/Salina-BookItalic.woff2') format('woff2');font-display:swap;}
+@font-face{font-family:'Fira Sans';font-weight:300;font-display:swap;src:url('/static/fonts/firasans-300-cyrillic.woff2') format('woff2');unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;}
+@font-face{font-family:'Fira Sans';font-weight:300;font-display:swap;src:url('/static/fonts/firasans-300-latin.woff2') format('woff2');}
+@font-face{font-family:'Fira Sans';font-weight:400;font-display:swap;src:url('/static/fonts/firasans-400-cyrillic.woff2') format('woff2');unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;}
+@font-face{font-family:'Fira Sans';font-weight:400;font-display:swap;src:url('/static/fonts/firasans-400-latin.woff2') format('woff2');}
+@font-face{font-family:'Fira Sans';font-weight:500;font-display:swap;src:url('/static/fonts/firasans-500-cyrillic.woff2') format('woff2');unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;}
+@font-face{font-family:'Fira Sans';font-weight:500;font-display:swap;src:url('/static/fonts/firasans-500-latin.woff2') format('woff2');}
+
+:root{
+  --bg:#F7F3ED;--surface:#f0ebe3;--surface2:#e8e1d3;--border:#d4c9b5;
+  --dark:#1E2D1F;--accent2:#8B7355;--gold:#C4A882;--gold-hover:#d4be9c;
+  --text:#252525;--muted:#888;--red:#8B4040;--ok:#4a6b4a;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;}
+body{background:var(--bg);color:var(--text);font-family:'Fira Sans',sans-serif;font-weight:300;-webkit-font-smoothing:antialiased;line-height:1.6;}
+.bebas{font-family:'BebasNeueCyrillic',sans-serif;font-weight:normal;}
+.salina{font-family:'Salina','Cormorant Garamond',serif;font-style:italic;}
+.eyebrow{font-family:'Fira Sans';font-weight:400;font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:'Fira Sans';font-weight:500;font-size:11px;letter-spacing:1px;text-transform:uppercase;padding:13px 26px;border-radius:60px;border:1px solid var(--border);background:transparent;color:var(--text);cursor:pointer;transition:all .25s;text-decoration:none;white-space:nowrap;}
+.btn:hover{border-color:var(--gold);color:var(--gold);}
+.btn.pri{background:var(--gold);border-color:var(--gold);color:var(--dark);}
+.btn.pri:hover{background:var(--gold-hover);border-color:var(--gold-hover);color:var(--dark);transform:translateY(-1px);}
+.btn:disabled{opacity:.4;pointer-events:none;}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px;}

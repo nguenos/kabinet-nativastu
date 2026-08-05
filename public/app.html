@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Личный кабинет · Nati Vastu</title>
+<link rel="stylesheet" href="/static/theme.css">
+<style>
+  .topbar{background:var(--dark);height:60px;padding:0 30px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:20;}
+  .topbar .logo{font-size:12px;letter-spacing:2.5px;text-transform:uppercase;color:var(--bg);font-weight:300;text-decoration:none;}
+  .topbar .logo span{color:var(--gold);margin-left:9px;}
+  .user{display:flex;align-items:center;gap:14px;}
+  .who{text-align:right;line-height:1.3;}
+  .who b{font-size:12px;font-weight:400;color:var(--bg);}
+  .who span{display:block;font-size:10px;color:rgba(247,243,237,.45);}
+  .avatar{width:36px;height:36px;border-radius:50%;background:var(--gold);color:var(--dark);display:grid;place-items:center;font-weight:500;font-size:14px;}
+  .logout{background:none;border:1px solid rgba(196,168,130,.3);color:rgba(247,243,237,.7);padding:9px 16px;border-radius:60px;font-family:'Fira Sans';font-weight:400;font-size:10px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all .25s;}
+  .logout:hover{border-color:var(--gold);color:var(--gold);}
+  .wrap{max-width:1120px;margin:0 auto;padding:44px 30px 80px;}
+  .hero h1{font-size:46px;letter-spacing:.02em;text-transform:uppercase;color:var(--dark);line-height:1;margin:10px 0 0;}
+  .hero h1 em{font-family:'Salina',serif;font-style:italic;text-transform:none;color:var(--gold);font-size:.66em;letter-spacing:0;}
+  .hero p{color:var(--accent2);font-size:14px;margin-top:16px;max-width:60ch;font-weight:300;}
+  .stats{display:flex;gap:14px;flex-wrap:wrap;margin:34px 0 8px;}
+  .stat{flex:1;min-width:150px;background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:18px 20px;}
+  .stat .num{font-family:'BebasNeueCyrillic';font-size:34px;color:var(--dark);line-height:1;letter-spacing:.02em;}
+  .stat .lbl{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent2);margin-top:6px;font-weight:400;}
+  .divider{display:flex;align-items:center;gap:16px;margin:44px 0 22px;}
+  .divider h2{font-size:13px;letter-spacing:2.5px;text-transform:uppercase;color:var(--dark);font-family:'Fira Sans';font-weight:500;white-space:nowrap;}
+  .divider .line{flex:1;height:1px;background:var(--border);}
+  .divider .count{font-family:'Salina',serif;font-style:italic;color:var(--gold);font-size:15px;}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(298px,1fr));gap:20px;}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:6px;overflow:hidden;display:flex;flex-direction:column;transition:all .25s;}
+  .card:hover{transform:translateY(-3px);border-color:var(--gold);box-shadow:0 22px 46px -26px rgba(30,45,31,.4);}
+  .cover{height:138px;position:relative;display:grid;place-items:center;overflow:hidden;}
+  .cover .sym{font-family:'Salina',serif;font-style:italic;font-size:56px;color:rgba(247,243,237,.9);}
+  .cover.g1{background:linear-gradient(140deg,#1E2D1F,#38513a);}
+  .cover.g2{background:linear-gradient(140deg,#6d5a3f,#8B7355);}
+  .cover.g3{background:linear-gradient(140deg,#7a4a3c,#8B4040);}
+  .cover.g4{background:linear-gradient(140deg,#2b3a4a,#4a6070);}
+  .cover.locked{filter:grayscale(.55) brightness(.82);}
+  .tbadge{position:absolute;top:12px;left:12px;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;font-weight:500;background:rgba(30,45,31,.5);color:var(--gold);padding:5px 11px;border-radius:60px;backdrop-filter:blur(4px);}
+  .card-body{padding:18px 20px 20px;display:flex;flex-direction:column;flex:1;}
+  .card-body h3{font-family:'BebasNeueCyrillic';font-size:21px;letter-spacing:.02em;text-transform:uppercase;color:var(--dark);line-height:1.05;margin-bottom:8px;}
+  .card-body .desc{font-size:12.5px;color:var(--accent2);margin-bottom:16px;flex:1;font-weight:300;line-height:1.6;}
+  .meta{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+  .pill{font-size:9px;letter-spacing:1px;text-transform:uppercase;font-weight:500;padding:5px 11px;border-radius:60px;}
+  .pill.open{background:rgba(74,107,74,.13);color:var(--ok);}
+  .pill.locked{background:rgba(139,64,64,.1);color:var(--red);}
+  .meta .m-note{font-size:11px;color:var(--muted);letter-spacing:.3px;}
+  .progress{height:4px;background:var(--surface2);border-radius:60px;overflow:hidden;margin-bottom:16px;}
+  .progress>i{display:block;height:100%;background:var(--gold);}
+  .actions{display:flex;gap:10px;}
+  .actions .btn{flex:1;}
+  .banner{margin-top:46px;background:var(--dark);border-radius:8px;padding:34px 38px;display:flex;align-items:center;justify-content:space-between;gap:26px;flex-wrap:wrap;}
+  .banner h3{font-family:'BebasNeueCyrillic';font-size:30px;letter-spacing:.02em;text-transform:uppercase;color:var(--bg);line-height:1;margin:10px 0 8px;}
+  .banner h3 em{font-family:'Salina',serif;font-style:italic;text-transform:none;color:var(--gold);font-size:.66em;}
+  .banner p{color:rgba(247,243,237,.6);font-size:13px;max-width:50ch;font-weight:300;}
+  .empty{color:var(--accent2);font-size:14px;padding:8px 0 4px;}
+  @media(max-width:560px){.wrap{padding:30px 18px 60px;}.hero h1{font-size:34px;}.topbar{padding:0 18px;}.who{display:none;}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <a class="logo" href="/app">Nati Vastu<span>кабинет</span></a>
+  <div class="user">
+    <div class="who"><b id="uName">—</b><span id="uEmail">—</span></div>
+    <div class="avatar" id="uAvatar">•</div>
+    <button class="logout" id="logout" type="button">Выйти</button>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="hero">
+    <div class="eyebrow">С возвращением</div>
+    <h1 class="bebas">Ваши <em class="salina">материалы</em></h1>
+    <p>Всё, что вы приобрели: гайды, протоколы и записи. Доступ открыт навсегда, возвращайтесь к практикам, когда нужно.</p>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="num" id="sOwned">0</div><div class="lbl">В доступе</div></div>
+    <div class="stat"><div class="num" id="sStarted">0</div><div class="lbl">Начаты</div></div>
+    <div class="stat"><div class="num">∞</div><div class="lbl">Срок доступа</div></div>
+  </div>
+
+  <div class="divider"><h2>Мои продукты</h2><span class="line"></span><span class="count salina" id="ownedCount"></span></div>
+  <div class="grid" id="ownedGrid"></div>
+  <div class="empty" id="ownedEmpty" style="display:none">Пока нет открытых материалов. Загляните в предложения ниже.</div>
+
+  <div id="lockedBlock" style="display:none">
+    <div class="divider"><h2>Доступно к покупке</h2><span class="line"></span></div>
+    <div class="grid" id="lockedGrid"></div>
+  </div>
+
+  <div class="banner">
+    <div>
+      <div class="eyebrow">Следующий шаг</div>
+      <h3 class="bebas">Хотите <em class="salina">глубже?</em></h3>
+      <p>Полная консультация по вашему дому: карта зон, приоритеты и пошаговый план на 3 месяца.</p>
+    </div>
+    <a class="btn pri" href="https://nativastu.com/consult/" target="_blank">Записаться · 36 800 ₽</a>
+  </div>
+</div>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s).replace(/[&<>"]/g, (c)=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+function ownedCard(p){
+  return `<article class="card">
+    <div class="cover ${p.cover}"><span class="tbadge">${esc(p.type)}</span><span class="sym">${esc(p.sym)}</span></div>
+    <div class="card-body">
+      <h3>${esc(p.title)}</h3>
+      <p class="desc">${esc(p.desc)}</p>
+      <div class="meta"><span class="pill open">Открыт</span><span class="m-note">${p.progress>0?('пройдено '+p.progress+'%'):'не начато'}</span></div>
+      <div class="progress"><i style="width:${p.progress}%"></i></div>
+      <div class="actions"><a class="btn pri" href="/guide/${encodeURIComponent(p.slug)}">${p.progress>0?'Продолжить':'Открыть'}</a></div>
+    </div>
+  </article>`;
+}
+function lockedCard(p){
+  const price = p.price>0 ? (p.price.toLocaleString('ru-RU')+' ₽') : 'бесплатно';
+  return `<article class="card">
+    <div class="cover ${p.cover} locked"><span class="tbadge">${esc(p.type)}</span><span class="sym">${esc(p.sym)}</span></div>
+    <div class="card-body">
+      <h3>${esc(p.title)}</h3>
+      <p class="desc">${esc(p.desc)}</p>
+      <div class="meta"><span class="pill locked">Нет доступа</span></div>
+      <div class="actions"><a class="btn pri" href="https://nativastu.com/" target="_blank">Открыть · ${price}</a></div>
+    </div>
+  </article>`;
+}
+
+async function load(){
+  const r = await fetch('/api/me');
+  if(r.status===401){ location.href='/login'; return; }
+  const d = await r.json();
+  const name = d.user.name || d.user.email.split('@')[0];
+  $('uName').textContent = name;
+  $('uEmail').textContent = d.user.email;
+  $('uAvatar').textContent = (name[0]||'•').toUpperCase();
+
+  const owned = d.products.filter(p=>p.owned);
+  const locked = d.products.filter(p=>!p.owned);
+
+  $('sOwned').textContent = d.stats.owned;
+  $('sStarted').textContent = d.stats.started;
+
+  const words=['ноль','один','два','три','четыре','пять','шесть','семь','восемь','девять'];
+  $('ownedCount').textContent = words[owned.length]||owned.length;
+
+  $('ownedGrid').innerHTML = owned.map(ownedCard).join('');
+  $('ownedEmpty').style.display = owned.length ? 'none':'block';
+
+  if(locked.length){
+    $('lockedBlock').style.display='block';
+    $('lockedGrid').innerHTML = locked.map(lockedCard).join('');
+  }
+}
+
+$('logout').addEventListener('click', async ()=>{
+  await fetch('/api/auth/logout',{method:'POST'});
+  location.href='/login';
+});
+
+load();
+</script>
+</body>
+</html>

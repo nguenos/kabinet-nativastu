@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Админка · Nati Vastu</title>
+<link rel="stylesheet" href="/static/theme.css">
+<style>
+  .topbar{background:var(--dark);height:60px;padding:0 30px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:20;}
+  .topbar .logo{font-size:12px;letter-spacing:2.5px;text-transform:uppercase;color:var(--bg);font-weight:300;text-decoration:none;}
+  .topbar .logo span{color:var(--gold);margin-left:9px;}
+  .topbar .links a{color:rgba(247,243,237,.7);font-size:10px;letter-spacing:1px;text-transform:uppercase;text-decoration:none;margin-left:20px;}
+  .topbar .links a:hover{color:var(--gold);}
+  .wrap{max-width:1080px;margin:0 auto;padding:40px 30px 80px;}
+  h1{font-family:'BebasNeueCyrillic';font-size:40px;letter-spacing:.02em;text-transform:uppercase;color:var(--dark);line-height:1;}
+  h1 em{font-family:'Salina',serif;font-style:italic;text-transform:none;color:var(--gold);font-size:.62em;}
+  .stats{display:flex;gap:14px;margin:22px 0 34px;}
+  .stat{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:14px 20px;}
+  .stat .num{font-family:'BebasNeueCyrillic';font-size:30px;color:var(--dark);line-height:1;}
+  .stat .lbl{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent2);margin-top:4px;}
+
+  .panel{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:22px 24px;margin-bottom:30px;}
+  .panel h2{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--dark);font-weight:500;margin-bottom:16px;}
+  .grant{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;}
+  .grant .f{display:flex;flex-direction:column;gap:6px;}
+  .grant label{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--accent2);font-weight:500;}
+  .grant input,.grant select{padding:12px 14px;font-family:'Fira Sans';font-size:14px;font-weight:300;background:#fff;color:var(--text);border:1px solid var(--border);border-radius:3px;min-width:220px;}
+  .grant input:focus,.grant select:focus{outline:none;border-color:var(--gold);}
+  .msg{font-size:12px;color:var(--ok);margin-top:12px;min-height:16px;}
+  .msg.err{color:var(--red);}
+
+  table{width:100%;border-collapse:collapse;}
+  th{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent2);text-align:left;padding:10px 12px;border-bottom:1px solid var(--border);font-weight:500;}
+  td{padding:12px;border-bottom:1px solid var(--border);font-size:13px;vertical-align:top;}
+  tr:last-child td{border-bottom:none;}
+  .email{font-weight:400;color:var(--dark);}
+  .when{font-size:11px;color:var(--muted);}
+  .tags{display:flex;flex-wrap:wrap;gap:6px;}
+  .tag{display:inline-flex;align-items:center;gap:6px;font-size:11px;background:var(--bg);border:1px solid var(--border);border-radius:60px;padding:4px 6px 4px 11px;}
+  .tag button{border:none;background:none;color:var(--red);cursor:pointer;font-size:14px;line-height:1;padding:0 4px;border-radius:50%;}
+  .tag button:hover{background:rgba(139,64,64,.12);}
+  .tag .src{color:var(--muted);font-size:9px;text-transform:uppercase;letter-spacing:.5px;}
+  .none{color:var(--muted);font-size:12px;}
+  .scroll{overflow-x:auto;}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <a class="logo" href="/admin">Nati Vastu<span>админка</span></a>
+  <div class="links"><a href="/app">кабинет</a><a href="#" id="logout">выйти</a></div>
+</header>
+
+<div class="wrap">
+  <h1 class="bebas">Покупательницы <em class="salina">и доступы</em></h1>
+
+  <div class="stats">
+    <div class="stat"><div class="num" id="tUsers">0</div><div class="lbl">Учениц</div></div>
+    <div class="stat"><div class="num" id="tPurchases">0</div><div class="lbl">Покупок</div></div>
+  </div>
+
+  <div class="panel">
+    <h2>Выдать доступ вручную</h2>
+    <form class="grant" id="grantForm">
+      <div class="f"><label>Email покупательницы</label><input id="gEmail" type="email" placeholder="name@example.com" required></div>
+      <div class="f"><label>Продукт</label><select id="gProduct" required></select></div>
+      <button class="btn pri" type="submit">Открыть доступ</button>
+    </form>
+    <div class="msg" id="gMsg"></div>
+  </div>
+
+  <div class="panel">
+    <h2>Все покупательницы</h2>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>Email</th><th>Имя</th><th>Доступы</th><th>Регистрация</th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+    <div class="none" id="empty" style="display:none">Пока никого нет. Выдайте первый доступ выше или дождитесь оплаты.</div>
+  </div>
+</div>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s).replace(/[&<>"]/g, (c)=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fmtDate = (s) => { try { return new Date(s).toLocaleDateString('ru-RU',{day:'2-digit',month:'2-digit',year:'2-digit'}); } catch { return ''; } };
+let PRODUCTS = [];
+
+async function load(){
+  const r = await fetch('/api/admin/data');
+  if(r.status===403||r.status===401){ location.href='/login'; return; }
+  const d = await r.json();
+  PRODUCTS = d.products;
+  $('tUsers').textContent = d.totals.users;
+  $('tPurchases').textContent = d.totals.purchases;
+
+  $('gProduct').innerHTML = PRODUCTS.map(p=>`<option value="${p.id}">${esc(p.title)} · ${p.price?p.price.toLocaleString('ru-RU')+' ₽':'бесплатно'}</option>`).join('');
+
+  const rows = d.users.map(u=>{
+    const tags = u.purchases.length
+      ? u.purchases.map(p=>`<span class="tag">${esc(p.title)} <span class="src">${esc(p.source)}</span><button title="Снять доступ" data-user="${u.id}" data-product="${p.productId}">×</button></span>`).join('')
+      : '<span class="none">нет доступов</span>';
+    return `<tr>
+      <td class="email">${esc(u.email)}</td>
+      <td>${esc(u.name)||'<span class="none">—</span>'}</td>
+      <td><div class="tags">${tags}</div></td>
+      <td class="when">${fmtDate(u.createdAt)}</td>
+    </tr>`;
+  }).join('');
+  $('rows').innerHTML = rows;
+  $('empty').style.display = d.users.length ? 'none':'block';
+
+  document.querySelectorAll('.tag button').forEach(b=>b.addEventListener('click', async ()=>{
+    if(!confirm('Снять этот доступ?')) return;
+    await fetch('/api/admin/revoke',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({userId:b.dataset.user,productId:b.dataset.product})});
+    load();
+  }));
+}
+
+$('grantForm').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  $('gMsg').textContent=''; $('gMsg').className='msg';
+  const body = { email: $('gEmail').value.trim().toLowerCase(), productId: $('gProduct').value };
+  const r = await fetch('/api/admin/grant',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+  if(r.status===200){ $('gMsg').textContent='Доступ открыт'; $('gEmail').value=''; load(); }
+  else { $('gMsg').textContent='Не удалось: проверьте email'; $('gMsg').className='msg err'; }
+});
+
+$('logout').addEventListener('click', async (e)=>{ e.preventDefault(); await fetch('/api/auth/logout',{method:'POST'}); location.href='/login'; });
+
+load();
+</script>
+</body>
+</html>

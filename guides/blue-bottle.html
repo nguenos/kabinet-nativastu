@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Практика «Синяя бутылка» | nativastu</title>
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="description" content="Практика Синяя бутылка: ритуал Сатурна на устранение препятствий, долгов и кредитов. Календарь благоприятных суббот и обратный отсчёт до следующего дня практики.">
+  <link rel="preload" href="bebasneuecyrillic.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="firasans-400-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="hero-bottles.jpg" as="image">
+  <style>
+    @font-face { font-family: 'BebasNeueCyrillic'; src: url('bebasneuecyrillic.woff2') format('woff2'), url('bebasneuecyrillic.ttf') format('truetype'); font-display: swap; }
+    @font-face { font-family: 'Salina'; src: url('Salina-BookItalic.woff2') format('woff2'), url('Salina-BookItalic.woff') format('woff'); font-display: swap; }
+    @font-face { font-family: 'Fira Sans'; font-style: normal; font-weight: 300; font-display: swap; src: url('firasans-300-cyrillic.woff2') format('woff2'); unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+    @font-face { font-family: 'Fira Sans'; font-style: normal; font-weight: 300; font-display: swap; src: url('firasans-300-latin.woff2') format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+    @font-face { font-family: 'Fira Sans'; font-style: normal; font-weight: 400; font-display: swap; src: url('firasans-400-cyrillic.woff2') format('woff2'); unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+    @font-face { font-family: 'Fira Sans'; font-style: normal; font-weight: 400; font-display: swap; src: url('firasans-400-latin.woff2') format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+    @font-face { font-family: 'Fira Sans'; font-style: normal; font-weight: 500; font-display: swap; src: url('firasans-500-cyrillic.woff2') format('woff2'); unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+
+    :root {
+      --green:   #26324f;
+      --cream:   #F7F3ED;
+      --cream-2: #f0ebe3;
+      --gold:    #C4A882;
+      --gold-light: #d4be9c;
+      --text:    #252525;
+      --muted:   #888;
+      --terra:   #8B4A3A;
+      --blue:      #3a4d78;
+      --blue-deep: #26324f;
+      --blue-tint: #e5e8f1;
+      --sans:    'Fira Sans', sans-serif;
+      --serif:   'Cormorant Garamond', serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--cream);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 15px; font-weight: 300;
+      line-height: 1.7;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: var(--green);
+      padding: 0 40px; height: 56px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .logo { font-family: var(--sans); font-size: 13px; font-weight: 300; color: var(--cream); text-decoration: none; letter-spacing: 2.5px; text-transform: uppercase; }
+    .logo-handle { font-family: var(--sans); font-size: 13px; font-weight: 300; letter-spacing: 2.5px; text-transform: uppercase; color: var(--gold); margin-left: 8px; text-decoration: none; }
+    .header-owner { font-family: var(--sans); font-size: 10px; font-weight: 400; letter-spacing: 2.5px; text-transform: uppercase; color: rgba(247,243,237,.5); }
+
+    /* ── INTRO ── */
+    .cal-intro {
+      position: relative;
+      background:
+        linear-gradient(180deg, rgba(0,0,0,.70) 0%, rgba(0,0,0,.55) 48%, rgba(0,0,0,.66) 100%),
+        url('hero-bottles.jpg') center bottom/cover no-repeat;
+      min-height: 583px;
+      padding: 48px 40px 72px;
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      text-align: center;
+    }
+    .cal-intro > * { position: relative; z-index: 1; }
+    .cal-eyebrow {
+      font-family: var(--sans); font-size: 11px; font-weight: 400;
+      letter-spacing: 3px; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 18px;
+    }
+    .cal-intro h1 {
+      font-family: 'BebasNeueCyrillic', sans-serif;
+      font-size: clamp(32px, 5vw, 54px); font-weight: normal;
+      color: var(--cream); line-height: .98; letter-spacing: .01em;
+      max-width: 720px; margin: 0 auto 18px;
+    }
+    .cal-intro h1 em { font-family: 'Salina', var(--serif); color: var(--gold); font-style: italic; font-size: 0.6em; }
+    .cal-intro p {
+      font-size: 14.5px; font-weight: 300;
+      color: rgba(247,243,237,.65); max-width: 560px;
+      margin: 0 auto; line-height: 1.7;
+    }
+
+    /* ── TICKER (как на ng1282979) ── */
+    .ticker { background: var(--green); overflow: hidden; height: 36px; display: flex; align-items: center; border-top: 1px solid rgba(196,168,130,.15); border-bottom: 1px solid rgba(196,168,130,.15); }
+    .ticker-track { display: flex; animation: tick 40s linear infinite; white-space: nowrap; }
+    @keyframes tick { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+    .t-item { display: inline-flex; align-items: center; gap: 14px; padding: 0 24px; font-size: 11px; font-weight: 400; color: rgba(247,243,237,.7); letter-spacing: 0.12em; text-transform: lowercase; flex-shrink: 0; }
+    .t-dot { color: var(--gold); font-size: 10px; }
+    @media (max-width: 760px) { .ticker { height: 32px; } .ticker-track { animation-duration: 28s; } }
+    @media (prefers-reduced-motion: reduce) { .ticker-track { animation: none !important; } }
+
+    /* ── ADD TO HOME SCREEN ── */
+    .a2hs-sec { background: var(--cream-2); padding: 16px 40px; border-bottom: 1px solid rgba(38,50,79,.06); }
+    .a2hs { max-width: 720px; margin: 0 auto; display: flex; align-items: center; gap: 16px; }
+    .a2hs-icon { width: 52px; height: 52px; border-radius: 13px; flex-shrink: 0; box-shadow: 0 3px 10px rgba(38,50,79,.2); }
+    .a2hs-body { flex: 1; min-width: 0; }
+    .a2hs-title { font-family: 'BebasNeueCyrillic', sans-serif; font-size: 16px; color: var(--green); letter-spacing: .02em; line-height: 1.05; margin-bottom: 3px; }
+    .a2hs-text { font-family: var(--sans); font-size: 12px; font-weight: 300; color: var(--muted); line-height: 1.5; }
+    .a2hs-text b { color: var(--green); font-weight: 500; }
+    .a2hs-close { flex-shrink: 0; width: 28px; height: 28px; border: none; background: transparent; color: var(--muted); font-size: 20px; line-height: 1; cursor: pointer; border-radius: 50%; transition: background .15s, color .15s; }
+    .a2hs-close:hover { background: rgba(38,50,79,.08); color: var(--green); }
+    @media (max-width: 600px) {
+      .a2hs-sec { padding: 14px 18px; }
+      .a2hs { gap: 12px; }
+      .a2hs-icon { width: 46px; height: 46px; border-radius: 11px; }
+      .a2hs-title { font-size: 15px; }
+      .a2hs-text { font-size: 11.5px; }
+    }
+
+    /* ── COUNTDOWN ── */
+    .countdown-wrap { max-width: 880px; margin: 38px auto 0; padding: 0 40px; position: relative; z-index: 3; }
+    .countdown {
+      background: linear-gradient(150deg, var(--blue-deep) 0%, var(--blue) 100%);
+      border-radius: 18px; padding: 28px 34px;
+      display: flex; align-items: center; gap: 26px;
+      box-shadow: 0 18px 40px rgba(38,50,79,.28);
+      color: var(--cream);
+    }
+    .cd-num {
+      font-family: 'BebasNeueCyrillic', sans-serif;
+      font-size: clamp(52px, 9vw, 76px); line-height: .82;
+      color: var(--cream); flex-shrink: 0; text-align: center;
+    }
+    .cd-num .cd-unit { display: block; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold-light); margin-top: 6px; }
+    .cd-body { border-left: 1px solid rgba(196,168,130,.35); padding-left: 24px; }
+    .cd-label { font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--gold-light); margin-bottom: 6px; }
+    .cd-date { font-family: 'BebasNeueCyrillic', sans-serif; font-size: clamp(20px, 3.4vw, 27px); color: var(--cream); letter-spacing: .01em; line-height: 1.05; margin-bottom: 6px; }
+    .cd-hint { font-size: 12.5px; font-weight: 300; color: rgba(247,243,237,.72); line-height: 1.55; }
+    .cd-hint b { color: var(--gold-light); font-weight: 500; }
+    @media (max-width: 520px) {
+      .countdown { flex-direction: column; text-align: center; gap: 16px; padding: 26px 22px; }
+      .cd-body { border-left: none; border-top: 1px solid rgba(196,168,130,.3); padding-left: 0; padding-top: 16px; }
+    }
+
+    /* ── ABOUT / STEPS ── */
+    .about { max-width: 880px; margin: 52px auto 0; padding: 0 40px; }
+    .sec-eyebrow { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); text-align: center; margin-bottom: 12px; }
+    .sec-title { font-family: 'BebasNeueCyrillic', sans-serif; font-size: clamp(26px,4vw,38px); color: var(--green); text-align: center; line-height: 1; letter-spacing: .01em; margin-bottom: 10px; }
+    .sec-title em { font-family: 'Salina', var(--serif); font-style: italic; color: var(--gold); font-size: .62em; }
+    .about-lead { text-align: center; max-width: 620px; margin: 0 auto 34px; color: #4a4a4a; font-size: 15px; line-height: 1.75; }
+
+    .steps { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    .step {
+      background: var(--cream-2); border: 1px solid rgba(38,50,79,.06);
+      border-radius: 16px; padding: 24px 26px; position: relative;
+    }
+    .step-n { font-family: 'BebasNeueCyrillic', sans-serif; font-size: 30px; color: var(--gold); line-height: 1; margin-bottom: 8px; }
+    .step h3 { font-family: 'BebasNeueCyrillic', sans-serif; font-size: 19px; font-weight: normal; color: var(--green); letter-spacing: .01em; margin-bottom: 8px; }
+    .step p { font-size: 13.5px; line-height: 1.6; color: #4a4a4a; font-weight: 300; }
+    .step p b { color: var(--green); font-weight: 500; }
+    @media (max-width: 600px) { .steps { grid-template-columns: 1fr; } }
+
+    .facts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 22px; }
+    .fact { background: var(--green); color: rgba(247,243,237,.85); border-radius: 14px; padding: 20px 22px; }
+    .fact .f-ic { font-size: 22px; margin-bottom: 8px; display: block; }
+    .fact h4 { font-family: 'BebasNeueCyrillic', sans-serif; font-size: 15px; color: var(--cream); font-weight: normal; letter-spacing: .5px; margin-bottom: 5px; }
+    .fact p { font-size: 12.5px; line-height: 1.55; color: rgba(247,243,237,.72); font-weight: 300; }
+    @media (max-width: 600px) { .facts { grid-template-columns: 1fr; } }
+
+    /* ── MANTRA PLAYER ── */
+    .mantra {
+      margin-top: 22px;
+      background: linear-gradient(150deg, var(--blue-deep) 0%, var(--blue) 100%);
+      border-radius: 16px; padding: 30px 32px;
+      display: flex; align-items: center; gap: 24px;
+      color: var(--cream);
+    }
+    .mantra-ic {
+      width: 58px; height: 58px; border-radius: 50%; flex-shrink: 0;
+      background: rgba(196,168,130,.16); border: 1px solid rgba(196,168,130,.4);
+      display: flex; align-items: center; justify-content: center; font-size: 26px;
+    }
+    .mantra-body { flex: 1; min-width: 0; }
+    .mantra-label { font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--gold-light); margin-bottom: 4px; }
+    .mantra-title { font-family: 'BebasNeueCyrillic', sans-serif; font-size: 22px; color: var(--cream); letter-spacing: .01em; line-height: 1; margin-bottom: 10px; }
+    .mantra-title span { color: var(--gold-light); }
+    .mantra audio { width: 100%; height: 38px; display: block; }
+    .mantra-note { font-size: 12px; color: rgba(247,243,237,.6); margin-top: 8px; line-height: 1.5; }
+    @media (max-width: 600px) {
+      .mantra { flex-direction: column; text-align: center; padding: 26px 22px; gap: 16px; }
+    }
+
+    /* ── WISHES ── */
+    .wishes { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 22px; }
+    .wish-col { background: var(--cream-2); border: 1px solid rgba(38,50,79,.06); border-radius: 16px; padding: 24px 26px; }
+    .wish-col.yes { border-left: 4px solid var(--gold); }
+    .wish-col.no  { border-left: 4px solid var(--terra); }
+    .wish-col h3 { font-family: 'BebasNeueCyrillic', sans-serif; font-size: 18px; font-weight: normal; color: var(--green); letter-spacing: .01em; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+    .wish-col.no h3 { color: var(--terra); }
+    .wish-col ul { list-style: none; margin: 0; padding: 0; }
+    .wish-col li { font-size: 13.5px; line-height: 1.5; color: #4a4a4a; padding: 6px 0 6px 18px; position: relative; }
+    .wish-col li::before { content: ""; position: absolute; left: 0; top: 13px; width: 6px; height: 6px; border-radius: 50%; }
+    .wish-col.yes li::before { background: var(--gold); }
+    .wish-col.no li::before { background: var(--terra); }
+    @media (max-width: 600px) { .wishes { grid-template-columns: 1fr; } }
+
+    /* ── FORMULATE ── */
+    .formulate { margin-top: 22px; background: var(--cream-2); border: 1px solid rgba(38,50,79,.06); border-radius: 16px; padding: 30px 32px; }
+    .formulate h3 { font-family: 'BebasNeueCyrillic', sans-serif; font-size: 20px; font-weight: normal; color: var(--green); letter-spacing: .01em; margin-bottom: 8px; }
+    .formulate p { font-size: 14px; line-height: 1.65; color: #4a4a4a; margin-bottom: 16px; }
+    .formulate p b { color: var(--green); font-weight: 500; }
+    .formulate .quotes { display: flex; flex-direction: column; gap: 10px; }
+    .formulate .q { font-family: 'Salina', var(--serif); font-style: italic; font-size: 17px; color: var(--green); padding: 12px 20px; background: var(--cream); border-radius: 10px; border-left: 3px solid var(--gold); line-height: 1.4; }
+
+    /* ── CALENDAR SHELL ── */
+    .cal-wrap { max-width: 880px; margin: 0 auto; padding: 56px 40px 0; }
+
+    .cal-nav {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 22px;
+    }
+    .cal-month {
+      font-family: 'BebasNeueCyrillic', sans-serif;
+      font-size: clamp(26px, 4vw, 38px); color: var(--green);
+      letter-spacing: .02em; line-height: 1; text-align: center;
+    }
+    .cal-month .yr { color: var(--gold); margin-left: 8px; }
+    .nav-btn {
+      width: 44px; height: 44px; border-radius: 50%;
+      border: 1px solid rgba(38,50,79,.15);
+      background: var(--cream); color: var(--green);
+      font-size: 18px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all .2s; flex-shrink: 0;
+    }
+    .nav-btn:hover:not(:disabled) { border-color: var(--gold); background: var(--cream-2); transform: translateY(-1px); }
+    .nav-btn:disabled { opacity: .3; cursor: default; }
+
+    /* ── GRID ── */
+    .cal-weekdays {
+      display: grid; grid-template-columns: repeat(7, 1fr);
+      gap: 6px; margin-bottom: 6px;
+    }
+    .cal-weekdays div {
+      text-align: center; font-size: 10px; font-weight: 500;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      color: var(--muted); padding: 4px 0;
+    }
+    .cal-weekdays .sat { color: var(--blue); }
+    .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+    .cal-cell {
+      position: relative;
+      aspect-ratio: 1 / 1.05;
+      border-radius: 10px;
+      background: var(--cream-2);
+      border: 1px solid rgba(38,50,79,.05);
+      padding: 6px 6px 4px;
+      display: flex; flex-direction: column;
+      cursor: pointer; overflow: hidden;
+      transition: transform .15s, box-shadow .15s, border-color .15s;
+    }
+    .cal-cell.empty { background: transparent; border: none; cursor: default; }
+    .cal-cell:not(.empty):hover { transform: translateY(-2px); border-color: var(--gold); box-shadow: 0 6px 16px rgba(38,50,79,.08); }
+    .cal-cell.sat-skip { background: repeating-linear-gradient(135deg, #ece7de, #ece7de 6px, #e6e0d5 6px, #e6e0d5 12px); }
+    .cal-cell.bottle { background: linear-gradient(160deg, #eaedf5 0%, #dfe3ef 100%); border-color: rgba(58,77,120,.35); }
+    .cal-cell.bottle:hover { border-color: var(--blue); box-shadow: 0 6px 16px rgba(58,77,120,.18); }
+    .cal-cell.bottle::before { content:""; position:absolute; left:0; top:0; bottom:0; width:4px; background: var(--blue); }
+    .cal-cell.sel { border-color: var(--green); box-shadow: 0 0 0 2px var(--green); }
+    .cal-cell.today .daynum { color: var(--cream); background: var(--terra); border-radius: 50%; width: 22px; height: 22px; display: inline-flex; align-items: center; justify-content: center; }
+
+    .daynum { font-family: var(--sans); font-size: 13px; font-weight: 500; color: var(--green); line-height: 1; }
+    .ld { font-size: 8.5px; color: var(--muted); letter-spacing: .3px; margin-top: 1px; line-height: 1; }
+    .cell-top { display: flex; align-items: flex-start; justify-content: space-between; }
+    .cell-icons {
+      margin-top: auto; display: flex; flex-wrap: wrap; gap: 1px;
+      font-size: 14px; line-height: 1; justify-content: flex-start;
+    }
+    .cell-cap {
+      font-size: 8px; line-height: 1.1; color: var(--green);
+      font-weight: 500; margin-top: 2px;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .cell-cap.bottle-cap { color: var(--blue-deep); }
+    .cell-cap.skip-cap { color: var(--terra); }
+
+    .dotrow { display: flex; gap: 3px; margin-top: 3px; }
+    .dot { width: 6px; height: 6px; border-radius: 50%; }
+    .dot.bottle { background: var(--blue); }
+    .dot.skip { background: var(--terra); }
+    .cell-bottle-ic { font-size: 13px; line-height: 1; }
+
+    /* ── LEGEND ── */
+    .legend {
+      max-width: 880px; margin: 36px auto 0; padding: 0 40px;
+    }
+    .legend-inner {
+      background: var(--cream-2); border-radius: 16px;
+      padding: 26px 30px; border: 1px solid rgba(38,50,79,.06);
+    }
+    .legend-title {
+      font-family: 'BebasNeueCyrillic', sans-serif;
+      font-size: 18px; color: var(--green); letter-spacing: .02em;
+      margin-bottom: 16px;
+    }
+    .legend-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px 24px; }
+    .legend-item { display: flex; gap: 10px; align-items: flex-start; font-size: 13px; line-height: 1.45; font-weight: 300; }
+    .legend-ic { flex-shrink: 0; font-size: 16px; line-height: 1.3; width: 20px; text-align: center; }
+    .legend-ic .dot { width: 9px; height: 9px; display: inline-block; margin-top: 5px; }
+    .legend-item strong { color: var(--green); font-weight: 500; }
+    .legend-swatch { width: 18px; height: 18px; border-radius: 5px; flex-shrink: 0; margin-top: 1px; }
+    .legend-swatch.bottle { background: linear-gradient(160deg, #eaedf5 0%, #dfe3ef 100%); border: 1px solid rgba(58,77,120,.4); }
+    .legend-swatch.skip { background: repeating-linear-gradient(135deg, #ece7de, #ece7de 5px, #e6e0d5 5px, #e6e0d5 10px); border: 1px solid rgba(38,50,79,.1); }
+    @media (max-width: 600px) { .legend-grid { grid-template-columns: 1fr; } }
+
+    /* ── DETAIL PANEL ── */
+    .detail {
+      max-width: 880px; margin: 28px auto 0; padding: 0 40px;
+    }
+    .detail-inner {
+      background: var(--green); border-radius: 18px;
+      padding: 30px 34px; color: rgba(247,243,237,.85);
+      min-height: 120px;
+    }
+    .detail-empty { color: rgba(247,243,237,.5); font-size: 14px; font-style: italic; font-family: 'Salina', serif; }
+    .detail-date {
+      font-family: 'BebasNeueCyrillic', sans-serif;
+      font-size: 26px; color: var(--cream); letter-spacing: .02em;
+      line-height: 1; margin-bottom: 2px;
+    }
+    .detail-ld { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 18px; }
+    .detail-row { display: flex; gap: 14px; padding: 12px 0; border-top: 1px solid rgba(196,168,130,.18); }
+    .detail-row:first-of-type { border-top: none; }
+    .detail-row .d-ic { font-size: 20px; flex-shrink: 0; width: 26px; text-align: center; line-height: 1.3; }
+    .detail-row .d-ic .dot { width: 11px; height: 11px; display: inline-block; margin-top: 5px; }
+    .d-body h4 { font-family: 'BebasNeueCyrillic', sans-serif; font-size: 17px; color: var(--cream); font-weight: normal; letter-spacing: .01em; margin-bottom: 3px; }
+    .d-body p { font-size: 13.5px; line-height: 1.6; color: rgba(247,243,237,.75); font-weight: 300; margin: 0; }
+    .d-none { font-size: 13.5px; color: rgba(247,243,237,.6); font-weight: 300; }
+
+    /* ── FEEDBACK · canvas waves ── */
+    .feedback { background: linear-gradient(150deg, var(--blue-deep) 0%, var(--blue) 100%); padding: 100px 40px; text-align: center; border-top: 1px solid rgba(196,168,130,.25); position: relative; overflow: hidden; }
+    .feedback-waves { position: absolute; inset: 0; width: 100%; height: 100%; display: block; pointer-events: none; z-index: 0; }
+    .feedback-overlay { position: absolute; inset: 0; background: radial-gradient(ellipse 80% 70% at 50% 45%, rgba(196,168,130,0.14) 0%, transparent 62%); pointer-events: none; z-index: 1; }
+    .feedback-inner { max-width: 640px; margin: 0 auto; position: relative; z-index: 2; }
+    .feedback-eyebrow { font-family: var(--sans); font-size: 10px; font-weight: 500; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 14px; }
+    .feedback h2 { font-family: 'BebasNeueCyrillic', sans-serif; font-size: clamp(28px, 4vw, 42px); color: var(--cream); line-height: 1; letter-spacing: .01em; margin-bottom: 16px; font-weight: normal; }
+    .feedback h2 em { font-family: 'Salina', serif; font-style: italic; color: var(--gold); font-size: 0.65em; }
+    .feedback p { font-size: 14.5px; color: rgba(247,243,237,.72); line-height: 1.7; margin: 0 auto 32px; max-width: 520px; font-weight: 300; }
+    .feedback-btn { display: inline-flex; align-items: center; gap: 12px; background: var(--gold); color: var(--green); font-family: var(--sans); font-weight: 500; font-size: 14px; letter-spacing: .8px; padding: 18px 36px; border: none; border-radius: 60px; text-decoration: none; cursor: pointer; transition: background .25s, color .25s, transform .25s, box-shadow .25s; box-shadow: 0 8px 24px rgba(0,0,0,.22); }
+    .feedback-btn:hover { background: var(--cream); color: var(--green); transform: translateY(-2px); box-shadow: 0 10px 28px rgba(0,0,0,.28); }
+    .feedback-btn .tg-icon { width: 20px; height: 20px; fill: currentColor; flex-shrink: 0; }
+    .feedback-handle { font-family: var(--sans); font-size: 12px; color: rgba(247,243,237,.55); margin-top: 18px; letter-spacing: .5px; }
+    .feedback-handle a { color: var(--gold); text-decoration: none; transition: color .2s; }
+    .feedback-handle a:hover { color: var(--cream); }
+    @media (max-width: 760px) { .feedback { padding: 60px 22px; } .feedback-btn { padding: 16px 28px; font-size: 13px; } .feedback p { font-size: 13.5px; } }
+
+    /* ── CTA ── */
+    .cal-cta { background: var(--cream-2); padding: 64px 40px; text-align: center; margin-top: 56px; border-top: 1px solid rgba(196,168,130,.3); }
+    .cal-cta .label { font-family: var(--sans); font-size: 10px; font-weight: 400; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 12px; }
+    .cal-cta h2 { font-family: 'BebasNeueCyrillic', sans-serif; font-size: clamp(26px, 4vw, 38px); font-weight: normal; color: var(--green); margin-bottom: 16px; line-height: 1; letter-spacing: .01em; }
+    .cal-cta h2 em { font-family: 'Salina', var(--serif); font-style: italic; color: var(--gold); font-size: 0.62em; }
+    .cal-cta p { color: var(--muted); font-size: 14px; max-width: 480px; margin: 0 auto 24px; line-height: 1.7; }
+    .btn-cta { display: inline-flex; align-items: center; gap: 10px; background: var(--green); color: var(--cream); font-family: var(--sans); font-weight: 500; font-size: 13px; letter-spacing: .8px; padding: 16px 34px; border-radius: 60px; text-decoration: none; transition: background .25s, transform .25s; }
+    .btn-cta:hover { background: var(--gold); color: var(--green); transform: translateY(-2px); }
+
+    /* ── FOOTER ── */
+    footer { background: var(--green); color: rgba(247,243,237,.45); font-family: var(--sans); font-size: 11px; font-weight: 300; padding: 24px 40px; text-align: center; line-height: 1.85; border-top: 1px solid rgba(196,168,130,.15); }
+    footer .f-links { margin-bottom: 4px; }
+    footer .f-links a { color: var(--gold); text-decoration: none; margin: 0 6px; }
+
+    /* ── MOBILE ── */
+    @media (max-width: 640px) {
+      header { padding: 0 18px; height: 52px; }
+      .logo, .logo-handle { font-size: 11px; letter-spacing: 1.8px; }
+      .header-owner { display: none; }
+      .cal-intro { min-height: 583px; padding: 36px 20px 64px; }
+      .countdown-wrap { padding: 0 14px; }
+      .about { padding: 0 14px; }
+      .cal-wrap { padding: 44px 14px 0; }
+      .cal-grid, .cal-weekdays { gap: 4px; }
+      .cal-cell { border-radius: 8px; padding: 4px 4px 3px; }
+      .daynum { font-size: 12px; }
+      .cell-icons { font-size: 12px; }
+      .cell-cap { display: none; }
+      .ld { font-size: 8px; }
+      .legend, .detail { padding: 0 14px; }
+      .legend-inner { padding: 22px 20px; }
+      .detail-inner { padding: 24px 22px; }
+      .cal-cta { padding: 48px 20px; }
+      .nav-btn { width: 40px; height: 40px; }
+    }
+  </style>
+  <meta name="theme-color" content="#26324f">
+  <link rel="apple-touch-icon" sizes="180x180" href="bottle-icon-180.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="bottle-icon-192.png">
+  <link rel="manifest" href="blue-bottle.webmanifest">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Синяя бутылка">
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=109158007', 'ym');
+
+    ym(109158007, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/109158007" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+</head>
+<body>
+
+<header>
+  <div>
+    <a href="https://nativastu.com/" class="logo">Васту Карта</a>
+    <a href="https://www.instagram.com/nativastu" target="_blank" class="logo-handle">@nativastu</a>
+  </div>
+  <div class="header-owner">практика синяя бутылка</div>
+</header>
+
+<section class="cal-intro">
+  <div class="cal-eyebrow">ритуал Сатурна · устранение препятствий</div>
+  <h1>практика<br><em>синяя бутылка</em></h1>
+  <p>Убирает то, что тянет вниз: долги, тяжбы, застой. Только в субботу до восхода - и не в любую.</p>
+</section>
+
+<div class="ticker">
+  <div class="ticker-track">
+    <span class="t-item"><span class="t-dot">✦</span>сатурн - планета дисциплины, труда и опоры</span>
+    <span class="t-item"><span class="t-dot">✦</span>7 гвоздей - число сатурна, суббота его день</span>
+    <span class="t-item"><span class="t-dot">✦</span>маслом «умасливаем» путь - и дело идёт как по маслу</span>
+    <span class="t-item"><span class="t-dot">✦</span>загадывай не вещь, а состояние</span>
+    <span class="t-item"><span class="t-dot">✦</span>убирает то, что тянет вниз: долги, тяжбы, застой</span>
+    <span class="t-item"><span class="t-dot">✦</span>сатурн любит терпение, честность и глубину</span>
+    <span class="t-item" aria-hidden="true"><span class="t-dot">✦</span>сатурн - планета дисциплины, труда и опоры</span>
+    <span class="t-item" aria-hidden="true"><span class="t-dot">✦</span>7 гвоздей - число сатурна, суббота его день</span>
+    <span class="t-item" aria-hidden="true"><span class="t-dot">✦</span>маслом «умасливаем» путь - и дело идёт как по маслу</span>
+    <span class="t-item" aria-hidden="true"><span class="t-dot">✦</span>загадывай не вещь, а состояние</span>
+    <span class="t-item" aria-hidden="true"><span class="t-dot">✦</span>убирает то, что тянет вниз: долги, тяжбы, застой</span>
+    <span class="t-item" aria-hidden="true"><span class="t-dot">✦</span>сатурн любит терпение, честность и глубину</span>
+  </div>
+</div>
+
+<section class="a2hs-sec" id="a2hsSec" hidden>
+  <div class="a2hs">
+    <img src="bottle-icon-192.png" class="a2hs-icon" width="52" height="52" alt="Синяя бутылка">
+    <div class="a2hs-body">
+      <div class="a2hs-title">сохраните практику на экран «домой»</div>
+      <div class="a2hs-text">Чтобы синяя бутылка всегда была под рукой. <b>iPhone:</b> «Поделиться» → «На экран «Домой»». <b>Android:</b> меню ⋮ → «Добавить на главный экран».</div>
+    </div>
+    <button type="button" class="a2hs-close" id="a2hsClose" aria-label="Закрыть подсказку">&times;</button>
+  </div>
+</section>
+
+<div class="countdown-wrap">
+  <div class="countdown" id="countdown">
+    <div class="cd-num" id="cdNum">–<span class="cd-unit" id="cdUnit">дней</span></div>
+    <div class="cd-body">
+      <div class="cd-label">следующий благоприятный день для практики</div>
+      <div class="cd-date" id="cdDate">рассчитываем…</div>
+      <div class="cd-hint" id="cdHint"></div>
+    </div>
+  </div>
+</div>
+
+<section class="about">
+  <div class="sec-eyebrow">как это работает</div>
+  <h2 class="sec-title">символика <em>ритуала</em></h2>
+  <p class="about-lead">Синяя бутылка связана с энергией Сатурна - планеты дисциплины, труда, опоры и кармы. Синее стекло, металл и масло - всё, что он любит. Практика помогает «умилостивить» Сатурн, гармонизировать его энергию и убрать препятствия. Поэтому загадывать через неё лучше то, что требует терпения, времени и глубины, - а не быстрых и лёгких результатов.</p>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-n">01</div>
+      <h3>Материалы</h3>
+      <p><b>Бутылка из тёмно-синего стекла</b>, очищенная от этикетки и клея. <b>7 видов масла</b>: подсолнечное, растительное, льняное, кунжутное, кукурузное, расторопши, горчичное (можно заменить на другие растительные - главное 7 разных). <b>7 новых длинных гвоздей</b> 10-12 см (не шурупы с резьбой).</p>
+    </div>
+    <div class="step">
+      <div class="step-n">02</div>
+      <h3>Время и место</h3>
+      <p>Только в <b>субботу утром до восхода</b> (до 7 утра). В <b>западном секторе</b> квартиры - или на западе комнаты / кухни, если запад попал в санузел. Всё подготовьте с вечера.</p>
+    </div>
+    <div class="step">
+      <div class="step-n">03</div>
+      <h3>Намерение</h3>
+      <p>Пока готовите бутылку, повторяйте мантру <b>«Ом Намах Шивая»</b>, вкладывая своё желание. Формулируйте не как «хочу», а как <b>состояние</b>: «я чувствую опору и стабильность», «я живу в гармонии и порядке». Сатурн любит серьёзность, честность и глубину.</p>
+    </div>
+    <div class="step">
+      <div class="step-n">04</div>
+      <h3>Сборка</h3>
+      <p>Налейте в бутылку <b>7 видов масла</b>. Аккуратно опустите внутрь <b>7 гвоздей остриём вниз</b>, чтобы они стояли в бутылке. Закройте и поставьте <b>стоя</b> в <b>западном секторе</b> дома. Если масло ушло и гвозди оголились - можно долить, но лучше сделать новую бутылку в новую субботу.</p>
+    </div>
+  </div>
+
+  <div class="facts">
+    <div class="fact">
+      <span class="f-ic">📌</span>
+      <h4>Одна суббота - одна бутылка</h4>
+      <p>Всего в квартире может стоять до 7 бутылок на всех жильцов. Не по 7 на каждого.</p>
+    </div>
+    <div class="fact">
+      <span class="f-ic">💰</span>
+      <h4>Лучше всего работает на</h4>
+      <p>Партнёрство, землю и недвижимость, судебные дела, здоровье (кости, зубы, кожа), освобождение от долгов и кармических узлов.</p>
+    </div>
+    <div class="fact">
+      <span class="f-ic">🏠</span>
+      <h4>Что дальше</h4>
+      <p>Сбылось - бутылка остаётся навсегда, протирайте пыль. Переезд - выбросить на дальнюю от дома помойку.</p>
+    </div>
+  </div>
+
+  <div class="mantra">
+    <div class="mantra-ic">🕉</div>
+    <div class="mantra-body">
+      <div class="mantra-label">звуковое сопровождение</div>
+      <div class="mantra-title">Мантра «Ом Намах Шивая» · <span>108 раз</span></div>
+      <audio controls preload="none" src="mantra-om-namah-shivaya.m4a"></audio>
+      <div class="mantra-note">Включите на время практики - устранение препятствий, обращение к Шиве.</div>
+    </div>
+  </div>
+
+  <div class="wishes">
+    <div class="wish-col yes">
+      <h3>✨ Подходящие желания</h3>
+      <ul>
+        <li>стабильная работа, повышение в карьере;</li>
+        <li>покупка или строительство дома, земли, недвижимости;</li>
+        <li>здоровье - опорно-двигательный аппарат, зубы, кости, кожа;</li>
+        <li>решение юридических вопросов, окончание судов;</li>
+        <li>крепкая семья, верность, долгосрочные отношения;</li>
+        <li>освобождение от долгов и кармических «узлов»;</li>
+        <li>внутренняя сила, выдержка, терпение.</li>
+      </ul>
+    </div>
+    <div class="wish-col no">
+      <h3>⚠️ Чего лучше не просить</h3>
+      <ul>
+        <li>лёгких денег «с неба»;</li>
+        <li>быстрых удовольствий, развлечений, мимолётных романов;</li>
+        <li>всего импульсивного и страстного - это энергия Марса и Юпитера, а не Сатурна.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="formulate">
+    <h3>Загадывайте не вещь, а состояние</h3>
+    <p>Если попросить «дом» - Сатурн будет проверять, зачем он вам и выдержите ли ответственность. А если попросить <b>чувство опоры и стабильности</b> - пространство само подберёт лучший способ: дом, земля, работа или партнёрство. Формулируйте желание через ощущение:</p>
+    <div class="quotes">
+      <div class="q">«Я чувствую опору и безопасность в своём доме».</div>
+      <div class="q">«Я живу в гармоничной семье».</div>
+      <div class="q">«Моя работа приносит стабильный доход и уважение».</div>
+    </div>
+  </div>
+</section>
+
+<div class="cal-wrap">
+  <div class="sec-eyebrow" style="margin-bottom:18px;">календарь благоприятных суббот · 2026</div>
+  <div class="cal-nav">
+    <button class="nav-btn" id="prev" aria-label="Предыдущий месяц">&#8592;</button>
+    <div class="cal-month" id="monthLabel"></div>
+    <button class="nav-btn" id="next" aria-label="Следующий месяц">&#8594;</button>
+  </div>
+  <div class="cal-weekdays">
+    <div>Пн</div><div>Вт</div><div>Ср</div><div>Чт</div><div>Пт</div><div class="sat">Сб</div><div>Вс</div>
+  </div>
+  <div class="cal-grid" id="grid"></div>
+</div>
+
+<div class="detail">
+  <div class="detail-inner" id="detail">
+    <div class="detail-empty">Нажми на любой день, чтобы узнать, подходит ли он для практики «Синяя бутылка».</div>
+  </div>
+</div>
+
+<div class="legend">
+  <div class="legend-inner">
+    <div class="legend-title">условные обозначения</div>
+    <div class="legend-grid">
+      <div class="legend-item"><span class="legend-ic"><span class="legend-swatch bottle"></span></span><div><strong>Благоприятная суббота.</strong> Можно делать «Синюю бутылку»: суббота и «хорошие» лунные сутки.</div></div>
+      <div class="legend-item"><span class="legend-ic"><span class="legend-swatch skip"></span></span><div><strong>Суббота - но не в этот день.</strong> Лунные сутки 4, 9, 14 дают наименьший результат, практику лучше перенести.</div></div>
+      <div class="legend-item"><span class="legend-ic">🌱</span><div><strong>Растущая луна.</strong> Время набирать и укреплять: стабильность, опора, дом, работа.</div></div>
+      <div class="legend-item"><span class="legend-ic">🌘</span><div><strong>Убывающая луна.</strong> Время освобождаться - от долгов, кармических узлов, лишнего.</div></div>
+    </div>
+  </div>
+</div>
+
+<section class="cal-cta">
+  <div class="label">анализ пространства</div>
+  <h2>где именно в доме<br><em>сидят препятствия</em></h2>
+  <p>Ритуал задаёт тайминг. На консультации я разбираю карту вашей квартиры и показываю, какие зоны блокируют деньги и держат в долгах - и что с ними делать, чтобы усилить эффект практики.</p>
+  <a href="https://nativastu.com/consult" target="_blank" class="btn-cta">записаться на консультацию &rarr;</a>
+</section>
+
+<section class="feedback" id="feedback">
+  <canvas class="feedback-waves" id="feedback-canvas" aria-hidden="true"></canvas>
+  <div class="feedback-overlay" aria-hidden="true"></div>
+  <div class="feedback-inner">
+    <div class="feedback-eyebrow">обратная связь</div>
+    <h2>расскажите, <em>как откликнулось</em></h2>
+    <p>Делали синюю бутылку? Что изменилось в жизни и в доме, что было непонятно, чего не хватило на странице. Каждый отзыв читаю лично.</p>
+    <button type="button" class="feedback-btn feedback-trigger">
+      <svg class="tg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.39 7.36H22l-6.18 4.49L18.21 22 12 17.27 5.79 22l2.39-8.15L2 9.36h7.61L12 2z"/></svg>
+      <span>оставить отзыв</span>
+    </button>
+  </div>
+</section>
+
+<footer>
+  <div class="f-links">
+    <a href="https://t.me/nativastu" target="_blank">telegram</a>
+    <span style="color:rgba(247,243,237,.2);">·</span>
+    <a href="https://nativastu.com">nativastu.com</a>
+    <span style="color:rgba(247,243,237,.2);">·</span>
+    <a href="https://www.instagram.com/nativastu" target="_blank">instagram</a>
+  </div>
+  <div class="f-legal" style="color:rgba(247,243,237,.35); font-size:10px; margin-top:4px;">
+    &copy; 2026 Квачантирадзе Натия Тенгизовна &middot; авторский метод &middot; все права защищены
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  // ── astronomy: new/full moon (Meeus, Astronomical Algorithms, ch. 49) ──
+  var DEG = Math.PI / 180;
+  function rad(d){ return d * DEG; }
+
+  function corr(M, Mp, F, Om, E){
+    var s = Math.sin;
+    return (
+      -0.40720 * s(rad(Mp))
+      +0.17241 * E * s(rad(M))
+      +0.01608 * s(rad(2*Mp))
+      +0.01039 * s(rad(2*F))
+      +0.00739 * E * s(rad(Mp - M))
+      -0.00514 * E * s(rad(Mp + M))
+      +0.00208 * E*E * s(rad(2*M))
+      -0.00111 * s(rad(Mp - 2*F))
+      -0.00057 * s(rad(Mp + 2*F))
+      +0.00056 * E * s(rad(2*Mp + M))
+      -0.00042 * s(rad(3*Mp))
+      +0.00042 * E * s(rad(M + 2*F))
+      +0.00038 * E * s(rad(M - 2*F))
+      -0.00024 * E * s(rad(2*Mp - M))
+      -0.00017 * s(rad(Om))
+      -0.00007 * s(rad(Mp + 2*M))
+      +0.00004 * s(rad(2*Mp - 2*F))
+      +0.00004 * s(rad(3*M))
+      +0.00003 * s(rad(Mp + M - 2*F))
+      +0.00003 * s(rad(2*Mp + 2*F))
+      -0.00003 * s(rad(Mp + M + 2*F))
+      +0.00003 * s(rad(Mp - M + 2*F))
+      -0.00002 * s(rad(Mp - M - 2*F))
+      -0.00002 * s(rad(3*Mp + M))
+      +0.00002 * s(rad(4*Mp))
+    );
+  }
+
+  function phaseJDE(kk){
+    var T = kk / 1236.85;
+    var JDE = 2451550.09766 + 29.530588861*kk
+      + 0.00015437*T*T - 0.000000150*T*T*T + 0.00000000073*T*T*T*T;
+    var E  = 1 - 0.002516*T - 0.0000074*T*T;
+    var M  = 2.5534 + 29.10535670*kk - 0.0000014*T*T - 0.00000011*T*T*T;
+    var Mp = 201.5643 + 385.81693528*kk + 0.0107582*T*T + 0.00001238*T*T*T - 0.000000058*T*T*T*T;
+    var F  = 160.7108 + 390.67050284*kk - 0.0016118*T*T - 0.00000227*T*T*T + 0.000000011*T*T*T*T;
+    var Om = 124.7746 - 1.56375588*kk + 0.0020672*T*T + 0.00000215*T*T*T;
+    return JDE + corr(M, Mp, F, Om, E);
+  }
+
+  var MSK = 3 / 24;
+
+  function gregToJD(y, m, d, hUT){
+    if (m <= 2){ y -= 1; m += 12; }
+    var A = Math.floor(y/100);
+    var B = 2 - A + Math.floor(A/4);
+    return Math.floor(365.25*(y+4716)) + Math.floor(30.6001*(m+1)) + d + B - 1524.5 + hUT/24;
+  }
+
+  function lunationsFor(year, month0){
+    var yearDec = year + (month0 + 0.5)/12;
+    var kCenter = Math.round((yearDec - 2000) * 12.3685);
+    var news = [];
+    for (var k = kCenter - 3; k <= kCenter + 3; k++){
+      news.push(phaseJDE(k));
+    }
+    news.sort(function(a,b){ return a-b; });
+    return news;
+  }
+
+  // lunar day for a civil date (sampled at noon MSK), from previous new moon
+  function lunarDayRaw(news, y, m, d){
+    var ref = gregToJD(y, m, d, 9);
+    var prev = null;
+    for (var i = 0; i < news.length; i++){
+      if (news[i] <= ref + 0.0001){ prev = news[i]; } else break;
+    }
+    if (prev === null) return null;
+    var ld = Math.floor(ref - prev) + 1;
+    if (ld < 1) ld = 1; if (ld > 30) ld = 30;
+    return ld;
+  }
+
+  // lunar day for arbitrary civil date, self-contained (m = 1..12)
+  function lunarDayFor(y, m, d){
+    var news = lunationsFor(y, m - 1);
+    return lunarDayRaw(news, y, m, d);
+  }
+
+  // ── method data ──
+  var SKIP = [4, 9, 14];   // избегаем 4, 9, 14 лунные сутки (канон практики)
+  var MONTHS = ["Январь","Февраль","Март","Апрель","Май","Июнь","Июль","Август","Сентябрь","Октябрь","Ноябрь","Декабрь"];
+  var GEN = ["января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря"];
+  var WD  = ["воскресенье","понедельник","вторник","среда","четверг","пятница","суббота"];
+  var YEAR = 2026;
+
+  // classify a civil date for the blue-bottle practice
+  function classify(y, m, d, weekday){
+    var ld = lunarDayFor(y, m, d);
+    var isSat = weekday === 6;
+    var isSkip = ld !== null && SKIP.indexOf(ld) !== -1;
+    var favorable = isSat && ld !== null && !isSkip;
+    var waxing = ld !== null && ld <= 15;
+    return { ld: ld, isSat: isSat, isSkip: isSkip, favorable: favorable, waxing: waxing };
+  }
+
+  // ── COUNTDOWN: next favorable Saturday from today ──
+  function pluralDays(n){
+    var n10 = n % 10, n100 = n % 100;
+    if (n10 === 1 && n100 !== 11) return "день";
+    if (n10 >= 2 && n10 <= 4 && (n100 < 10 || n100 >= 20)) return "дня";
+    return "дней";
+  }
+  function renderCountdown(){
+    var today = new Date();
+    today.setHours(0,0,0,0);
+    var found = null, days = 0;
+    for (var i = 0; i < 400; i++){
+      var cand = new Date(today.getFullYear(), today.getMonth(), today.getDate() + i);
+      var c = classify(cand.getFullYear(), cand.getMonth()+1, cand.getDate(), cand.getDay());
+      if (c.favorable){ found = { date: cand, cls: c }; days = i; break; }
+    }
+    var numEl = document.getElementById('cdNum');
+    var unitEl = document.getElementById('cdUnit');
+    var dateEl = document.getElementById('cdDate');
+    var hintEl = document.getElementById('cdHint');
+    if (!found){
+      numEl.textContent = '–';
+      dateEl.textContent = 'нет данных';
+      return;
+    }
+    var dt = found.date;
+    var dateStr = dt.getDate() + ' ' + GEN[dt.getMonth()] + ' ' + dt.getFullYear();
+    if (days === 0){
+      numEl.innerHTML = 'сегодня';
+      numEl.style.fontSize = 'clamp(30px,6vw,44px)';
+      unitEl.style.display = 'none';
+    } else {
+      numEl.innerHTML = days + '<span class="cd-unit">' + pluralDays(days) + '</span>';
+    }
+    dateEl.textContent = 'суббота, ' + dateStr;
+    var dir = found.cls.waxing
+      ? '<b>Растущая луна</b> - время укреплять и набирать: опора, стабильность.'
+      : '<b>Убывающая луна</b> - время освобождаться: от долгов, узлов, лишнего.';
+    hintEl.innerHTML = found.cls.ld + '-й лунный день. Делайте утром до восхода в западном секторе. ' + dir;
+  }
+
+  // ── state / render ──
+  var state = { month0: 5 };
+  (function initMonth(){
+    var now = new Date();
+    if (now.getFullYear() === YEAR) state.month0 = now.getMonth();
+    else if (now.getFullYear() < YEAR) state.month0 = 0;
+    else state.month0 = 11;
+  })();
+
+  var gridEl = document.getElementById('grid');
+  var labelEl = document.getElementById('monthLabel');
+  var detailEl = document.getElementById('detail');
+  var prevBtn = document.getElementById('prev');
+  var nextBtn = document.getElementById('next');
+  var selected = null;
+
+  function todayParts(){
+    var n = new Date();
+    return { y: n.getFullYear(), m: n.getMonth() + 1, d: n.getDate() };
+  }
+
+  function render(){
+    var month0 = state.month0;
+    labelEl.innerHTML = MONTHS[month0] + ' <span class="yr">' + YEAR + '</span>';
+    prevBtn.disabled = (month0 === 0);
+    nextBtn.disabled = (month0 === 11);
+
+    var first = new Date(YEAR, month0, 1);
+    var offset = (first.getDay() + 6) % 7; // Monday-first
+    var daysInMonth = new Date(YEAR, month0 + 1, 0).getDate();
+    var tp = todayParts();
+
+    gridEl.innerHTML = '';
+    for (var i = 0; i < offset; i++){
+      var e = document.createElement('div');
+      e.className = 'cal-cell empty';
+      gridEl.appendChild(e);
+    }
+
+    for (var d = 1; d <= daysInMonth; d++){
+      var weekday = new Date(YEAR, month0, d).getDay();
+      var data = classify(YEAR, month0 + 1, d, weekday);
+      var cell = document.createElement('div');
+      cell.className = 'cal-cell';
+      if (data.favorable) cell.classList.add('bottle');
+      else if (data.isSat && data.isSkip) cell.classList.add('sat-skip');
+      if (tp.y === YEAR && tp.m === month0 + 1 && tp.d === d) cell.classList.add('today');
+
+      var top = '<div class="cell-top"><span class="daynum">' + d + '</span>' +
+                (data.ld ? '<span class="ld">' + data.ld + ' л.д.</span>' : '') + '</div>';
+
+      var icons = '';
+      if (data.favorable) icons += '<span class="cell-bottle-ic">' + (data.waxing ? '🌱' : '🌘') + '</span>';
+      var iconHtml = '<div class="cell-icons">' + icons + '</div>';
+
+      var cap = '';
+      if (data.favorable) cap = '<div class="cell-cap bottle-cap">Синяя бутылка</div>';
+      else if (data.isSat && data.isSkip) cap = '<div class="cell-cap skip-cap">Не в этот день</div>';
+
+      var dots = '';
+      if (data.favorable) dots += '<span class="dot bottle"></span>';
+      else if (data.isSat && data.isSkip) dots += '<span class="dot skip"></span>';
+      var dotHtml = dots ? '<div class="dotrow">' + dots + '</div>' : '';
+
+      cell.innerHTML = top + iconHtml + dotHtml + cap;
+      (function(dd, dat, wd){
+        cell.addEventListener('click', function(){ select(dd, dat, wd, month0); });
+      })(d, data, weekday);
+      gridEl.appendChild(cell);
+    }
+
+    if (selected && selected.month0 === month0){
+      highlightSelected(selected.d, offset);
+    } else {
+      selected = null;
+      detailEl.innerHTML = '<div class="detail-empty">Нажми на любой день, чтобы узнать, подходит ли он для практики «Синяя бутылка».</div>';
+    }
+  }
+
+  function highlightSelected(d, offset){
+    var cells = gridEl.querySelectorAll('.cal-cell');
+    cells.forEach(function(c){ c.classList.remove('sel'); });
+    var idx = offset + d - 1;
+    if (cells[idx]) cells[idx].classList.add('sel');
+  }
+
+  function select(d, data, weekday, month0){
+    selected = { d: d, month0: month0 };
+    var first = new Date(YEAR, month0, 1);
+    var offset = (first.getDay() + 6) % 7;
+    highlightSelected(d, offset);
+
+    var rows = [];
+    if (data.favorable){
+      rows.push(row('🫙', 'Благоприятный день для практики',
+        'Суббота и подходящие лунные сутки - можно делать «Синюю бутылку». Встаньте до восхода (до 7 утра), в западном секторе, включите мантру «Ом намах Шивая» и чётко проговорите намерение в свою пользу.'));
+      if (data.waxing){
+        rows.push(row('🌱', 'Растущая луна · ' + data.ld + ' лунный день',
+          'Луна растёт - время набирать и укреплять. Формулируйте состояние опоры и стабильности: «я чувствую уверенность и опору».'));
+      } else {
+        rows.push(row('🌘', 'Убывающая луна · ' + data.ld + ' лунный день',
+          'Луна убывает - время освобождаться: от долгов, кредитов, кармических узлов и лишнего.'));
+      }
+    } else if (data.isSat && data.isSkip){
+      rows.push(rowDot('skip', 'Суббота, но не в этот день · ' + data.ld + ' лунный день',
+        'Лунные сутки 4, 9, 14 дают наименьший результат. Практику лучше перенести на ближайшую благоприятную субботу - она отмечена в календаре.'));
+    } else {
+      var wdName = WD[weekday];
+      rows.push('<div class="d-none">Это ' + wdName + '. Практика «Синяя бутылка» делается только в субботу утром до восхода. Ближайшая благоприятная суббота отмечена синим.</div>');
+    }
+
+    var dateStr = d + ' ' + GEN[state.month0] + ' ' + YEAR;
+    detailEl.innerHTML =
+      '<div class="detail-date">' + dateStr + '</div>' +
+      '<div class="detail-ld">' + WD[weekday] + (data.ld ? ' · ' + data.ld + ' лунный день' : '') + '</div>' +
+      rows.join('');
+    detailEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  function row(ic, title, text){
+    return '<div class="detail-row"><div class="d-ic">' + ic + '</div>' +
+           '<div class="d-body"><h4>' + title + '</h4><p>' + text + '</p></div></div>';
+  }
+  function rowDot(cls, title, text){
+    return '<div class="detail-row"><div class="d-ic"><span class="dot ' + cls + '"></span></div>' +
+           '<div class="d-body"><h4>' + title + '</h4><p>' + text + '</p></div></div>';
+  }
+
+  prevBtn.addEventListener('click', function(){ if (state.month0 > 0){ state.month0--; render(); } });
+  nextBtn.addEventListener('click', function(){ if (state.month0 < 11){ state.month0++; render(); } });
+
+  renderCountdown();
+  render();
+})();
+</script>
+
+<script>
+(function(){
+  "use strict";
+  var sec = document.getElementById('a2hsSec');
+  if (!sec) return;
+  var standalone = window.matchMedia && window.matchMedia('(display-mode: standalone)').matches;
+  if (window.navigator.standalone === true) standalone = true;
+  var dismissed = false;
+  try { dismissed = localStorage.getItem('a2hs-bottle-dismissed') === '1'; } catch(e){}
+  if (standalone || dismissed) return; // keep hidden
+  sec.hidden = false;
+  var close = document.getElementById('a2hsClose');
+  if (close) close.addEventListener('click', function(){
+    sec.hidden = true;
+    try { localStorage.setItem('a2hs-bottle-dismissed', '1'); } catch(e){}
+  });
+})();
+</script>
+
+<!-- ── FEEDBACK WIDGET ── -->
+<script src="feedback-widget.js" data-tag="практика-синяя-бутылка" data-eyebrow="обратная связь" data-title="расскажите, <em>как откликнулось</em>" data-lede="Делали синюю бутылку? Мне важно знать, что изменилось в жизни и в доме, и что можно улучшить на странице."></script>
+
+<!-- ── FEEDBACK CANVAS WAVES ── -->
+<script>
+(function(){
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var section = document.getElementById('feedback');
+  var canvas = document.getElementById('feedback-canvas');
+  if (!section || !canvas) return;
+  var ctx = canvas.getContext('2d');
+  var w = 0, h = 0, time = 0;
+  function size() {
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    w = section.offsetWidth; h = section.offsetHeight;
+    canvas.width = w * dpr; canvas.height = h * dpr;
+    canvas.style.width = w + 'px'; canvas.style.height = h + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  size();
+  if (window.ResizeObserver) new ResizeObserver(size).observe(section);
+  window.addEventListener('resize', size);
+
+  var layers = [
+    { y:0.18, freq:0.004, amp:18, speed:0.008, fill:'rgba(196,168,130,0.03)', stroke:'rgba(196,168,130,0.10)', lw:0.6 },
+    { y:0.28, freq:0.005, amp:22, speed:0.010, fill:'rgba(196,168,130,0.04)', stroke:'rgba(196,168,130,0.14)', lw:0.7 },
+    { y:0.38, freq:0.006, amp:24, speed:0.013, fill:'rgba(196,168,130,0.05)', stroke:'rgba(196,168,130,0.20)', lw:0.9 },
+    { y:0.48, freq:0.005, amp:28, speed:0.011, fill:'rgba(196,168,130,0.07)', stroke:'rgba(196,168,130,0.30)', lw:1.3 },
+    { y:0.55, freq:0.007, amp:32, speed:0.015, fill:'rgba(196,168,130,0.09)', stroke:'rgba(212,190,156,0.45)', lw:1.7 },
+    { y:0.62, freq:0.006, amp:28, speed:0.012, fill:'rgba(196,168,130,0.06)', stroke:'rgba(196,168,130,0.26)', lw:1.2 },
+    { y:0.72, freq:0.005, amp:22, speed:0.009, fill:'rgba(196,168,130,0.04)', stroke:'rgba(196,168,130,0.14)', lw:0.8 },
+    { y:0.82, freq:0.004, amp:18, speed:0.007, fill:'rgba(196,168,130,0.03)', stroke:'rgba(196,168,130,0.10)', lw:0.6 },
+    { y:0.90, freq:0.003, amp:14, speed:0.006, fill:'rgba(196,168,130,0.02)', stroke:'rgba(196,168,130,0.07)', lw:0.5 }
+  ];
+  function drawLayer(layer, idx) {
+    var baseY = h * layer.y;
+    var nextY = idx < layers.length - 1 ? h * layers[idx+1].y + 30 : h;
+    ctx.beginPath();
+    for (var x = 0; x <= w; x += 2) {
+      var y = baseY + Math.sin(x * layer.freq + time * layer.speed) * layer.amp
+        + Math.sin(x * layer.freq * 2.3 + time * layer.speed * 0.7) * layer.amp * 0.3;
+      x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    }
+    ctx.lineTo(w, nextY); ctx.lineTo(0, nextY); ctx.closePath();
+    ctx.fillStyle = layer.fill; ctx.fill();
+    ctx.beginPath();
+    for (var x2 = 0; x2 <= w; x2 += 2) {
+      var y2 = baseY + Math.sin(x2 * layer.freq + time * layer.speed) * layer.amp
+        + Math.sin(x2 * layer.freq * 2.3 + time * layer.speed * 0.7) * layer.amp * 0.3;
+      x2 === 0 ? ctx.moveTo(x2, y2) : ctx.lineTo(x2, y2);
+    }
+    ctx.strokeStyle = layer.stroke; ctx.lineWidth = layer.lw; ctx.stroke();
+  }
+  function Particle() { this.reset(true); }
+  Particle.prototype.reset = function(initial) {
+    this.x = Math.random() * w; this.y = h * (0.2 + Math.random() * 0.6);
+    this.vy = -(0.08 + Math.random() * 0.22); this.vx = (Math.random() - 0.5) * 0.25;
+    this.size = 0.7 + Math.random() * 1.3;
+    this.life = initial ? Math.floor(Math.random() * 400) : 0;
+    this.maxLife = 200 + Math.random() * 300; this.gold = Math.random() > 0.4;
+  };
+  Particle.prototype.update = function() {
+    this.x += this.vx; this.y += this.vy; this.life++;
+    if (this.life > this.maxLife) this.reset(false);
+  };
+  Particle.prototype.draw = function() {
+    var p = this.life / this.maxLife;
+    var alpha = p < 0.15 ? p / 0.15 : p > 0.7 ? (1 - p) / 0.3 : 1;
+    ctx.fillStyle = this.gold ? 'rgba(196,168,130,' + (alpha * 0.40) + ')' : 'rgba(247,243,237,' + (alpha * 0.22) + ')';
+    ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
+  };
+  var particles = [];
+  for (var i = 0; i < 18; i++) particles.push(new Particle());
+  function loop() {
+    ctx.clearRect(0, 0, w, h);
+    for (var i = 0; i < layers.length; i++) drawLayer(layers[i], i);
+    for (var j = 0; j < particles.length; j++) { particles[j].update(); particles[j].draw(); }
+    time++; requestAnimationFrame(loop);
+  }
+  loop();
+})();
+</script>
+
+</body>
+</html>

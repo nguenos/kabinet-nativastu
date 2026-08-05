@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Протокол Венеры · nativastu</title>
+  <meta name="description" content="Перестаньте заслуживать любовь. Настройте пространство, в котором вы становитесь той, кого выбирают первой. 21-дневный протокол Васту: сначала дом, потом состояние, потом отношения.">
+  <link rel="canonical" href="https://nativastu.com/venus">
+  <meta property="og:title" content="Протокол Венеры">
+  <meta property="og:description" content="Сначала дом. Потом состояние. Потом отношения.">
+  <meta property="og:type" content="product">
+  <meta property="og:url" content="https://nativastu.com/venus">
+  <meta name="theme-color" content="#452533">
+  <style>
+    @font-face { font-family: 'BebasNeueCyrillic'; src: url('bebasneuecyrillic.woff2') format('woff2'), url('bebasneuecyrillic.ttf') format('truetype'); font-display: swap; }
+    @font-face { font-family: 'Salina'; src: url('Salina-BookItalic.woff2') format('woff2'), url('Salina-BookItalic.woff') format('woff'); font-display: swap; }
+    @font-face { font-family: 'Fira Sans'; font-style: normal; font-weight: 300; font-display: swap; src: url('firasans-300-cyrillic.woff2') format('woff2'); unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+    @font-face { font-family: 'Fira Sans'; font-style: normal; font-weight: 400; font-display: swap; src: url('firasans-400-cyrillic.woff2') format('woff2'); unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+    @font-face { font-family: 'Fira Sans'; font-style: normal; font-weight: 500; font-display: swap; src: url('firasans-500-cyrillic.woff2') format('woff2'); unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+
+    :root{
+      --blush:#F7EDEA; --blush-2:#F1DFDC; --blush-3:#E9CFCD;
+      --wine:#5C3242; --wine-solid:#452533;
+      --rose-head:#DBA9B6; --rose:#C77E92; --rose-deep:#B15F79; --rose-light:#EAC7D0;
+      --text:#3A2F33; --text-soft:#574850; --muted:#9C848C;
+      --sans:'Fira Sans',sans-serif; --serif:'Salina',Georgia,serif;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{background:var(--blush);color:var(--text);font-family:var(--sans);font-weight:300;font-size:15.5px;line-height:1.74;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+    .wrap{max-width:540px;margin:0 auto;padding:0 24px}
+    a{color:inherit;text-decoration:none}
+
+    header{background:var(--wine-solid);height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 28px}
+    .logo{font-size:12.5px;color:var(--blush);letter-spacing:2.5px;text-transform:uppercase}
+    .logo b{color:var(--rose-light);font-weight:300;margin-left:7px}
+    .header-prog{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--rose-light)}
+
+    .cta{display:inline-flex;align-items:center;justify-content:center;gap:11px;background:var(--rose-deep);color:#fff;font-family:var(--sans);font-weight:500;font-size:14px;letter-spacing:.5px;padding:18px 44px;border-radius:60px;transition:transform .25s,background .25s;cursor:pointer;box-shadow:0 10px 30px rgba(69,37,51,.28)}
+    .cta:hover{background:var(--rose);transform:translateY(-2px)}
+
+    /* HERO */
+    .hero{position:relative;min-height:94vh;min-height:calc(98svh - 54px);display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:84px 26px;overflow:hidden;background:#C98EA0}
+    .hero-vid{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;object-position:50% 0%;transform:scale(1.12);transform-origin:50% 0%;z-index:0}
+    .hero::after{content:'';position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(45,24,33,.62) 0%,rgba(45,24,33,.44) 42%,rgba(45,24,33,.86) 100%)}
+    .hero .kicker,.hero h1,.hero .hook,.hero .cta,.hero .micro{position:relative;z-index:2}
+    .kicker{font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:#fff;opacity:.85;margin-bottom:18px}
+    .hero h1{font-family:'BebasNeueCyrillic',sans-serif;font-size:clamp(46px,9vw,86px);color:#fff;line-height:.9;margin-bottom:20px;text-shadow:0 2px 30px rgba(45,24,33,.5)}
+    .hero h1 em{font-style:normal;color:var(--rose-light)}
+    .hero .hook{font-family:var(--sans);font-weight:300;font-size:clamp(16px,2.9vw,21px);color:rgba(255,255,255,.94);line-height:1.45;margin-bottom:32px;max-width:460px;text-shadow:0 2px 18px rgba(45,24,33,.5);text-wrap:balance}
+    .hero .micro{margin-top:16px;font-size:12px;letter-spacing:.06em;color:rgba(255,255,255,.62)}
+    .hero-badge{position:relative;z-index:2;display:inline-flex;align-items:center;gap:9px;margin-top:20px;padding:9px 20px;border-radius:40px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.26);font-size:12px;letter-spacing:.04em;color:rgba(255,255,255,.94)}
+    .hero-badge .hb-dot{color:var(--rose-light);font-size:11px;line-height:1}
+
+    /* ticker */
+    .ticker{background:var(--wine-solid);overflow:hidden;height:36px;display:flex;align-items:center;border-bottom:1px solid rgba(234,199,208,.15)}
+    .tr{display:flex;white-space:nowrap;animation:tick 40s linear infinite}
+    @keyframes tick{to{transform:translateX(-50%)}}
+    @media(prefers-reduced-motion:reduce){.tr{animation:none}}
+    .ti{display:inline-flex;align-items:center;gap:14px;padding:0 24px;font-size:11px;font-weight:400;letter-spacing:0.12em;text-transform:lowercase;color:rgba(234,199,208,.7);flex-shrink:0}
+    .ti .d{color:var(--rose);font-size:10px}
+
+    /* MANIFEST (под героем) */
+    .intro{position:relative;overflow:hidden;padding:120px 0;text-align:center;background:var(--wine-solid)}
+    .intro-vid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 92%;z-index:0}
+    .intro::after{content:'';position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(45,24,33,.72),rgba(45,24,33,.56) 45%,rgba(45,24,33,.84))}
+    .intro .wrap{position:relative;z-index:2}
+    .intro .eyebrow{color:var(--rose-head);margin-bottom:32px}
+    .manifest{font-family:'BebasNeueCyrillic',sans-serif;color:#fff;line-height:1.0;letter-spacing:.004em}
+    .manifest span{display:block;font-size:clamp(34px,7.6vw,64px)}
+    .manifest .hl{color:var(--rose-light)}
+    .mline{font-family:var(--serif);font-style:italic;font-size:clamp(19px,3.2vw,26px);color:var(--rose-light);line-height:1.4;max-width:460px;margin:28px auto 0}
+    .mnote{font-size:14px;color:rgba(255,255,255,.7);line-height:1.7;max-width:420px;margin:24px auto 0;letter-spacing:.01em}
+
+    /* sections */
+    section.sec{padding:98px 0}
+    .sec.alt{background:var(--blush-2)}
+    .eyebrow{font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--rose-deep);text-align:center;margin-bottom:26px}
+    .sec h2{font-family:'BebasNeueCyrillic',sans-serif;font-size:clamp(29px,5.4vw,46px);color:var(--wine);text-align:center;line-height:1.05;margin-bottom:32px;text-wrap:balance}
+    .sec h2 em{font-family:var(--serif);font-style:italic;color:var(--rose-deep);font-size:.62em}
+    .after-check{max-width:520px;margin:38px auto 0;text-align:center;font-size:15.5px;color:var(--text-soft);line-height:1.6}
+    .after-check b{color:var(--wine);font-weight:500}
+    /* карточки болей (референс с флажком-номером) */
+    .pcards{max-width:560px;margin:8px auto 0;display:grid;gap:16px}
+    .pcard{position:relative;background:#fff;border:1px solid rgba(92,50,66,.07);border-radius:16px;padding:26px 26px 24px;box-shadow:0 6px 20px rgba(69,37,51,.05)}
+    .pcard .num{position:absolute;top:-4px;right:22px;width:36px;height:46px;padding-top:8px;text-align:center;font-family:var(--sans);font-weight:600;font-size:12px;color:var(--wine);z-index:1}
+    .pcard .num::before{content:'';position:absolute;inset:0;z-index:-1;background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 46'><path d='M4 1.5 Q1.5 1.5 1.5 4 V44.5 L18 35.5 L34.5 44.5 V4 Q34.5 1.5 32 1.5 Z' fill='%23FBF3F0' stroke='%23DBA9B6' stroke-width='1.4' stroke-linejoin='round'/></svg>") no-repeat center/contain}
+    .pcard h3{font-family:var(--sans);font-weight:600;font-size:18px;color:var(--wine);line-height:1.25;margin-bottom:11px;padding-right:40px}
+    .pcard p{font-family:var(--sans);font-weight:300;font-size:15.5px;color:var(--text-soft);line-height:1.6}
+
+    /* narrate */
+    .narrate{max-width:540px;margin:0 auto;text-align:center}
+    .narrate p{font-size:17px;color:var(--text-soft);line-height:1.78;margin-bottom:24px}
+    .narrate p:last-child{margin-bottom:0}
+    .narrate p b{color:var(--wine);font-weight:500}
+    .narrate .soft{color:var(--muted);font-size:15.5px}
+
+    /* замкнутый круг (видео) */
+    .cyc{position:relative;max-width:440px;margin:22px auto 54px}
+    .cyc-img{display:block;width:100%;height:auto}
+    .sec.alt .chain .node{background:var(--blush)}
+    .sec.alt .step{background:var(--blush)}
+    .mini{text-align:center;font-size:13.5px;color:var(--muted);margin-top:40px;letter-spacing:.02em}
+    /* таблица «что вы получаете» (2 колонки) */
+    .tt{max-width:660px;margin:38px auto 0;padding:0 24px}
+    .tt-row{display:grid;grid-template-columns:33% 1fr;gap:26px;padding:22px 2px;border-top:1px solid rgba(92,50,66,.13);align-items:start}
+    .tt-row:last-child{border-bottom:1px solid rgba(92,50,66,.13)}
+    .tt-head{padding:0 2px 11px;border-top:none}
+    .tt-head .tt-c,.tt-head .tt-r{font-family:var(--sans);font-weight:400;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+    .tt-c{font-family:var(--sans);font-weight:600;font-size:16px;color:var(--wine);line-height:1.3}
+    .tt-c .tt-l{display:block;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--rose-deep);font-weight:400;margin-bottom:4px}
+    .tt-r{font-family:var(--sans);font-weight:300;font-size:15px;color:var(--text-soft);line-height:1.62}
+    .tt-r b{color:var(--wine);font-weight:500}
+    @media(max-width:560px){
+      .tt{padding:0 14px}
+      .tt-row{grid-template-columns:30% 1fr;gap:12px;padding:16px 2px}
+      .tt-c{font-size:13.5px}
+      .tt-c .tt-l{font-size:9.5px;margin-bottom:3px}
+      .tt-r{font-size:13px;line-height:1.5}
+    }
+    .peek-deck{position:relative;width:min(224px,54vw);aspect-ratio:990/2048;margin:58px auto 0}
+    .peek-deck img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 22px 40px rgba(69,37,51,.26));transition:transform 1s cubic-bezier(.5,.05,.2,1),opacity .9s ease;will-change:transform,opacity}
+    .peek-deck img.pf{transform:translateX(0) scale(1);opacity:1;z-index:4}
+    .peek-deck img.pl{transform:translateX(-52%) scale(.82);opacity:1;z-index:2}
+    .peek-deck img.pr{transform:translateX(52%) scale(.82);opacity:1;z-index:2}
+    .peek-deck img.pb{transform:translateX(0) scale(.62);opacity:0;z-index:1}
+    .sec.alt .story{background:var(--blush)}
+
+    /* FAQ аккордеон */
+    .faq{max-width:560px;margin:40px auto 0;display:grid;gap:12px}
+    .faq details{background:var(--blush-2);border:1px solid rgba(92,50,66,.08);border-radius:16px;overflow:hidden;transition:border-color .2s}
+    .faq details[open]{border-color:rgba(177,95,121,.35)}
+    .faq summary{list-style:none;cursor:pointer;padding:20px 60px 20px 24px;position:relative;font-size:15.5px;color:var(--wine);font-weight:400;line-height:1.5}
+    .faq summary::-webkit-details-marker{display:none}
+    .faq summary::after{content:'+';position:absolute;right:20px;top:16px;width:30px;height:30px;border-radius:50%;background:#fff;color:var(--rose-deep);font-size:20px;font-weight:300;display:flex;align-items:center;justify-content:center;transition:transform .25s}
+    .faq details[open] summary::after{transform:rotate(45deg)}
+    .faq .fa{padding:0 24px 22px;font-size:14.5px;color:var(--text-soft);line-height:1.66}
+    .dark .eyebrow{color:var(--rose-head)}
+    /* блок цены (карточка, референс) */
+    .priceb{max-width:520px;margin:34px auto 0}
+    .pbox{background:#fff;border:1px solid rgba(92,50,66,.09);border-radius:22px;padding:20px 30px 30px;box-shadow:0 16px 44px rgba(69,37,51,.09)}
+    .pfeats{list-style:none;margin:0}
+    .pfeats li{text-align:center;font-size:15.5px;color:var(--text-soft);padding:17px 4px;border-top:1px solid rgba(92,50,66,.10)}
+    .pfeats li:first-child{border-top:none}
+    .pfeats li.last{color:var(--wine);font-weight:500}
+    .pprice{font-family:'BebasNeueCyrillic',sans-serif;font-size:clamp(54px,13vw,78px);color:var(--wine);line-height:1;margin:26px 0 4px;text-align:center}
+    .pprice .cur{font-family:var(--sans);font-weight:500;font-size:.42em;vertical-align:.12em;letter-spacing:0}
+    .psub{text-align:center;font-size:14px;color:var(--muted);margin-bottom:10px}
+    .psub b{color:var(--rose-deep);font-weight:500}
+    .pold{font-size:.46em;color:var(--muted);text-decoration:line-through;font-weight:400;margin-right:12px;letter-spacing:0}
+    .pnote{text-align:center;font-size:12.5px;color:var(--rose-deep);line-height:1.5;max-width:330px;margin:0 auto 22px}
+    .au-philo{max-width:620px;margin:30px auto 0;background:linear-gradient(150deg,var(--wine-solid),#6f3a4d);border-radius:22px;padding:38px 32px;text-align:center;box-shadow:0 18px 46px rgba(69,37,51,.22)}
+    .au-philo .au-pl{font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--rose-head);margin-bottom:16px}
+    .au-philo .au-tr{font-family:'BebasNeueCyrillic',sans-serif;font-size:clamp(21px,4.2vw,32px);color:#fff;letter-spacing:.02em;line-height:1.18;margin-bottom:16px}
+    .au-philo .au-tr i{color:var(--rose-light);font-style:normal;font-size:.8em;margin:0 .32em;vertical-align:.04em}
+    .au-philo .au-ln{font-family:var(--serif);font-style:italic;font-size:clamp(15px,2.4vw,18px);color:var(--rose-light);line-height:1.55;max-width:500px;margin:0 auto}
+    /* финальный CTA */
+    .closer{text-align:center;max-width:520px;margin:0 auto}
+    .closer p{font-size:16px;color:var(--text-soft);line-height:1.7;margin:0 auto 30px;max-width:460px}
+    .closer .reassure2{font-size:12.5px;color:var(--muted);margin-top:18px;letter-spacing:.02em}
+    @media(max-width:600px){.au-philo{padding:32px 24px}}
+    /* автор — редакторская вёрстка, фото слева, без обводки */
+    .au2{max-width:620px;margin:0 auto}
+    .au2-top{font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--rose-deep);margin-bottom:22px;text-align:center}
+    .au2-head{display:flex;align-items:center;gap:24px}
+    .au2-photo{flex:0 0 auto;width:clamp(104px,24vw,140px);aspect-ratio:1;position:relative}
+    .au2-photo::before{content:'';position:absolute;inset:-14px;border-radius:50%;background:radial-gradient(circle at 50% 42%,rgba(199,126,146,.42),transparent 70%);filter:blur(6px);z-index:0}
+    .au2-photo img{position:relative;z-index:1;width:100%;height:100%;object-fit:cover;border-radius:50%;display:block}
+    .au2-name{font-family:'BebasNeueCyrillic',sans-serif;font-size:clamp(30px,5.4vw,42px);color:var(--wine);letter-spacing:.02em;line-height:1}
+    .au2-handle{font-family:var(--sans);font-weight:400;font-size:13.5px;color:var(--rose-deep);letter-spacing:.05em;margin-top:8px}
+    .au2-role{font-size:15.5px;color:var(--text-soft);line-height:1.72;margin-top:12px}
+    .au2-role a{color:var(--rose-deep);font-weight:500;text-decoration:underline;text-decoration-color:rgba(177,95,121,.4);text-underline-offset:3px;transition:text-decoration-color .2s}
+    .au2-role a:hover{text-decoration-color:var(--rose-deep)}
+    .au2-bio{margin-top:34px}
+    .au2-bio p{font-size:15.5px;color:var(--text-soft);line-height:1.72;margin-bottom:14px}
+    .au2-bio p:last-child{margin-bottom:0}
+    .au2-bio p b{color:var(--wine);font-weight:500}
+    .priceb .cta{width:100%}
+    .paynote{max-width:520px;margin:16px auto 0;background:#fff;border:1px solid rgba(92,50,66,.09);border-radius:18px;padding:20px 24px 22px}
+    .paynote .plabel{display:inline-block;background:var(--rose-head);color:#fff;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;padding:5px 13px;border-radius:30px;margin-bottom:12px}
+    .paynote p{font-size:14.5px;color:var(--text-soft);line-height:1.6}
+    .paynote p b{color:var(--wine);font-weight:500}
+    .pricedark{position:relative;overflow:hidden;background:linear-gradient(150deg,var(--wine-solid) 0%,#6f3a4d 100%)}
+    .pricedark .pwaves{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none;z-index:0}
+    .pricedark > .wrap{position:relative;z-index:2}
+    .pricedark .eyebrow{color:var(--rose-head)}
+    .pricedark h2{color:#fff}
+    .pricedark h2 em{color:var(--rose-light)}
+    .pricedark .closer p{color:rgba(247,237,234,.82)}
+    .pricedark .closer .reassure2{color:rgba(247,237,234,.5)}
+
+    footer{background:var(--wine-solid);color:rgba(247,237,234,.45);font-size:11px;font-weight:300;padding:26px 28px;text-align:center;line-height:1.9;border-top:1px solid rgba(234,199,208,.14)}
+    footer a{color:var(--rose-light)}
+    footer .dis{color:rgba(247,237,234,.3);font-size:10px;margin-top:4px}
+
+    @media(max-width:640px){
+      .wrap{padding:0 18px}
+      section.sec{padding:68px 0}
+      .hero{padding:56px 18px;min-height:calc(96svh - 54px)}
+      .dark .cta{width:100%}
+    }
+    @media(max-width:400px){
+      header{padding:0 18px}
+      .logo{font-size:11px;letter-spacing:1.2px}
+      .logo b{margin-left:5px}
+      .header-prog{font-size:9px;letter-spacing:1.2px}
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Васту Карта<b>@nativastu</b></div>
+  <div class="header-prog">протокол венеры</div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <video class="hero-vid" muted autoplay loop playsinline webkit-playsinline disableRemotePlayback x5-playsinline preload="auto" aria-hidden="true">
+    <source src="hero-venus.mp4" type="video/mp4">
+  </video>
+  <div class="kicker">васту · венера · 21 день</div>
+  <h1>Протокол <em>Венеры</em></h1>
+  <div class="hook">Перестаньте заслуживать любовь.<br>Настройте пространство, в котором вы становитесь той, кого выбирают первой.</div>
+  <a href="https://payform.ru/doccwDX/" target="_blank" rel="noopener" class="cta">Начать протокол</a>
+  <div class="micro">доступ сразу · без подписки · навсегда</div>
+  <div class="hero-badge"><span class="hb-dot">✦</span>интерактивное приложение в телефоне</div>
+</section>
+
+<!-- ТИКЕР -->
+<div class="ticker">
+  <div class="tr">
+    <span class="ti"><span class="d">✦</span>сначала дом</span>
+    <span class="ti"><span class="d">✦</span>потом состояние</span>
+    <span class="ti"><span class="d">✦</span>потом отношения</span>
+    <span class="ti"><span class="d">✦</span>21 день, чтобы вернуться к себе</span>
+    <span class="ti"><span class="d">✦</span>сначала дом</span>
+    <span class="ti"><span class="d">✦</span>потом состояние</span>
+    <span class="ti"><span class="d">✦</span>потом отношения</span>
+    <span class="ti"><span class="d">✦</span>21 день, чтобы вернуться к себе</span>
+    <span class="ti" aria-hidden="true"><span class="d">✦</span>сначала дом</span>
+    <span class="ti" aria-hidden="true"><span class="d">✦</span>потом состояние</span>
+    <span class="ti" aria-hidden="true"><span class="d">✦</span>потом отношения</span>
+    <span class="ti" aria-hidden="true"><span class="d">✦</span>21 день, чтобы вернуться к себе</span>
+  </div>
+</div>
+
+<!-- УЗНАВАНИЕ -->
+<section class="sec">
+  <div class="wrap">
+    <div class="eyebrow">возможно, вы узнаете себя</div>
+    <div class="pcards">
+      <div class="pcard"><span class="num">01</span>
+        <h3>Выгорание от роли «сильной женщины»</h3>
+        <p>Вы держите на себе всё: дом, работу, решения. Но вечером чувствуете только опустошение, а не удовлетворение.</p>
+      </div>
+      <div class="pcard"><span class="num">02</span>
+        <h3>Сложно просто получать</h3>
+        <p>Комплименты, подарки, помощь: вместо радости внутри включается лихорадочное «я должница» или «мне неловко».</p>
+      </div>
+      <div class="pcard"><span class="num">03</span>
+        <h3>Отношения в одни ворота</h3>
+        <p>Вы откладываете свои желания, подстраиваетесь, даёте максимум, а в ответ вас всё чаще принимают как удобную и само собой разумеющуюся.</p>
+      </div>
+      <div class="pcard"><span class="num">04</span>
+        <h3>Дом не восстанавливает</h3>
+        <p>Вы приходите домой, чтобы отдохнуть, но пространство будто давит и забирает остатки сил.</p>
+      </div>
+    </div>
+    <div class="after-check">Если откликнулось хотя бы одно, <b>скорее всего, дело не в мужчинах. И даже не в самооценке.</b></div>
+  </div>
+</section>
+
+<!-- МАНИФЕСТ -->
+<section class="intro">
+  <video class="intro-vid" muted autoplay loop playsinline webkit-playsinline disableRemotePlayback x5-playsinline preload="auto" aria-hidden="true">
+    <source src="intro-bg.mp4" type="video/mp4">
+  </video>
+  <div class="wrap">
+    <div class="eyebrow">с чего всё начинается</div>
+    <div class="manifest">
+      <span>Сначала дом.</span>
+      <span>Потом состояние.</span>
+      <span class="hl">Потом отношения.</span>
+    </div>
+    <p class="mline">Состояние, в котором к вам тянутся <span style="font-style:normal">без борьбы</span>.</p>
+    <p class="mnote">21 день, который начинается не с аффирмаций, а с пространства, где вы живёте каждый день.</p>
+  </div>
+</section>
+
+<!-- МАРШРУТ БЕЗ РЕЗУЛЬТАТА -->
+<section class="sec">
+  <div class="wrap">
+    <div class="eyebrow">это объяснимо</div>
+    <h2>почему аффирмации и терапия<br><em>«выдыхаются» через неделю?</em></h2>
+    <div class="cyc">
+      <img class="cyc-img" src="cycle-image.png" alt="Замкнутый круг: книги, терапия, практики, обещания себе, тот же дом" loading="lazy">
+    </div>
+    <div class="narrate">
+      <p>Вы можете прочитать десятки книг по женственности, но вечером возвращаетесь в квартиру, <b>которая запрограммирована на ваше истощение.</b></p>
+      <p>Наша психика бессознательно подстраивается под геометрию и энергию дома 24 часа в сутки. Если сектор Венеры «заблокирован» (завален вещами, ослаблен или активирует мужские энергии), любые практики женственности <b>требуют вдвое больше усилий и воли.</b></p>
+      <p>Мы не меняем вашу личность через насилие над собой. Мы меняем среду, <b>и ваше состояние переключается автоматически.</b></p>
+    </div>
+  </div>
+</section>
+
+<!-- АВТОР -->
+<section class="sec alt">
+  <div class="wrap">
+    <div class="au2">
+      <div class="au2-top">об авторе</div>
+      <div class="au2-head">
+        <div class="au2-photo"><img src="author-round.png" alt="Нати Гуэнос" loading="lazy"></div>
+        <div>
+          <div class="au2-name">Нати Гуэнос</div>
+          <div class="au2-handle">@nativastu</div>
+          <div class="au2-role">эксперт по Васту и автор цифрового<br><a href="https://nativastu.com/" target="_blank" rel="noopener">Vastu-конструктора</a></div>
+        </div>
+      </div>
+      <div class="au2-bio">
+        <p>Я создала инструмент, который <b>автоматически строит карту Васту с расчётом центра тяжести пространства</b>. Раньше это требовало сложных ручных вычислений.</p>
+        <p>Я соединяю <b>древние знания Васту, современный дизайн и технологии</b>, превращая сложную систему в понятные инструменты для жизни.</p>
+      </div>
+    </div>
+    <div class="au-philo">
+      <div class="au-pl">моя философия</div>
+      <div class="au-tr">Создавать&nbsp;новое <i>·</i> Жить&nbsp;свободно <i>·</i> Влиять&nbsp;глубоко</div>
+      <p class="au-ln">Создавать то, чего ещё нет, и прожить жизнь так, чтобы не хотелось переписывать ни одной главы.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ЧТО ВХОДИТ (таблица + карусель) -->
+<section class="sec" style="overflow:hidden">
+  <div class="wrap">
+    <div class="eyebrow">что входит в протокол</div>
+    <h2>это система <em>из трёх слоёв</em></h2>
+  </div>
+  <div class="tt">
+    <div class="tt-row tt-head">
+      <div class="tt-c">компонент</div>
+      <div class="tt-r">что вы получаете</div>
+    </div>
+    <div class="tt-row">
+      <div class="tt-c">Формат</div>
+      <div class="tt-r"><b>Интерактивное приложение в телефоне:</b> сохраняется на рабочий стол за один клик, внутри встроенная Васту-карта, калькулятор и трекер.</div>
+    </div>
+    <div class="tt-row">
+      <div class="tt-c"><span class="tt-l">слой 1</span>Пространство</div>
+      <div class="tt-r"><b>Пошаговый Васту-план активации Венеры:</b> готовые решения под любую планировку, даже если на юго-востоке туалет. Список цветов, света и декора без ремонта и крупных трат.</div>
+    </div>
+    <div class="tt-row">
+      <div class="tt-c"><span class="tt-l">слой 2</span>Состояние</div>
+      <div class="tt-r"><b>«Код магнетизма», 21 день:</b> короткие ритуалы по 10-15 минут вместо часовых медитаций. Действия, которые снимают фоновый контроль и тревогу и возвращают вас в тело.</div>
+    </div>
+    <div class="tt-row">
+      <div class="tt-c"><span class="tt-l">слой 3</span>Астро-профиль</div>
+      <div class="tt-r"><b>Персональный профиль привлекательности:</b> расчёт положения вашей Венеры, архетип красоты, индивидуальный астро-стиль, подходящие оттенки и ароматы.</div>
+    </div>
+  </div>
+  <div class="peek-deck">
+    <img class="pf" src="mockup-venus.png" alt="Калькулятор знака Венеры по натальной карте" loading="lazy">
+    <img class="pr" src="mockup-map.png" alt="Точная васту-карта квартиры с секторами" loading="lazy">
+    <img class="pb" src="mockup-tracker.png" alt="Трекер протокола на 21 день" loading="lazy">
+    <img class="pl" src="mockup-rooms.png" alt="Разбор юго-востока по комнатам" loading="lazy">
+  </div>
+  <div class="wrap"><div class="mini">всё открывается сразу после оплаты</div></div>
+</section>
+
+<!-- СТОИМОСТЬ -->
+<section class="sec pricedark">
+  <canvas class="pwaves" id="price-canvas" aria-hidden="true"></canvas>
+  <div class="wrap">
+    <div class="eyebrow" style="color:var(--rose-head)">стоимость</div>
+    <div class="priceb">
+      <div class="pbox">
+        <ul class="pfeats">
+          <li>настройка пространства по Васту</li>
+          <li>21-дневный протокол</li>
+          <li>персонализация по Венере</li>
+          <li class="last">доступ навсегда</li>
+        </ul>
+        <div class="pprice"><span class="pold">9 800 <span class="cur">₽</span></span>5 300 <span class="cur">₽</span></div>
+        <div class="psub"><b>252 ₽ в день</b> в течение 21 дня</div>
+        <div class="pnote">специальная цена запуска текущего потока. дальше стоимость вырастет до 9 800 ₽</div>
+              <a href="https://payform.ru/doccwDX/" target="_blank" rel="noopener" class="cta">Получить протокол Венеры</a>
+      </div>
+    </div>
+    <div class="paynote">
+      <span class="plabel">оплата</span>
+      <p>Оплата разовая, без подписки. Доступ приходит на email сразу после оплаты.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="sec">
+  <div class="wrap">
+    <div class="eyebrow">вопросы</div>
+    <h2>частые <em>вопросы</em></h2>
+    <div class="faq">
+      <details>
+        <summary>Мне подойдёт протокол, если я вообще ничего не знаю о Васту?</summary>
+        <div class="fa">Да. Знать васту заранее не нужно, всё объясняется по шагам простым языком. Вы строите карту квартиры прямо внутри протокола и идёте по инструкции.</div>
+      </details>
+      <details>
+        <summary>Что делать, если на юго-востоке у меня ванная, туалет или другая «неправильная» комната?</summary>
+        <div class="fa">Внутри разобраны все возможные помещения, которые могут оказаться на юго-востоке, и как каждое должно выглядеть в идеале. Для «неправильных» комнат есть отдельные решения, вы точно найдёте свой случай.</div>
+      </details>
+      <details>
+        <summary>Нужно ли делать ремонт или покупать дорогой декор, чтобы активировать Венеру?</summary>
+        <div class="fa">Нет. Без ремонта и дорогого декора, работаем с тем, что есть.</div>
+      </details>
+      <details>
+        <summary>А если я живу не одна и не могу менять пространство так, как хочу?</summary>
+        <div class="fa">Тогда работаем в вашей личной зоне. Женский уголок Венеры можно собрать даже на одной полке, менять всю квартиру не нужно.</div>
+      </details>
+      <details>
+        <summary>Подойдёт ли мне протокол, если я сейчас не в отношениях?</summary>
+        <div class="fa">Да, и особенно. Когда рядом никого нет, проще всего вернуться к себе, без оглядки на чужие ожидания. Протокол не про то, чтобы срочно найти мужчину, а про состояние, из которого к вам тянутся сами и без борьбы. Сначала вы наполняетесь и становитесь той, к кому хочется, а отношения приходят уже как следствие, а не как цель, которую нужно догонять.</div>
+      </details>
+      <details>
+        <summary>А если я замужем и мне важнее деньги, состояние и самоценность, а не поиск мужчины?</summary>
+        <div class="fa">Тоже ваш случай, и даже больше. Венера отвечает не только за любовь, но и за красоту, удовольствие, вкус к жизни, самоценность и деньги, которые приходят через радость, а не через насилие над собой. Мы настраиваем сектор Венеры и ваше состояние в целом, а из наполненного состояния к вам легче приходит и внимание, и деньги, и хорошее. Поиск мужчины тут вообще не обязателен.</div>
+      </details>
+      <details>
+        <summary>Чем этот протокол отличается от обычных практик женственности и любви к себе?</summary>
+        <div class="fa">Обычные практики работают только с мышлением: аффирмации, настрой, «полюби себя». Но каждый день вы возвращаетесь в дом, который держит старое состояние, и эффект быстро уходит. Здесь мы сначала настраиваем пространство, где вы живёте, а потом уже работаем с состоянием. Меняется не только мышление, но и среда, поэтому изменения устойчивее. Согласитесь, по течению плыть гораздо легче, чем против.</div>
+      </details>
+      <details>
+        <summary>Можно ли проходить протокол повторно?</summary>
+        <div class="fa">Да, доступ остаётся навсегда. Вы настроите пространство один раз, а практики станут частью вашей жизни: будете делать их в удовольствие.</div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ФИНАЛЬНЫЙ CTA -->
+<section class="sec pricedark">
+  <canvas class="pwaves" id="closer-canvas" aria-hidden="true"></canvas>
+  <div class="wrap">
+    <div class="eyebrow">пора начать</div>
+    <h2>21 день, чтобы <em>вернуться к себе</em></h2>
+    <div class="closer">
+      <p>Настройте пространство один раз, и состояние начнёт держаться само. Доступ остаётся навсегда, начать можно сегодня.</p>
+      <a href="https://payform.ru/doccwDX/" target="_blank" rel="noopener" class="cta">Получить протокол Венеры</a>
+      <div class="reassure2">единоразово · 5 300 ₽ · доступ приходит на email сразу</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div>
+    <a href="https://t.me/nativastu" target="_blank" rel="noopener">telegram</a> ·
+    <a href="https://nativastu.com">nativastu.com</a> ·
+    <a href="https://www.instagram.com/nativastu" target="_blank" rel="noopener">instagram</a>
+  </div>
+  <div>&copy; 2026 Квачантирадзе Натия Тенгизовна · ИНН 772799672001 · natiguenos@gmail.com</div>
+  <div class="dis">* Instagram принадлежит компании Meta, признанной экстремистской организацией и запрещённой в РФ</div>
+</footer>
+
+<script>
+(function(){
+  var vids=[].slice.call(document.querySelectorAll('.hero-vid,.why-vid,.intro-vid'));
+  if(!vids.length)return;
+  var play=function(){vids.forEach(function(v){var p=v.play();if(p&&p.catch)p.catch(function(){});});};
+  play();
+  document.addEventListener('touchstart',play,{once:true,passive:true});
+  document.addEventListener('click',play,{once:true});
+})();
+
+/* колода экранов: плавная смена по кругу */
+(function(){
+  var deck=document.querySelector('.peek-deck');
+  if(!deck)return;
+  var imgs=[].slice.call(deck.querySelectorAll('img'));
+  if(imgs.length<4)return;
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  var cur=['pf','pr','pb','pl'];            // старт: img0 перед, img1 право, img2 сзади, img3 лево
+  var next={pf:'pl',pl:'pb',pb:'pr',pr:'pf'}; // кольцо: перед -> лево -> сзади -> право -> перед
+  setInterval(function(){
+    for(var i=0;i<cur.length;i++){ cur[i]=next[cur[i]]; }
+    imgs.forEach(function(im,i){ im.classList.remove('pf','pl','pr','pb'); im.classList.add(cur[i]); });
+  }, 2600);
+})();
+</script>
+
+<script>
+/* анимированные волны блока цены (как в блоке обратной связи) */
+(function(){
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  document.querySelectorAll('.pwaves').forEach(function(canvas){
+  var section = canvas.closest('section');
+  if (!section) return;
+  var ctx = canvas.getContext('2d');
+  var w = 0, h = 0, time = 0;
+  function size(){
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    w = section.offsetWidth; h = section.offsetHeight;
+    canvas.width = w * dpr; canvas.height = h * dpr;
+    canvas.style.width = w + 'px'; canvas.style.height = h + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  size();
+  if (window.ResizeObserver) new ResizeObserver(size).observe(section);
+  window.addEventListener('resize', size);
+  var layers = [
+    { y:0.20, freq:0.004, amp:18, speed:0.008, fill:'rgba(234,199,208,0.03)', stroke:'rgba(234,199,208,0.10)', lw:0.6 },
+    { y:0.32, freq:0.005, amp:22, speed:0.010, fill:'rgba(234,199,208,0.04)', stroke:'rgba(234,199,208,0.14)', lw:0.7 },
+    { y:0.44, freq:0.006, amp:26, speed:0.013, fill:'rgba(234,199,208,0.05)', stroke:'rgba(199,126,146,0.34)', lw:1.1 },
+    { y:0.54, freq:0.005, amp:30, speed:0.011, fill:'rgba(234,199,208,0.08)', stroke:'rgba(234,199,208,0.48)', lw:1.6 },
+    { y:0.64, freq:0.007, amp:26, speed:0.015, fill:'rgba(234,199,208,0.05)', stroke:'rgba(199,126,146,0.24)', lw:1.1 },
+    { y:0.76, freq:0.005, amp:20, speed:0.009, fill:'rgba(234,199,208,0.04)', stroke:'rgba(234,199,208,0.13)', lw:0.8 },
+    { y:0.88, freq:0.004, amp:16, speed:0.007, fill:'rgba(234,199,208,0.03)', stroke:'rgba(234,199,208,0.09)', lw:0.6 }
+  ];
+  function drawLayer(layer, idx){
+    var baseY = h * layer.y;
+    var nextY = idx < layers.length - 1 ? h * layers[idx+1].y + 30 : h;
+    ctx.beginPath();
+    for (var x = 0; x <= w; x += 2){
+      var y = baseY + Math.sin(x * layer.freq + time * layer.speed) * layer.amp
+        + Math.sin(x * layer.freq * 2.3 + time * layer.speed * 0.7) * layer.amp * 0.3;
+      x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    }
+    ctx.lineTo(w, nextY); ctx.lineTo(0, nextY); ctx.closePath();
+    ctx.fillStyle = layer.fill; ctx.fill();
+    ctx.beginPath();
+    for (var x2 = 0; x2 <= w; x2 += 2){
+      var y2 = baseY + Math.sin(x2 * layer.freq + time * layer.speed) * layer.amp
+        + Math.sin(x2 * layer.freq * 2.3 + time * layer.speed * 0.7) * layer.amp * 0.3;
+      x2 === 0 ? ctx.moveTo(x2, y2) : ctx.lineTo(x2, y2);
+    }
+    ctx.strokeStyle = layer.stroke; ctx.lineWidth = layer.lw; ctx.stroke();
+  }
+  function Particle(){ this.reset(true); }
+  Particle.prototype.reset = function(initial){
+    this.x = Math.random() * w; this.y = h * (0.2 + Math.random() * 0.6);
+    this.vy = -(0.08 + Math.random() * 0.22); this.vx = (Math.random() - 0.5) * 0.25;
+    this.size = 0.7 + Math.random() * 1.3;
+    this.life = initial ? Math.floor(Math.random() * 400) : 0;
+    this.maxLife = 200 + Math.random() * 300; this.rose = Math.random() > 0.4;
+  };
+  Particle.prototype.update = function(){
+    this.x += this.vx; this.y += this.vy; this.life++;
+    if (this.life > this.maxLife) this.reset(false);
+  };
+  Particle.prototype.draw = function(){
+    var p = this.life / this.maxLife;
+    var alpha = p < 0.15 ? p / 0.15 : p > 0.7 ? (1 - p) / 0.3 : 1;
+    ctx.fillStyle = this.rose ? 'rgba(234,199,208,' + (alpha * 0.42) + ')' : 'rgba(247,237,234,' + (alpha * 0.22) + ')';
+    ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
+  };
+  var particles = [];
+  for (var i = 0; i < 16; i++) particles.push(new Particle());
+  function loop(){
+    ctx.clearRect(0, 0, w, h);
+    for (var i = 0; i < layers.length; i++) drawLayer(layers[i], i);
+    for (var j = 0; j < particles.length; j++){ particles[j].update(); particles[j].draw(); }
+    time++; requestAnimationFrame(loop);
+  }
+  loop();
+  });
+})();
+</script>
+<script src="/checkout-widget.js" defer></script>
+</body>
+</html>
