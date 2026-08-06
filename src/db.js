@@ -32,7 +32,7 @@ const products = [
     coverVideo: '/static/assets/consult-express.mp4',
     landing: 'https://nativastu.com/consult' },
   { id: 'consult-full', title: 'Полная консультация', type: 'Консультация',
-    desc: 'Дом по всем секторам, приоритеты и пошаговый план на 3 месяца, с записью созвона.',
+    desc: 'Дом по всем секторам, приоритеты и пошаговый план на 3 месяца. Личный документ с поддержкой.',
     cover: 'g1', sym: '☰', slug: 'consult-full', price: 36800,
     coverVideo: '/static/assets/consult-full.mp4',
     landing: 'https://nativastu.com/consult' },
