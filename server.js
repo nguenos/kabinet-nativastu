@@ -5,7 +5,7 @@ import { existsSync } from 'node:fs';
 
 import { db, backend } from './src/db.js';
 import { setSession, clearSession, getUserId, requireAuth, genCode, isAdminEmail } from './src/auth.js';
-import { sendCode, mailerMode } from './src/mailer.js';
+import { sendCode, sendPurchaseEmail, mailerMode } from './src/mailer.js';
 import { verifySignature, extractOrder } from './src/prodamus.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -174,8 +174,18 @@ app.post('/webhook/prodamus', wrap(async (req, res) => {
   if (!order.productId) { console.warn('Prodamus: неизвестный продукт', order.orderId); return res.status(200).send('ignored: unknown product'); }
 
   const user = await db.upsertUser({ email: order.email });
-  await db.addPurchase({ userId: user.id, productId: order.productId, source: 'prodamus', orderId: order.orderId });
-  console.log(`Prodamus: доступ выдан ${order.email} → ${order.productId}`);
+  const created = await db.addPurchase({ userId: user.id, productId: order.productId, source: 'prodamus', orderId: order.orderId });
+  console.log(`Prodamus: доступ выдан ${order.email} → ${order.productId}${created ? '' : ' (уже был)'}`);
+
+  // Письмо покупателю — только при НОВОЙ покупке (не на повторные вебхуки).
+  if (created) {
+    const product = db.productById(order.productId);
+    try {
+      await sendPurchaseEmail(order.email, product ? product.title : 'ваш продукт');
+    } catch (e) {
+      console.error('Не удалось отправить письмо о покупке:', e.message);
+    }
+  }
   res.status(200).send('success');
 }));
 
