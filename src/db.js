@@ -37,6 +37,7 @@ const products = [
   { id: 'sleep', title: 'Калькулятор сна', type: 'Инструмент',
     desc: 'Направление сна и качество жизни. Расчёт по сторонам света.',
     cover: 'g4', sym: '☾', slug: 'sleep-calculator', price: 0, free: true,
+    coverVideo: 'https://nativastu.com/2770a102eafefdc79514561d69ed5114.mp4',
     landing: 'https://nativastu.com/sleep-calculator' },
   { id: 'bluebottle', title: 'Синяя бутылка', type: 'Практика',
     desc: 'Практика солнечной воды для энергии пространства.',
