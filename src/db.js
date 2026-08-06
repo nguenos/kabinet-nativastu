@@ -29,6 +29,7 @@ const products = [
   { id: 'consult-express', title: 'Экспресс-консультация', type: 'Консультация',
     desc: 'Запись вашего разбора и конспект с рекомендациями по зонам.',
     cover: 'g4', sym: '◉', slug: 'consult-express', price: 9800,
+    coverVideo: '/static/assets/consult-express.mp4',
     landing: 'https://nativastu.com/consult' },
   { id: 'consult-full', title: 'Полная консультация', type: 'Консультация',
     desc: 'Карта зон дома, приоритеты и пошаговый план на 3 месяца, запись созвона.',
