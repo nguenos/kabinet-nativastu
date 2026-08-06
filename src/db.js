@@ -33,6 +33,7 @@ const products = [
   { id: 'consult-full', title: 'Полная консультация', type: 'Консультация',
     desc: 'Карта зон дома, приоритеты и пошаговый план на 3 месяца, запись созвона.',
     cover: 'g1', sym: '☰', slug: 'consult-full', price: 36800,
+    coverVideo: '/static/assets/consult-full.mp4',
     landing: 'https://nativastu.com/consult' },
   { id: 'sleep', title: 'Калькулятор сна', type: 'Инструмент',
     desc: 'Направление сна и качество жизни. Расчёт по сторонам света.',
