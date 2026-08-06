@@ -266,7 +266,7 @@ async function load(){
 
   if(locked.length){
     $('lockedBlock').style.display='block';
-    $('lockedGrid').innerHTML = locked.map(p=> p.tiers ? tierCard(p) : (p.expired ? expiredCard(p) : lockedCard(p))).join('');
+    $('lockedGrid').innerHTML = locked.map(p=> p.expired ? expiredCard(p) : lockedCard(p)).join('');
   } else { $('lockedBlock').style.display='none'; }
 }
 
