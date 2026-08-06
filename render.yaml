@@ -22,7 +22,7 @@ services:
       - key: SESSION_SECRET
         generateValue: true          # Render сгенерирует секрет сам
       - key: ADMIN_EMAILS
-        value: natiyaguenos@gmail.com
+        value: natiguenos@gmail.com,natiyaguenos@gmail.com
       # Почта (заполнить, когда будет SMTP):
       # - key: SMTP_HOST
       #   value: ""
