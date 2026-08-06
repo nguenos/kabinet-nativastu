@@ -166,7 +166,7 @@ app.post('/api/admin/bulk-grant', requireAdmin('api'), wrap(async (req, res) => 
 
   for (const line of lines) {
     const emailMatch = line.match(/[\w.+-]+@[\w-]+\.[\w.-]+/);
-    if (!emailMatch) { skipped.push({ line, reason: 'нет email' }); continue; }
+    if (!emailMatch) { continue; } // строки без email (номер заказа, дата) просто пропускаем
     const email = emailMatch[0].toLowerCase();
 
     let productId = null;
