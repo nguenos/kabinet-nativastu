@@ -157,17 +157,8 @@ app.post('/api/admin/revoke', requireAdmin('api'), wrap(async (req, res) => {
 }));
 
 // ---------- ВЕБХУК PRODAMUS ----------
-// Временная смотровая панель для отладки интеграции (потом удалим).
-let lastWebhook = null;
-const DEBUG_KEY = process.env.DEBUG_KEY || 'nv-debug-8271';
-app.get('/debug/last-webhook', (req, res) => {
-  if (req.query.k !== DEBUG_KEY) return res.status(403).send('no');
-  res.json(lastWebhook || { empty: true });
-});
-
 app.post('/webhook/prodamus', wrap(async (req, res) => {
   const data = req.body || {};
-  lastWebhook = { receivedAt: new Date().toISOString(), headers: req.headers, query: req.query, body: data };
 
   // Защита: секретный ключ в адресе вебхука (?key=...). Если задан WEBHOOK_KEY — проверяем.
   const WEBHOOK_KEY = process.env.WEBHOOK_KEY;
