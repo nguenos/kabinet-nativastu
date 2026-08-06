@@ -33,6 +33,8 @@
   .card:hover{transform:translateY(-3px);border-color:var(--gold);box-shadow:0 22px 46px -26px rgba(30,45,31,.4);}
   .cover{height:138px;position:relative;display:grid;place-items:center;overflow:hidden;}
   .cover .sym{font-family:'Salina',serif;font-style:italic;font-size:56px;color:rgba(247,243,237,.9);}
+  .cover-vid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;}
+  .tbadge{z-index:2}
   .cover.g1{background:linear-gradient(140deg,#1E2D1F,#38513a);}
   .cover.g2{background:linear-gradient(140deg,#6d5a3f,#8B7355);}
   .cover.g3{background:linear-gradient(140deg,#7a4a3c,#8B4040);}
@@ -104,6 +106,10 @@
 <script>
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s).replace(/[&<>"]/g, (c)=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function coverInner(p){
+  if(p.coverVideo) return `<video class="cover-vid" src="${esc(p.coverVideo)}" autoplay muted loop playsinline preload="metadata"></video>`;
+  return `<span class="sym">${esc(p.sym)}</span>`;
+}
 
 function ownedCard(p){
   const free = p.free && !p.owned;
@@ -112,7 +118,7 @@ function ownedCard(p){
     : `<span class="pill open">Открыт</span><span class="m-note">${p.progress>0?('пройдено '+p.progress+'%'):'не начато'}</span>`;
   const progress = free ? '' : `<div class="progress"><i style="width:${p.progress}%"></i></div>`;
   return `<article class="card">
-    <div class="cover ${p.cover}"><span class="tbadge">${esc(p.type)}</span><span class="sym">${esc(p.sym)}</span></div>
+    <div class="cover ${p.cover}">${coverInner(p)}<span class="tbadge">${esc(p.type)}</span></div>
     <div class="card-body">
       <h3>${esc(p.title)}</h3>
       <p class="desc">${esc(p.desc)}</p>
@@ -125,7 +131,7 @@ function ownedCard(p){
 function lockedCard(p){
   const price = p.price>0 ? (p.price.toLocaleString('ru-RU')+' ₽') : 'бесплатно';
   return `<article class="card">
-    <div class="cover ${p.cover} locked"><span class="tbadge">${esc(p.type)}</span><span class="sym">${esc(p.sym)}</span></div>
+    <div class="cover ${p.cover} locked">${coverInner(p)}<span class="tbadge">${esc(p.type)}</span></div>
     <div class="card-body">
       <h3>${esc(p.title)}</h3>
       <p class="desc">${esc(p.desc)}</p>

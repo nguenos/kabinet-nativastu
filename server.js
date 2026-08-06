@@ -68,6 +68,7 @@ app.get('/api/me', requireAuth('api'), wrap(async (req, res) => {
     return {
       id: p.id, title: p.title, type: p.type, desc: p.desc,
       cover: p.cover, sym: p.sym, slug: p.slug, price: p.price, landing: p.landing || '',
+      coverVideo: p.coverVideo || '',
       free: !!p.free,
       owned: !!rec, progress: rec ? rec.progress : 0,
     };
