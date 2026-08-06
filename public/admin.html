@@ -133,7 +133,7 @@ async function load(){
       : '<span class="none">нет доступов</span>';
     return `<tr>
       <td class="email">${esc(u.email)}</td>
-      <td>${esc(u.name)||'<span class="none">—</span>'}</td>
+      <td>${esc(u.name)||'<span class="none">—</span>'}${u.phone?`<div style="font-size:11px;color:var(--muted);margin-top:2px">${esc(u.phone)}</div>`:''}</td>
       <td><div class="tags">${tags}</div></td>
       <td class="when">${fmtDate(u.createdAt)}</td>
     </tr>`;

@@ -92,6 +92,12 @@ function makePg() {
         id text PRIMARY KEY, user_id text NOT NULL, product_id text NOT NULL,
         text text NOT NULL, rating int, created_at timestamptz NOT NULL DEFAULT now())`);
       await q(`ALTER TABLE purchases ADD COLUMN IF NOT EXISTS duration_days int`);
+      await q(`ALTER TABLE users ADD COLUMN IF NOT EXISTS phone text DEFAULT ''`);
+    },
+    async updateProfile(userId, { name, phone }) {
+      const r = await q(`UPDATE users SET name=$2, phone=$3 WHERE id=$1 RETURNING *`,
+        [userId, name || '', phone || '']);
+      return r.rows[0] ? mapUser(r.rows[0]) : null;
     },
     async addReview({ userId, productId, text, rating = null }) {
       const r = await q(
@@ -186,7 +192,7 @@ function makePg() {
     },
   };
 }
-const mapUser = (r) => ({ id: r.id, email: r.email, name: r.name || '', createdAt: r.created_at });
+const mapUser = (r) => ({ id: r.id, email: r.email, name: r.name || '', phone: r.phone || '', createdAt: r.created_at });
 const mapPurchase = (r) => ({ id: r.id, userId: r.user_id, productId: r.product_id, source: r.source, orderId: r.order_id, progress: r.progress, durationDays: r.duration_days ?? null, createdAt: r.created_at });
 const mapReview = (r) => ({ id: r.id, userId: r.user_id, productId: r.product_id, text: r.text, rating: r.rating, createdAt: r.created_at });
 
@@ -220,8 +226,14 @@ function makeFile() {
       const e = norm(email);
       let u = s.users.find((x) => x.email === e);
       if (u) { if (name && !u.name) { u.name = name; save(); } return u; }
-      u = { id: uid(), email: e, name: name || '', createdAt: new Date().toISOString() };
+      u = { id: uid(), email: e, name: name || '', phone: '', createdAt: new Date().toISOString() };
       s.users.push(u); save(); return u;
+    },
+    async updateProfile(userId, { name, phone }) {
+      const u = s.users.find((x) => x.id === userId);
+      if (!u) return null;
+      u.name = name || ''; u.phone = phone || ''; save();
+      return u;
     },
     async purchasesForUser(userId) { return s.purchases.filter((p) => p.userId === userId); },
     async hasPurchase(userId, productId) { return s.purchases.some((p) => p.userId === userId && p.productId === productId); },

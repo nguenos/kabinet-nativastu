@@ -65,6 +65,14 @@ app.post('/api/auth/verify', wrap(async (req, res) => {
 
 app.post('/api/auth/logout', (req, res) => { clearSession(res); res.json({ ok: true }); });
 
+// ---------- ПРОФИЛЬ ----------
+app.post('/api/profile', requireAuth('api'), wrap(async (req, res) => {
+  const name = String(req.body.name || '').trim().slice(0, 80);
+  const phone = String(req.body.phone || '').trim().slice(0, 40);
+  await db.updateProfile(req.userId, { name, phone });
+  res.json({ ok: true });
+}));
+
 // ---------- ДАННЫЕ КАБИНЕТА ----------
 app.get('/api/me', requireAuth('api'), wrap(async (req, res) => {
   const user = await db.findUserById(req.userId);
@@ -89,7 +97,7 @@ app.get('/api/me', requireAuth('api'), wrap(async (req, res) => {
   });
 
   res.json({
-    user: { email: user.email, name: user.name || '' },
+    user: { email: user.email, name: user.name || '', phone: user.phone || '' },
     products,
     hasReview: reviewed,
     stats: {
@@ -158,7 +166,7 @@ app.get('/api/admin/data', requireAdmin('api'), wrap(async (req, res) => {
   for (const u of list) {
     const purchases = await db.purchasesForUser(u.id);
     users.push({
-      id: u.id, email: u.email, name: u.name || '', createdAt: u.createdAt,
+      id: u.id, email: u.email, name: u.name || '', phone: u.phone || '', createdAt: u.createdAt,
       purchases: purchases.map((p) => ({
         productId: p.productId,
         title: (db.productById(p.productId) || {}).title || p.productId,

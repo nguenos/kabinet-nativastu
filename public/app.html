@@ -10,6 +10,8 @@
   .topbar .logo{font-size:12px;letter-spacing:2.5px;text-transform:uppercase;color:var(--bg);font-weight:300;text-decoration:none;}
   .topbar .logo span{color:var(--gold);margin-left:9px;}
   .user{display:flex;align-items:center;gap:14px;}
+  .profile-chip{display:flex;align-items:center;gap:14px;cursor:pointer;border-radius:60px;padding:4px 4px 4px 12px;transition:background .2s;}
+  .profile-chip:hover{background:rgba(196,168,130,.12);}
   .who{text-align:right;line-height:1.3;}
   .who b{font-size:12px;font-weight:400;color:var(--bg);}
   .who span{display:block;font-size:10px;color:rgba(247,243,237,.45);}
@@ -81,15 +83,17 @@
 <header class="topbar">
   <a class="logo" href="/app">Nati Vastu<span>кабинет</span></a>
   <div class="user">
-    <div class="who"><b id="uName">—</b><span id="uEmail">—</span></div>
-    <div class="avatar" id="uAvatar">•</div>
+    <div class="profile-chip" onclick="openProfile()" title="Мой профиль">
+      <div class="who"><b id="uName">—</b><span id="uEmail">—</span></div>
+      <div class="avatar" id="uAvatar">•</div>
+    </div>
     <button class="logout" id="logout" type="button">Выйти</button>
   </div>
 </header>
 
 <div class="wrap">
   <div class="hero">
-    <div class="eyebrow">С возвращением</div>
+    <div class="eyebrow" id="heroEyebrow">С возвращением</div>
     <h1 class="bebas">Ваши <em class="salina">материалы</em></h1>
     <p>Всё, что вы приобрели: гайды, протоколы и записи. Доступ открыт навсегда, возвращайтесь к практикам, когда нужно.</p>
   </div>
@@ -133,6 +137,25 @@
       <button class="btn pri" id="rvBtn" type="button" onclick="submitReview()">Отправить</button>
     </div>
     <div class="rv-msg" id="rvMsg"></div>
+  </div>
+</div>
+
+<div id="profileModal" class="modal">
+  <div class="modal-card">
+    <div class="eyebrow">Профиль</div>
+    <h2 class="modal-h">Ваша карточка</h2>
+    <p class="modal-sub">Как к вам обращаться и как с вами связаться.</p>
+    <label class="rv-label">Имя</label>
+    <input id="pfName" class="rv-input" type="text" placeholder="Марина">
+    <label class="rv-label">Телефон</label>
+    <input id="pfPhone" class="rv-input" type="tel" placeholder="+7 900 000 00 00">
+    <label class="rv-label">Email</label>
+    <input id="pfEmail" class="rv-input" type="email" disabled>
+    <div class="rv-actions">
+      <button class="btn" type="button" onclick="closeProfile()">Отмена</button>
+      <button class="btn pri" id="pfBtn" type="button" onclick="submitProfile()">Сохранить</button>
+    </div>
+    <div class="rv-msg" id="pfMsg"></div>
   </div>
 </div>
 
@@ -232,15 +255,19 @@ function reviewCard(p){
 }
 
 let OWNED_PRODUCTS = [];
+let ME = { email:'', name:'', phone:'' };
 
 async function load(){
   const r = await fetch('/api/me');
   if(r.status===401){ location.href='/login'; return; }
   const d = await r.json();
-  const name = d.user.name || d.user.email.split('@')[0];
-  $('uName').textContent = name;
+  ME = d.user;
+  const hasName = !!(d.user.name && d.user.name.trim());
+  const avatarSrc = (d.user.name || d.user.email || '•');
+  $('uName').textContent = hasName ? d.user.name : 'Указать имя';
   $('uEmail').textContent = d.user.email;
-  $('uAvatar').textContent = (name[0]||'•').toUpperCase();
+  $('uAvatar').textContent = (avatarSrc[0]||'•').toUpperCase();
+  $('heroEyebrow').textContent = 'С возвращением' + (hasName ? ', ' + d.user.name : '');
 
   const hasReview = d.hasReview;
   OWNED_PRODUCTS = d.products.filter(p=>p.owned);
@@ -293,6 +320,21 @@ $('logout').addEventListener('click', async ()=>{
   await fetch('/api/auth/logout',{method:'POST'});
   location.href='/login';
 });
+
+// ----- профиль -----
+function openProfile(){
+  $('pfName').value = ME.name||''; $('pfPhone').value = ME.phone||''; $('pfEmail').value = ME.email||'';
+  $('pfMsg').textContent=''; $('profileModal').style.display='flex';
+}
+function closeProfile(){ $('profileModal').style.display='none'; }
+async function submitProfile(){
+  const name=$('pfName').value.trim(), phone=$('pfPhone').value.trim();
+  $('pfBtn').disabled=true; $('pfMsg').textContent='Сохраняю...'; $('pfMsg').className='rv-msg';
+  const r=await fetch('/api/profile',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,phone})});
+  $('pfBtn').disabled=false;
+  if(r.status===200){ closeProfile(); load(); }
+  else { $('pfMsg').textContent='Не удалось сохранить'; }
+}
 
 load();
 </script>
