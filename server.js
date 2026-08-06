@@ -62,6 +62,7 @@ app.get('/api/me', requireAuth('api'), wrap(async (req, res) => {
 
   const owned = await db.purchasesForUser(user.id);
   const ownedMap = new Map(owned.map((p) => [p.productId, p]));
+  const reviewed = await db.hasReview(user.id);
 
   const products = db.products.map((p) => {
     const rec = ownedMap.get(p.id);
@@ -69,7 +70,7 @@ app.get('/api/me', requireAuth('api'), wrap(async (req, res) => {
       id: p.id, title: p.title, type: p.type, desc: p.desc,
       cover: p.cover, sym: p.sym, slug: p.slug, price: p.price, landing: p.landing || '',
       coverVideo: p.coverVideo || '',
-      free: !!p.free,
+      free: !!p.free, unlockByReview: !!p.unlockByReview,
       owned: !!rec, progress: rec ? rec.progress : 0,
     };
   });
@@ -77,6 +78,7 @@ app.get('/api/me', requireAuth('api'), wrap(async (req, res) => {
   res.json({
     user: { email: user.email, name: user.name || '' },
     products,
+    hasReview: reviewed,
     stats: {
       owned: owned.length,
       started: owned.filter((p) => p.progress > 0 && p.progress < 100).length,
@@ -84,14 +86,27 @@ app.get('/api/me', requireAuth('api'), wrap(async (req, res) => {
   });
 }));
 
+// ---------- ОТЗЫВ (открывает бонус) ----------
+app.post('/api/review', requireAuth('api'), wrap(async (req, res) => {
+  const productId = String(req.body.productId || '').trim();
+  const text = String(req.body.text || '').trim();
+  const rating = req.body.rating ? Math.max(1, Math.min(5, parseInt(req.body.rating, 10))) : null;
+  if (text.length < 5) return res.status(400).json({ error: 'short' });
+  if (!db.productById(productId)) return res.status(400).json({ error: 'bad_product' });
+  if (!(await db.hasPurchase(req.userId, productId))) return res.status(403).json({ error: 'not_owned' });
+  await db.addReview({ userId: req.userId, productId, text, rating });
+  res.json({ ok: true });
+}));
+
 // ---------- ГАЙДЫ ЗА ВХОДОМ ----------
 app.get('/guide/:slug', requireAuth('page'), wrap(async (req, res) => {
   const product = db.productBySlug(req.params.slug);
   if (!product) return res.status(404).send('Материал не найден');
-  // Бесплатные продукты открыты любому вошедшему; платные — только при покупке.
-  if (!product.free && !(await db.hasPurchase(req.userId, product.id))) {
-    return res.redirect('/app?locked=' + encodeURIComponent(product.id));
-  }
+  // Доступ: бесплатные — всем вошедшим; «по отзыву» — после отзыва; остальные — при покупке.
+  let allowed = product.free
+    || (product.unlockByReview && await db.hasReview(req.userId))
+    || await db.hasPurchase(req.userId, product.id);
+  if (!allowed) return res.redirect('/app?locked=' + encodeURIComponent(product.id));
   const file = join(__dirname, 'guides', product.slug + '.html');
   if (!existsSync(file)) {
     return res.status(200).send(
@@ -137,10 +152,17 @@ app.get('/api/admin/data', requireAdmin('api'), wrap(async (req, res) => {
       })),
     });
   }
+  const reviews = (await db.allReviews()).map((r) => ({
+    email: r.email, name: r.name,
+    product: (db.productById(r.productId) || {}).title || r.productId,
+    text: r.text, rating: r.rating, createdAt: r.createdAt,
+  }));
+
   res.json({
     products: db.products.map((p) => ({ id: p.id, title: p.title, type: p.type, price: p.price })),
     users,
-    totals: { users: users.length, purchases: users.reduce((n, u) => n + u.purchases.length, 0) },
+    reviews,
+    totals: { users: users.length, purchases: users.reduce((n, u) => n + u.purchases.length, 0), reviews: reviews.length },
   });
 }));
 

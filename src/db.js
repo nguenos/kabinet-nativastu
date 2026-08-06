@@ -12,6 +12,7 @@ const USE_PG = !!process.env.DATABASE_URL;
 const norm = (email) => String(email || '').trim().toLowerCase();
 const uid = () => 'u_' + Math.random().toString(36).slice(2, 10);
 const pid = () => 'p_' + Math.random().toString(36).slice(2, 10);
+const rid = () => 'r_' + Math.random().toString(36).slice(2, 10);
 
 // ---------- КАТАЛОГ ПРОДУКТОВ (статичен, живёт в коде) ----------
 const products = [
@@ -48,7 +49,7 @@ const products = [
     landing: 'https://nativastu.com/sleep-calculator' },
   { id: 'bluebottle', title: 'Синяя бутылка', type: 'Практика',
     desc: 'Практика Сатурна. Убирает то, что тянет вниз: долги, тяжбы, застой. Возвращает опору и стабильность.',
-    cover: 'g3', sym: '◐', slug: 'blue-bottle', price: 0,
+    cover: 'g3', sym: '◐', slug: 'blue-bottle', price: 0, unlockByReview: true,
     coverVideo: '/static/assets/bluebottle.mp4',
     landing: 'https://nativastu.com/blue-bottle' },
 ];
@@ -83,6 +84,24 @@ function makePg() {
         UNIQUE(user_id, product_id))`);
       await q(`CREATE TABLE IF NOT EXISTS login_codes (
         email text PRIMARY KEY, code text NOT NULL, expires bigint NOT NULL, attempts int NOT NULL DEFAULT 0)`);
+      await q(`CREATE TABLE IF NOT EXISTS reviews (
+        id text PRIMARY KEY, user_id text NOT NULL, product_id text NOT NULL,
+        text text NOT NULL, rating int, created_at timestamptz NOT NULL DEFAULT now())`);
+    },
+    async addReview({ userId, productId, text, rating = null }) {
+      const r = await q(
+        'INSERT INTO reviews (id, user_id, product_id, text, rating) VALUES ($1,$2,$3,$4,$5) RETURNING *',
+        [rid(), userId, productId, text, rating]
+      );
+      return mapReview(r.rows[0]);
+    },
+    async hasReview(userId) {
+      const r = await q('SELECT 1 FROM reviews WHERE user_id=$1 LIMIT 1', [userId]);
+      return r.rowCount > 0;
+    },
+    async allReviews() {
+      const r = await q(`SELECT r.*, u.email, u.name FROM reviews r JOIN users u ON u.id=r.user_id ORDER BY r.created_at DESC`);
+      return r.rows.map((row) => ({ ...mapReview(row), email: row.email, name: row.name || '' }));
     },
     async findUserByEmail(email) {
       const r = await q('SELECT * FROM users WHERE email=$1', [norm(email)]);
@@ -160,6 +179,7 @@ function makePg() {
 }
 const mapUser = (r) => ({ id: r.id, email: r.email, name: r.name || '', createdAt: r.created_at });
 const mapPurchase = (r) => ({ id: r.id, userId: r.user_id, productId: r.product_id, source: r.source, orderId: r.order_id, progress: r.progress, createdAt: r.created_at });
+const mapReview = (r) => ({ id: r.id, userId: r.user_id, productId: r.product_id, text: r.text, rating: r.rating, createdAt: r.created_at });
 
 // require в ESM (для ленивой загрузки pg только когда нужен)
 import { createRequire } from 'node:module';
@@ -172,7 +192,7 @@ function makeFile() {
   const DATA_DIR = join(__dirname, '..', 'data');
   const DB_FILE = join(DATA_DIR, 'db.json');
   if (!existsSync(DATA_DIR)) mkdirSync(DATA_DIR, { recursive: true });
-  const EMPTY = { users: [], purchases: [], codes: [] };
+  const EMPTY = { users: [], purchases: [], codes: [], reviews: [] };
 
   const load = () => {
     if (!existsSync(DB_FILE)) return structuredClone(EMPTY);
@@ -196,6 +216,17 @@ function makeFile() {
     },
     async purchasesForUser(userId) { return s.purchases.filter((p) => p.userId === userId); },
     async hasPurchase(userId, productId) { return s.purchases.some((p) => p.userId === userId && p.productId === productId); },
+    async addReview({ userId, productId, text, rating = null }) {
+      const rec = { id: rid(), userId, productId, text, rating, createdAt: new Date().toISOString() };
+      s.reviews.push(rec); save(); return rec;
+    },
+    async hasReview(userId) { return s.reviews.some((r) => r.userId === userId); },
+    async allReviews() {
+      return s.reviews.slice().sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1)).map((r) => {
+        const u = s.users.find((x) => x.id === r.userId);
+        return { ...r, email: u ? u.email : '', name: u ? (u.name || '') : '' };
+      });
+    },
     async addPurchase({ userId, productId, source = 'manual', orderId = null, progress = 0 }) {
       if (await this.hasPurchase(userId, productId)) return null;
       const rec = { id: pid(), userId, productId, source, orderId, progress, createdAt: new Date().toISOString() };

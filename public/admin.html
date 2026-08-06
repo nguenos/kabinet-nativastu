@@ -84,6 +84,12 @@
   </div>
 
   <div class="panel">
+    <h2>Отзывы <span id="revCount" style="color:var(--gold)"></span></h2>
+    <div id="reviewsList"></div>
+    <div class="none" id="revEmpty" style="display:none">Пока нет отзывов. Появятся, когда ученицы начнут их оставлять ради «Синей бутылки».</div>
+  </div>
+
+  <div class="panel">
     <h2>Все покупательницы</h2>
     <div class="scroll">
       <table>
@@ -110,6 +116,16 @@ async function load(){
   $('tPurchases').textContent = d.totals.purchases;
 
   $('gProduct').innerHTML = PRODUCTS.map(p=>`<option value="${p.id}">${esc(p.title)} · ${p.price?p.price.toLocaleString('ru-RU')+' ₽':'бесплатно'}</option>`).join('');
+
+  // отзывы
+  const reviews = d.reviews || [];
+  $('revCount').textContent = reviews.length ? '· '+reviews.length : '';
+  $('reviewsList').innerHTML = reviews.map(r=>`
+    <div style="border:1px solid var(--border);border-radius:6px;padding:14px 16px;margin-bottom:10px;background:var(--bg)">
+      <div style="font-size:14px;color:var(--text);line-height:1.6">${esc(r.text)}</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:8px;letter-spacing:.3px">${esc(r.name||r.email)} · ${esc(r.product)} · ${fmtDate(r.createdAt)}</div>
+    </div>`).join('');
+  $('revEmpty').style.display = reviews.length ? 'none':'block';
 
   const rows = d.users.map(u=>{
     const tags = u.purchases.length

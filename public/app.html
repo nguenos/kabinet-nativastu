@@ -48,6 +48,17 @@
   .pill{font-size:9px;letter-spacing:1px;text-transform:uppercase;font-weight:500;padding:5px 11px;border-radius:60px;}
   .pill.open{background:rgba(74,107,74,.13);color:var(--ok);}
   .pill.locked{background:rgba(139,64,64,.1);color:var(--red);}
+  .pill.review{background:rgba(196,168,130,.18);color:var(--accent2);}
+  .modal{display:none;position:fixed;inset:0;background:rgba(30,45,31,.55);z-index:100;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(3px);}
+  .modal-card{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:30px 28px;max-width:440px;width:100%;box-shadow:0 30px 70px -30px rgba(30,45,31,.5);}
+  .modal-h{font-family:'BebasNeueCyrillic';font-size:28px;letter-spacing:.02em;text-transform:uppercase;color:var(--dark);margin:6px 0 6px;}
+  .modal-sub{font-size:13px;color:var(--accent2);margin-bottom:18px;font-weight:300;}
+  .rv-label{display:block;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--accent2);margin:12px 0 6px;font-weight:500;}
+  .rv-input{width:100%;padding:12px 14px;font-family:'Fira Sans';font-weight:300;font-size:14px;background:#fff;color:var(--text);border:1px solid var(--border);border-radius:4px;}
+  .rv-input:focus{outline:none;border-color:var(--gold);}
+  textarea.rv-input{resize:vertical;line-height:1.5;}
+  .rv-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:20px;}
+  .rv-msg{font-size:12px;color:var(--red);margin-top:10px;min-height:14px;text-align:right;}
   .meta .m-note{font-size:11px;color:var(--muted);letter-spacing:.3px;}
   .progress{height:4px;background:var(--surface2);border-radius:60px;overflow:hidden;margin-bottom:16px;}
   .progress>i{display:block;height:100%;background:var(--gold);}
@@ -103,6 +114,23 @@
   </div>
 </div>
 
+<div id="reviewModal" class="modal">
+  <div class="modal-card">
+    <div class="eyebrow">Бонус</div>
+    <h2 class="modal-h">Оставьте отзыв</h2>
+    <p class="modal-sub">Поделитесь впечатлением о купленном продукте, и «Синяя бутылка» откроется.</p>
+    <label class="rv-label">Продукт</label>
+    <select id="rvProduct" class="rv-input"></select>
+    <label class="rv-label">Ваш отзыв</label>
+    <textarea id="rvText" class="rv-input" rows="4" placeholder="Что изменилось, что понравилось..."></textarea>
+    <div class="rv-actions">
+      <button class="btn" type="button" onclick="closeReview()">Отмена</button>
+      <button class="btn pri" id="rvBtn" type="button" onclick="submitReview()">Отправить</button>
+    </div>
+    <div class="rv-msg" id="rvMsg"></div>
+  </div>
+</div>
+
 <script>
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s).replace(/[&<>"]/g, (c)=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -112,9 +140,11 @@ function coverInner(p){
 }
 
 function ownedCard(p){
-  const free = p.free && !p.owned;
+  const free = (p.free || p.unlockByReview) && !p.owned;
+  const freeLabel = p.unlockByReview ? 'Бонус' : 'Бесплатно';
+  const freeNote = p.unlockByReview ? 'открыто за отзыв' : 'доступно всем';
   const meta = free
-    ? `<span class="pill open">Бесплатно</span><span class="m-note">доступно всем</span>`
+    ? `<span class="pill open">${freeLabel}</span><span class="m-note">${freeNote}</span>`
     : `<span class="pill open">Открыт</span><span class="m-note">${p.progress>0?('пройдено '+p.progress+'%'):'не начато'}</span>`;
   const progress = free ? '' : `<div class="progress"><i style="width:${p.progress}%"></i></div>`;
   return `<article class="card">
@@ -144,6 +174,20 @@ function lockedCard(p){
   </article>`;
 }
 
+function reviewCard(p){
+  return `<article class="card">
+    <div class="cover ${p.cover}">${coverInner(p)}<span class="tbadge">${esc(p.type)}</span></div>
+    <div class="card-body">
+      <h3>${esc(p.title)}</h3>
+      <p class="desc">${esc(p.desc)}</p>
+      <div class="meta"><span class="pill review">Бонус за отзыв</span></div>
+      <div class="actions"><button class="btn pri" type="button" onclick="openReview()">Оставить отзыв, чтобы открыть</button></div>
+    </div>
+  </article>`;
+}
+
+let OWNED_PRODUCTS = [];
+
 async function load(){
   const r = await fetch('/api/me');
   if(r.status===401){ location.href='/login'; return; }
@@ -153,22 +197,50 @@ async function load(){
   $('uEmail').textContent = d.user.email;
   $('uAvatar').textContent = (name[0]||'•').toUpperCase();
 
-  const owned = d.products.filter(p=>p.owned || p.free);
-  const locked = d.products.filter(p=>!p.owned && !p.free);
+  const hasReview = d.hasReview;
+  OWNED_PRODUCTS = d.products.filter(p=>p.owned);
+  const purchasedCount = OWNED_PRODUCTS.length;
+  const state = (p)=>{
+    if(p.owned) return 'own';
+    if(p.free) return 'open';
+    if(p.unlockByReview) return hasReview ? 'open' : (purchasedCount>0 ? 'review' : 'locked');
+    return 'locked';
+  };
+  const top = d.products.filter(p=>['own','open','review'].includes(state(p)));
+  const locked = d.products.filter(p=>state(p)==='locked');
 
   $('sOwned').textContent = d.stats.owned;
   $('sStarted').textContent = d.stats.started;
 
   const words=['ноль','один','два','три','четыре','пять','шесть','семь','восемь','девять'];
-  $('ownedCount').textContent = words[owned.length]||owned.length;
+  $('ownedCount').textContent = words[top.length]||top.length;
 
-  $('ownedGrid').innerHTML = owned.map(ownedCard).join('');
-  $('ownedEmpty').style.display = owned.length ? 'none':'block';
+  $('ownedGrid').innerHTML = top.map(p=> state(p)==='review' ? reviewCard(p) : ownedCard(p)).join('');
+  $('ownedEmpty').style.display = top.length ? 'none':'block';
 
   if(locked.length){
     $('lockedBlock').style.display='block';
     $('lockedGrid').innerHTML = locked.map(lockedCard).join('');
-  }
+  } else { $('lockedBlock').style.display='none'; }
+}
+
+// ----- форма отзыва -----
+function openReview(){
+  const sel = $('rvProduct');
+  sel.innerHTML = OWNED_PRODUCTS.map(p=>`<option value="${p.id}">${esc(p.title)}</option>`).join('');
+  $('rvText').value=''; $('rvMsg').textContent='';
+  $('reviewModal').style.display='flex';
+}
+function closeReview(){ $('reviewModal').style.display='none'; }
+async function submitReview(){
+  const productId = $('rvProduct').value;
+  const text = $('rvText').value.trim();
+  if(text.length<5){ $('rvMsg').textContent='Напишите пару слов'; return; }
+  $('rvBtn').disabled=true; $('rvMsg').textContent='Отправляю...';
+  const r = await fetch('/api/review',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({productId,text})});
+  $('rvBtn').disabled=false;
+  if(r.status===200){ closeReview(); load(); }
+  else { $('rvMsg').textContent='Не удалось отправить'; }
 }
 
 $('logout').addEventListener('click', async ()=>{
