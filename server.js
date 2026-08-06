@@ -6,7 +6,7 @@ import { existsSync } from 'node:fs';
 import { db, backend } from './src/db.js';
 import { setSession, clearSession, getUserId, requireAuth, genCode, isAdminEmail } from './src/auth.js';
 import { sendCode, sendPurchaseEmail, mailerMode } from './src/mailer.js';
-import { verifySignature, extractOrder } from './src/prodamus.js';
+import { extractOrder, productIdByName, productIdByAmount, KNOWN_AMOUNTS } from './src/prodamus.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -154,6 +154,46 @@ app.post('/api/admin/grant', requireAdmin('api'), wrap(async (req, res) => {
 app.post('/api/admin/revoke', requireAdmin('api'), wrap(async (req, res) => {
   const removed = await db.removePurchase(String(req.body.userId || ''), String(req.body.productId || ''));
   res.json({ ok: true, removed });
+}));
+
+// Массовая загрузка учениц из истории Prodamus — БЕЗ отправки писем.
+// Каждая строка: email + продукт (по id продукта или по сумме в строке).
+app.post('/api/admin/bulk-grant', requireAdmin('api'), wrap(async (req, res) => {
+  const text = String(req.body.text || '');
+  const lines = text.split(/\r?\n/).map((l) => l.trim()).filter(Boolean).slice(0, 5000);
+  const productIds = db.products.map((p) => p.id);
+  const added = [], already = [], skipped = [];
+
+  for (const line of lines) {
+    const emailMatch = line.match(/[\w.+-]+@[\w-]+\.[\w.-]+/);
+    if (!emailMatch) { skipped.push({ line, reason: 'нет email' }); continue; }
+    const email = emailMatch[0].toLowerCase();
+
+    let productId = null;
+    // 1) явный id продукта в строке (например "clean5")
+    for (const id of productIds) {
+      if (new RegExp('(^|[^\\w-])' + id + '([^\\w-]|$)').test(line)) { productId = id; break; }
+    }
+    // 2) по сумме (числа со «пробелами» тоже: 36 800 -> 36800)
+    if (!productId) {
+      let norm = line;
+      for (let k = 0; k < 3; k++) norm = norm.replace(/(\d)\s(\d)/g, '$1$2');
+      for (const amt of KNOWN_AMOUNTS) {
+        if (new RegExp('\\b' + amt + '\\b').test(norm)) { productId = productIdByAmount(amt); break; }
+      }
+    }
+    if (!productId) { skipped.push({ line, email, reason: 'не понял продукт' }); continue; }
+
+    const user = await db.upsertUser({ email });
+    const created = await db.addPurchase({ userId: user.id, productId, source: 'import' });
+    (created ? added : already).push({ email, productId });
+  }
+
+  res.json({
+    ok: true,
+    addedCount: added.length, alreadyCount: already.length, skippedCount: skipped.length,
+    added, already, skipped,
+  });
 }));
 
 // ---------- ВЕБХУК PRODAMUS ----------

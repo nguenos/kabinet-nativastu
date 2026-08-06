@@ -62,6 +62,17 @@ const PRICE_MAP = {
   36800: 'consult-full',
 };
 
+// Помощники для массовой загрузки учениц из истории Prodamus.
+export function productIdByName(name) {
+  return (name && PRODUCT_MAP[String(name).trim()]) || null;
+}
+export function productIdByAmount(sum) {
+  const n = Math.round(parseFloat(String(sum).replace(/[^\d.]/g, '')) || 0);
+  return PRICE_MAP[n] || null;
+}
+// Известные суммы продуктов (для поиска в строке выгрузки), от больших к меньшим.
+export const KNOWN_AMOUNTS = Object.keys(PRICE_MAP).map(Number).sort((a, b) => b - a);
+
 export function extractOrder(data) {
   const email = data.customer_email || data._param_email || data.email || '';
   const phone = data.customer_phone || data.customer_phone_number || '';
