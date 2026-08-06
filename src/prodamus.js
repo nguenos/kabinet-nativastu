@@ -59,10 +59,17 @@ const PRODUCT_MAP = {
 // Запасной вариант — по сумме заказа (у каждого продукта своя цена).
 const PRICE_MAP = {
   888: 'clean5',
-  5300: 'venus',
+  5300: 'venus',   // Венера, доступ 30 дней
+  7100: 'venus',   // Венера, доступ 6 месяцев
   9800: 'consult-express',
   36800: 'consult-full',
   53000: 'consult-business',
+};
+
+// Срок доступа по сумме (для тарифов с ограниченным сроком). null = навсегда.
+const DURATION_MAP = {
+  5300: 30,
+  7100: 180,
 };
 
 // Помощники для массовой загрузки учениц из истории Prodamus.
@@ -96,5 +103,8 @@ export function extractOrder(data) {
   // 3) По сумме заказа.
   if (!productId && PRICE_MAP[sum]) productId = PRICE_MAP[sum];
 
-  return { email, phone, orderId, status, sum, productId, paid: status === 'success' || status === 'paid' };
+  // Срок доступа (для тарифов Венеры и подобных). null = навсегда.
+  const durationDays = DURATION_MAP[sum] || null;
+
+  return { email, phone, orderId, status, sum, productId, durationDays, paid: status === 'success' || status === 'paid' };
 }

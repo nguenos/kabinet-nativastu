@@ -26,7 +26,11 @@ const products = [
     desc: 'Настраиваем юго-восток дома по вашей карте, дальше 21 день мягких ежедневных практик, чтобы вернуться к себе.',
     cover: 'g2', sym: '♀', slug: 'venus-landing', price: 5300,
     coverVideo: 'https://nativastu.com/hero-venus.mp4',
-    landing: 'https://nativastu.com/venus' },
+    landing: 'https://nativastu.com/venus',
+    tiers: [
+      { label: '30 дней', days: 30, price: 5300, url: 'https://nativastu.com/venus' },
+      { label: '6 месяцев', days: 180, price: 7100, url: 'https://payform.ru/ricdu4J/' },
+    ] },
   { id: 'consult-express', title: 'Экспресс-консультация', type: 'Консультация',
     desc: 'Полный разбор квартиры или дома по всем секторам: где живут деньги, сон, отношения, и что переставить.',
     cover: 'g4', sym: '◉', slug: 'consult-express', price: 9800,
@@ -87,6 +91,7 @@ function makePg() {
       await q(`CREATE TABLE IF NOT EXISTS reviews (
         id text PRIMARY KEY, user_id text NOT NULL, product_id text NOT NULL,
         text text NOT NULL, rating int, created_at timestamptz NOT NULL DEFAULT now())`);
+      await q(`ALTER TABLE purchases ADD COLUMN IF NOT EXISTS duration_days int`);
     },
     async addReview({ userId, productId, text, rating = null }) {
       const r = await q(
@@ -129,14 +134,18 @@ function makePg() {
       const r = await q('SELECT 1 FROM purchases WHERE user_id=$1 AND product_id=$2', [userId, productId]);
       return r.rowCount > 0;
     },
-    async addPurchase({ userId, productId, source = 'manual', orderId = null, progress = 0 }) {
+    async addPurchase({ userId, productId, source = 'manual', orderId = null, progress = 0, durationDays = null }) {
       const r = await q(
-        `INSERT INTO purchases (id, user_id, product_id, source, order_id, progress)
-         VALUES ($1,$2,$3,$4,$5,$6)
+        `INSERT INTO purchases (id, user_id, product_id, source, order_id, progress, duration_days)
+         VALUES ($1,$2,$3,$4,$5,$6,$7)
          ON CONFLICT (user_id, product_id) DO NOTHING RETURNING *`,
-        [pid(), userId, productId, source, orderId, progress]
+        [pid(), userId, productId, source, orderId, progress, durationDays]
       );
       return r.rows[0] ? mapPurchase(r.rows[0]) : null;
+    },
+    async renewPurchase(userId, productId, durationDays) {
+      await q(`UPDATE purchases SET created_at=now(), duration_days=$3 WHERE user_id=$1 AND product_id=$2`,
+        [userId, productId, durationDays]);
     },
     async removePurchase(userId, productId) {
       const r = await q('DELETE FROM purchases WHERE user_id=$1 AND product_id=$2', [userId, productId]);
@@ -178,7 +187,7 @@ function makePg() {
   };
 }
 const mapUser = (r) => ({ id: r.id, email: r.email, name: r.name || '', createdAt: r.created_at });
-const mapPurchase = (r) => ({ id: r.id, userId: r.user_id, productId: r.product_id, source: r.source, orderId: r.order_id, progress: r.progress, createdAt: r.created_at });
+const mapPurchase = (r) => ({ id: r.id, userId: r.user_id, productId: r.product_id, source: r.source, orderId: r.order_id, progress: r.progress, durationDays: r.duration_days ?? null, createdAt: r.created_at });
 const mapReview = (r) => ({ id: r.id, userId: r.user_id, productId: r.product_id, text: r.text, rating: r.rating, createdAt: r.created_at });
 
 // require в ESM (для ленивой загрузки pg только когда нужен)
@@ -227,10 +236,14 @@ function makeFile() {
         return { ...r, email: u ? u.email : '', name: u ? (u.name || '') : '' };
       });
     },
-    async addPurchase({ userId, productId, source = 'manual', orderId = null, progress = 0 }) {
+    async addPurchase({ userId, productId, source = 'manual', orderId = null, progress = 0, durationDays = null }) {
       if (await this.hasPurchase(userId, productId)) return null;
-      const rec = { id: pid(), userId, productId, source, orderId, progress, createdAt: new Date().toISOString() };
+      const rec = { id: pid(), userId, productId, source, orderId, progress, durationDays, createdAt: new Date().toISOString() };
       s.purchases.push(rec); save(); return rec;
+    },
+    async renewPurchase(userId, productId, durationDays) {
+      const rec = s.purchases.find((p) => p.userId === userId && p.productId === productId);
+      if (rec) { rec.createdAt = new Date().toISOString(); rec.durationDays = durationDays; save(); }
     },
     async removePurchase(userId, productId) {
       const before = s.purchases.length;

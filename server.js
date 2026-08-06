@@ -20,6 +20,16 @@ app.use('/static', express.static(join(__dirname, 'public')));
 // маленький помощник, чтобы ошибки в async-маршрутах не роняли сервер
 const wrap = (fn) => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next);
 
+// Статус доступа с учётом срока. Без срока (durationDays) — навсегда.
+function accessStatus(purchase) {
+  if (!purchase) return { active: false, daysLeft: null, expired: false };
+  if (!purchase.durationDays) return { active: true, daysLeft: null, expired: false };
+  const expires = new Date(purchase.createdAt).getTime() + purchase.durationDays * 86400000;
+  const daysLeft = Math.ceil((expires - Date.now()) / 86400000);
+  const active = Date.now() < expires;
+  return { active, daysLeft: active ? daysLeft : 0, expired: !active };
+}
+
 // ---------- СТРАНИЦЫ ----------
 app.get('/', (req, res) => res.redirect(getUserId(req) ? '/app' : '/login'));
 
@@ -66,12 +76,15 @@ app.get('/api/me', requireAuth('api'), wrap(async (req, res) => {
 
   const products = db.products.map((p) => {
     const rec = ownedMap.get(p.id);
+    const st = accessStatus(rec);
     return {
       id: p.id, title: p.title, type: p.type, desc: p.desc,
       cover: p.cover, sym: p.sym, slug: p.slug, price: p.price, landing: p.landing || '',
       coverVideo: p.coverVideo || '',
       free: !!p.free, unlockByReview: !!p.unlockByReview,
-      owned: !!rec, progress: rec ? rec.progress : 0,
+      tiers: p.tiers || null,
+      owned: !!rec && st.active, expired: !!rec && st.expired,
+      daysLeft: st.daysLeft, progress: rec ? rec.progress : 0,
     };
   });
 
@@ -102,10 +115,11 @@ app.post('/api/review', requireAuth('api'), wrap(async (req, res) => {
 app.get('/guide/:slug', requireAuth('page'), wrap(async (req, res) => {
   const product = db.productBySlug(req.params.slug);
   if (!product) return res.status(404).send('Материал не найден');
-  // Доступ: бесплатные — всем вошедшим; «по отзыву» — после отзыва; остальные — при покупке.
-  let allowed = product.free
+  // Доступ: бесплатные — всем вошедшим; «по отзыву» — после отзыва; остальные — при активной покупке (с учётом срока).
+  const rec = (await db.purchasesForUser(req.userId)).find((p) => p.productId === product.id);
+  const allowed = product.free
     || (product.unlockByReview && await db.hasReview(req.userId))
-    || await db.hasPurchase(req.userId, product.id);
+    || accessStatus(rec).active;
   if (!allowed) return res.redirect('/app?locked=' + encodeURIComponent(product.id));
   const file = join(__dirname, 'guides', product.slug + '.html');
   if (!existsSync(file)) {
@@ -239,10 +253,13 @@ app.post('/webhook/prodamus', wrap(async (req, res) => {
   if (!order.productId) { console.warn('Prodamus: неизвестный продукт', order.orderId); return res.status(200).send('ignored: unknown product'); }
 
   const user = await db.upsertUser({ email: order.email });
-  const created = await db.addPurchase({ userId: user.id, productId: order.productId, source: 'prodamus', orderId: order.orderId });
-  console.log(`Prodamus: доступ выдан ${order.email} → ${order.productId}${created ? '' : ' (уже был)'}`);
+  const existed = await db.hasPurchase(user.id, order.productId);
+  const created = await db.addPurchase({ userId: user.id, productId: order.productId, source: 'prodamus', orderId: order.orderId, durationDays: order.durationDays });
+  // Повторная оплата тарифа со сроком — продлеваем доступ (сбрасываем окно).
+  if (existed && order.durationDays) await db.renewPurchase(user.id, order.productId, order.durationDays);
+  console.log(`Prodamus: доступ ${existed ? 'продлён' : 'выдан'} ${order.email} → ${order.productId}${order.durationDays ? ' на ' + order.durationDays + ' дн.' : ''}`);
 
-  // Письмо покупателю — только при НОВОЙ покупке (не на повторные вебхуки).
+  // Письмо покупателю — только при ПЕРВОЙ покупке (не на повторные вебхуки/продления).
   if (created) {
     const product = db.productById(order.productId);
     try {
