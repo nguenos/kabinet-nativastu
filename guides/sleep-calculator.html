@@ -1,0 +1,1429 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Калькулятор направления сна по Васту | nativastu</title>
+<link rel="canonical" href="https://nativastu.com/sleep-calculator">
+  <meta name="description" content="Интерактивный калькулятор направления сна по Васту. Узнайте, как расположение кровати и направление головы влияют на качество сна и жизнь.">
+  <link rel="preload" href="https://nativastu.com/bebasneuecyrillic.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="preload" href="https://nativastu.com/Salina-BookItalic.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="https://nativastu.com/firasans-400-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
+  <style>
+    @font-face { font-family: 'BebasNeueCyrillic'; src: url('https://nativastu.com/bebasneuecyrillic.ttf') format('truetype'); font-display: swap; }
+    @font-face { font-family: 'Salina'; src: url('https://nativastu.com/Salina-BookItalic.woff2') format('woff2'), url('https://nativastu.com/Salina-BookItalic.woff') format('woff'); font-display: swap; }
+@font-face { font-family: 'Fira Sans'; font-style: normal; font-weight: 300; font-display: swap; src: url('https://nativastu.com/firasans-300-cyrillic.woff2') format('woff2'); unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+@font-face { font-family: 'Fira Sans'; font-style: normal; font-weight: 300; font-display: swap; src: url('https://nativastu.com/firasans-300-latin.woff2') format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: 'Fira Sans'; font-style: normal; font-weight: 400; font-display: swap; src: url('https://nativastu.com/firasans-400-cyrillic.woff2') format('woff2'); unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+@font-face { font-family: 'Fira Sans'; font-style: normal; font-weight: 400; font-display: swap; src: url('https://nativastu.com/firasans-400-latin.woff2') format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: 'Fira Sans'; font-style: normal; font-weight: 500; font-display: swap; src: url('https://nativastu.com/firasans-500-cyrillic.woff2') format('woff2'); unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+@font-face { font-family: 'Fira Sans'; font-style: normal; font-weight: 500; font-display: swap; src: url('https://nativastu.com/firasans-500-latin.woff2') format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+
+
+    :root {
+      --green: #1E2D1F;
+      --cream: #F7F3ED;
+      --cream-2: #f0ebe3;
+      --gold: #C4A882;
+      --gold-light: #d4be9c;
+      --text: #252525;
+      --muted: #888;
+      --sans: 'Fira Sans', sans-serif;
+      --serif: 'Cormorant Garamond', serif;
+      --ease-out:    cubic-bezier(0.23, 1, 0.32, 1);
+      --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+      --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--cream);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 15px;
+      font-weight: 300;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .inner { max-width: 1160px; margin: 0 auto; padding: 0 20px; }
+    .narrow { max-width: 720px; margin: 0 auto; }
+
+    /* ── TYPOGRAPHY ── */
+    .label {
+      font-family: var(--sans);
+      font-size: 11px;
+      font-weight: 300;
+      letter-spacing: 3.5px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 20px;
+    }
+
+    h1, h2 {
+      font-family: 'BebasNeueCyrillic', sans-serif;
+      font-weight: normal;
+      color: var(--text);
+      line-height: 1;
+      letter-spacing: .01em;
+    }
+
+    h1 em, h2 em {
+      font-family: 'Salina', var(--serif);
+      font-style: italic;
+      font-weight: 400;
+      font-size: 0.65em;
+    }
+
+    p { margin-bottom: 16px; }
+    p:last-child { margin-bottom: 0; }
+    p strong { font-weight: 500; color: var(--green); }
+
+    /* ── HERO ── */
+    .hero {
+      background: var(--green);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: var(--green);
+      opacity: 0.55;
+      z-index: 1;
+    }
+
+    .hero-video {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      z-index: 0;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      padding: 80px 20px;
+    }
+
+    .hero-top-label {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 20px;
+      text-align: center;
+      font-family: var(--sans);
+      font-size: 11px;
+      font-weight: 300;
+      letter-spacing: 3.5px;
+      text-transform: uppercase;
+      color: var(--gold);
+      z-index: 2;
+    }
+
+    .hero .label { color: var(--gold); margin-bottom: 40px; }
+
+    .hero h1 {
+      font-family: 'BebasNeueCyrillic', sans-serif;
+      font-size: clamp(38px, 6vw, 68px);
+      font-weight: normal;
+      color: var(--cream);
+      line-height: .95;
+      max-width: 780px;
+      margin: 0 auto 28px;
+      letter-spacing: .01em;
+    }
+
+    .hero h1 em {
+      font-family: 'Salina', var(--serif);
+      color: var(--gold);
+      font-style: italic;
+      font-size: 0.65em;
+    }
+
+    .hero-sub {
+      font-size: 14px;
+      font-weight: 300;
+      color: rgba(247,243,237,.55);
+      max-width: 520px;
+      margin: 0 auto 48px;
+      line-height: 1.7;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--gold);
+      color: var(--green);
+      font-family: var(--sans);
+      font-weight: 500;
+      font-size: 13px;
+      letter-spacing: .5px;
+      padding: 17px 38px;
+      border-radius: 60px;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: background 220ms var(--ease-out), transform 220ms var(--ease-out), box-shadow 220ms var(--ease-out), border-color 220ms var(--ease-out), color 220ms var(--ease-out);
+      will-change: transform;
+    }
+    @media (hover: hover) and (pointer: fine) {
+      .btn:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 12px 28px -12px rgba(196,168,130,.55); }
+    }
+    .btn:active { transform: scale(0.97); transition-duration: 140ms; }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid rgba(247,243,237,.25);
+      color: var(--cream);
+    }
+    @media (hover: hover) and (pointer: fine) {
+      .btn-outline:hover { background: rgba(247,243,237,.08); border-color: var(--gold); color: var(--gold); box-shadow: none; }
+    }
+
+    .hero-link {
+      display: block;
+      margin-top: 24px;
+      color: var(--gold);
+      font-size: 11px;
+      font-weight: 300;
+      text-decoration: none;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      opacity: .6;
+      transition: opacity 200ms var(--ease-out);
+    }
+    @media (hover: hover) and (pointer: fine) {
+      .hero-link:hover { opacity: 1; }
+    }
+
+    /* ── SECTIONS ── */
+    .sec {
+      padding: 0;
+    }
+
+    .sec-dark {
+      background: var(--green);
+      color: var(--cream);
+    }
+
+    .sec-dark .label { color: var(--gold); }
+    .sec-dark h2 { color: var(--cream); }
+    .sec-dark p { color: rgba(247,243,237,.6); }
+    .sec-dark p strong { color: rgba(247,243,237,.85); }
+
+    .sec h2 {
+      font-family: 'BebasNeueCyrillic', sans-serif;
+      font-size: clamp(28px, 4vw, 44px);
+      font-weight: normal;
+      color: var(--green);
+      margin-bottom: 24px;
+      line-height: 1;
+      letter-spacing: .01em;
+    }
+    .sec h2 em {
+      font-family: 'Salina', serif;
+      font-style: italic;
+      font-size: 0.65em;
+    }
+
+    .sec p {
+      font-size: 14px;
+      font-weight: 300;
+      line-height: 1.7;
+      max-width: 640px;
+    }
+
+    /* ── WIZARD STEPS ── */
+    .step { display: none; padding: 0; }
+    .step.active { display: block; padding: 80px 0; }
+
+    /* ── GRID ── */
+    .grid-3x3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      max-width: 420px;
+      margin: 40px 0 0;
+    }
+
+    .grid-btn {
+      background: rgba(30,45,31,.04);
+      border: 1px solid rgba(30,45,31,.1);
+      border-radius: 12px;
+      padding: 20px 12px;
+      font-family: var(--sans);
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--green);
+      cursor: pointer;
+      transition: background-color 200ms var(--ease-out), border-color 200ms var(--ease-out), color 200ms var(--ease-out), transform 160ms var(--ease-out);
+      text-align: center;
+      line-height: 1.3;
+      will-change: transform;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      .grid-btn:hover {
+        border-color: var(--gold);
+        background: rgba(196,168,130,.08);
+      }
+    }
+    .grid-btn:active { transform: scale(0.97); transition-duration: 120ms; }
+
+    .grid-btn.selected {
+      background: var(--green);
+      color: var(--cream);
+      border-color: var(--green);
+      font-weight: 500;
+    }
+
+    .grid-btn.center-btn { font-size: 11px; }
+
+    .grid-btn.empty-center {
+      background: transparent;
+      border: 1px dashed rgba(30,45,31,.12);
+      cursor: default;
+      pointer-events: none;
+    }
+
+    /* ── RESULT ── */
+    .result-tags {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 40px;
+    }
+
+    .result-tag {
+      background: rgba(30,45,31,.04);
+      border: 1px solid rgba(30,45,31,.08);
+      border-radius: 8px;
+      padding: 12px 20px;
+      font-size: 13px;
+      font-weight: 300;
+      color: var(--muted);
+    }
+
+    .result-tag span {
+      font-weight: 500;
+      color: var(--green);
+    }
+
+    .result-block {
+      border-left: 3px solid var(--gold);
+      padding: 32px 36px;
+      margin-bottom: 24px;
+      background: rgba(196,168,130,.04);
+      border-radius: 0 12px 12px 0;
+    }
+
+    .result-block .r-title {
+      font-family: var(--serif);
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--green);
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .result-block p { font-size: 14px; line-height: 1.8; max-width: none; }
+    .result-block ul {
+      list-style: none;
+      padding: 0;
+      margin: 12px 0 16px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .result-block li {
+      position: relative;
+      padding-left: 28px;
+      font-size: 14px;
+      line-height: 1.65;
+      font-weight: 300;
+      color: var(--text);
+      margin: 0;
+    }
+    .result-block li::before {
+      content: '\2192';
+      position: absolute;
+      left: 0; top: 1px;
+      color: #8B4A3A;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1.6;
+    }
+    .result-block li strong { color: #8B4A3A; font-weight: 500; }
+
+    .result-block .r-img {
+      width: 100%;
+      max-width: 480px;
+      border-radius: 12px;
+      margin: 20px 0 12px;
+      display: block;
+    }
+
+    .result-block .desc-warning { color: #9a7d2e; font-weight: 400; }
+    .result-block .desc-good { color: #2d6a2e; font-weight: 400; }
+
+    .note-box {
+      background: rgba(196,168,130,.06);
+      border: 1px solid rgba(196,168,130,.15);
+      border-radius: 12px;
+      padding: 32px 36px;
+      margin: 40px 0;
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
+    .note-box strong { font-weight: 500; color: var(--green); }
+
+    .btn-restart {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: transparent;
+      color: var(--muted);
+      font-family: var(--sans);
+      font-weight: 300;
+      font-size: 12px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 12px 0;
+      border: none;
+      cursor: pointer;
+      transition: color 200ms var(--ease-out), transform 160ms var(--ease-out);
+    }
+    @media (hover: hover) and (pointer: fine) {
+      .btn-restart:hover { color: var(--green); }
+    }
+    .btn-restart:active { transform: scale(0.97); transition-duration: 120ms; }
+
+    /* ── CTA BLOCK ── */
+    .cta-block {
+      background: var(--green);
+      border-radius: 16px;
+      padding: 64px 40px;
+      text-align: center;
+      margin-top: 56px;
+    }
+
+    .cta-block h3 {
+      font-family: 'BebasNeueCyrillic', sans-serif;
+      font-size: clamp(28px, 4vw, 44px);
+      font-weight: 400;
+      color: var(--cream);
+      margin-bottom: 16px;
+      line-height: 1;
+    }
+
+    .cta-block h3 em {
+      font-family: 'Salina', var(--serif);
+      font-style: italic;
+      font-size: 0.6em;
+      color: var(--gold);
+    }
+
+    .cta-block p {
+      color: rgba(247,243,237,.45);
+      font-size: 13px;
+      max-width: 480px;
+      margin: 0 auto 32px;
+      line-height: 1.7;
+    }
+
+    /* ── ARTICLE ── */
+    .article {
+      padding: 80px 0;
+      background: var(--cream-2);
+    }
+
+    .article .section { margin-bottom: 0; }
+
+    .article h2 {
+      font-size: clamp(28px, 4vw, 44px);
+      margin-bottom: 28px;
+    }
+
+    .article p {
+      font-size: 14px;
+      font-weight: 300;
+      line-height: 1.8;
+      margin-bottom: 16px;
+      max-width: 640px;
+    }
+
+    .article p strong { font-weight: 500; color: var(--green); }
+
+    .article hr {
+      border: none;
+      border-top: 1px solid rgba(30,45,31,.08);
+      margin: 56px 0;
+      max-width: 640px;
+    }
+
+    .article-quote {
+      background: var(--cream-2);
+      border-left: 3px solid var(--gold);
+      border-radius: 0 12px 12px 0;
+      padding: 28px 32px;
+      margin: 32px 0;
+      max-width: 640px;
+    }
+
+    .article-quote p {
+      font-family: 'Salina', var(--serif);
+      font-size: 18px;
+      font-weight: 400;
+      font-style: italic;
+      color: var(--green);
+      line-height: 1.7;
+      margin: 0;
+    }
+
+    .article-card {
+      background: var(--cream);
+      border-radius: 12px;
+      padding: 28px 32px;
+      margin: 28px 0;
+      max-width: 640px;
+      border: 1px solid rgba(30,45,31,.06);
+    }
+
+    .article-card p { margin: 0; }
+
+    /* ── CTA FINAL ── */
+    .cta-final {
+      background: var(--green);
+      padding: 80px 0;
+    }
+
+    .cta-final .label { color: var(--gold); }
+
+    .cta-final h2 em { color: var(--gold); }
+
+    /* ── FOOTER ── */
+    /* ══ FOOTER (unified dark green) ══ */
+    footer {
+      background: var(--green);
+      color: rgba(247,243,237,.45);
+      font-family: 'Fira Sans', sans-serif;
+      font-size: 11px;
+      font-weight: 300;
+      padding: 24px 40px;
+      text-align: center;
+      line-height: 1.85;
+      border-top: 1px solid rgba(196,168,130,.15);
+    }
+    footer .f-links { margin-bottom: 4px; }
+    footer .f-links a { color: var(--gold); text-decoration: none; margin: 0 6px; transition: opacity 200ms var(--ease-out); }
+    footer .f-legal a { color: rgba(247,243,237,.5); text-decoration: underline; text-underline-offset: 2px; transition: color 200ms var(--ease-out); }
+    @media (hover: hover) and (pointer: fine) {
+      footer .f-links a:hover { opacity: .75; }
+      footer .f-legal a:hover { color: var(--gold); }
+    }
+    footer .f-disclaimer { color: rgba(247,243,237,.3); font-size: 10px; margin-top: 4px; }
+
+    /* ── MOBILE ── */
+    @media (max-width: 600px) {
+      .hero { min-height: 100svh; }
+      .hero h1 { font-size: 56px; }
+      .sec { padding: 56px 0; }
+      .grid-3x3 { max-width: 100%; }
+      .grid-btn { padding: 16px 8px; font-size: 12px; }
+      .result-tags { flex-direction: column; }
+      .result-block { padding: 24px; }
+      .cta-block { padding: 48px 24px; border-radius: 12px; }
+      .article-quote { padding: 20px 24px; }
+      .footer-links { flex-wrap: wrap; gap: 16px; }
+    }
+
+    /* ── REVEAL ANIMATION ── */
+    .r {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 700ms var(--ease-out), transform 700ms var(--ease-out);
+      will-change: opacity, transform;
+    }
+    .r.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── TICKER ── */
+    .ticker {
+      background: var(--green);
+      overflow: hidden;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid rgba(196,168,130,.15);
+    }
+    .ticker-track {
+      display: flex;
+      animation: tick 40s linear infinite;
+      white-space: nowrap;
+    }
+    @keyframes tick {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    .t-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      padding: 0 24px;
+      font-size: 11px;
+      font-weight: 400;
+      color: rgba(247,243,237,.7);
+      letter-spacing: 0.12em;
+      text-transform: lowercase;
+      flex-shrink: 0;
+    }
+    .t-dot { color: var(--gold); font-size: 10px; }
+  
+
+    /* ══ HEADER + NAV (unified) ══ */
+    header {
+      background: var(--green);
+      padding: 0 40px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      z-index: 10;
+    }
+    .logo {
+      font-family: 'Fira Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 300;
+      color: var(--cream);
+      text-decoration: none;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+    }
+    .logo-handle {
+      font-family: 'Fira Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 300;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-left: 8px;
+      text-decoration: none;
+    }
+    header nav { display: flex; align-items: center; }
+    header nav a {
+      color: rgba(247,243,237,.5);
+      text-decoration: none;
+      font-family: 'Fira Sans', sans-serif;
+      font-size: 13px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      font-weight: 300;
+      margin-left: 28px;
+      transition: color 180ms var(--ease-out);
+    }
+    header nav a.active { color: var(--gold); }
+    @media (hover: hover) and (pointer: fine) {
+      header nav a:hover { color: var(--gold); }
+    }
+
+    /* ══ MOBILE FIXES (unified across site) ══ */
+    @media (max-width: 900px) {
+      nav a { margin-left: 14px; font-size: 11px; letter-spacing: 1.8px; }
+    }
+    @media (max-width: 760px) {
+      header { padding: 0 20px; height: 52px; }
+      .logo { font-size: 11px; letter-spacing: 1.8px; }
+      .logo-handle { font-size: 11px; letter-spacing: 1.8px; margin-left: 6px; }
+      header nav { display: none; }
+      .ticker { height: 32px; }
+      .t-item { font-size: 10px; padding: 0 16px; gap: 10px; letter-spacing: 0.08em; }
+      .hero { padding: 64px 20px 56px; min-height: 70vh; }
+      .hero h1 { font-size: 42px !important; max-width: 100%; }
+      .hero-sub { font-size: 13px; padding: 0 8px; }
+      main { padding: 48px 20px 56px !important; }
+      .section h2, .article h2, .step h2, .sec h2, .pain h2, .cta-final h2, .hero h1 { letter-spacing: 0; }
+      .article-quote, .quote, .pullquote { padding: 20px 22px !important; margin: 24px 0 !important; max-width: 100% !important; }
+      .article-quote p, .quote p, .pullquote p { font-size: 16px !important; line-height: 1.6; }
+      .article-card, .note-box { padding: 20px 22px; max-width: 100%; }
+      .cta-final { padding: 56px 20px !important; }
+      .cta-final p { font-size: 13px; }
+      .hero-cta, .btn, .btn-gold, .btn-outline { font-size: 12px; padding: 14px 28px; }
+      footer { padding: 20px 18px !important; font-size: 10px !important; line-height: 1.7 !important; }
+      footer .f-disclaimer { font-size: 9px !important; }
+      .ritual-grid, .use-cases, .do-dont, .rules-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
+      .grid-3x3 { max-width: 100% !important; }
+      .rules-list li, .dont-list li { padding: 16px 18px !important; }
+      .circle-box { padding: 22px 22px !important; }
+      .hero-date { font-size: 10px; padding: 5px 14px; margin-bottom: 24px; }
+      .step-num { width: 30px; height: 30px; font-size: 16px; margin-bottom: 12px; }
+      .result-block, .direction-result, .result-interpretation { padding: 22px 22px !important; }
+      .result-tags { flex-direction: column; gap: 8px; }
+      .sub-block { margin-top: 14px; padding-left: 12px; }
+      .sub-block h3 { font-size: 15px; }
+      .sub-block li { font-size: 13px; }
+      .article hr, .article-quote, .article-card { max-width: 100% !important; }
+      .compare { grid-template-columns: 1fr !important; }
+    }
+    @media (max-width: 420px) {
+      .hero h1 { font-size: 36px !important; }
+      .ticker-track { animation-duration: 28s; }
+    }
+  
+    /* ══ RELATED ARTICLES ══ */
+    .related {
+      background: var(--cream-2);
+      padding: 64px 40px;
+      border-top: 1px solid rgba(30,45,31,.06);
+    }
+    .related-inner { max-width: 1160px; margin: 0 auto; }
+    .related-eyebrow {
+      font-family: 'Fira Sans', sans-serif; font-size: 10px; font-weight: 400;
+      letter-spacing: 3px; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 12px;
+    }
+    .related h2 {
+      font-family: 'BebasNeueCyrillic', sans-serif;
+      font-size: clamp(26px, 4vw, 40px);
+      font-weight: normal; color: var(--green);
+      line-height: 1; letter-spacing: .01em; margin-bottom: 28px;
+    }
+    .related h2 em {
+      font-family: 'Salina', serif; font-style: italic;
+      color: var(--gold); font-size: 0.65em;
+    }
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .related-card {
+      background: var(--cream);
+      border: 1px solid rgba(30,45,31,.06);
+      border-radius: 14px;
+      padding: 28px 24px;
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      transition: border-color 240ms var(--ease-out), transform 240ms var(--ease-out), box-shadow 240ms var(--ease-out);
+      will-change: transform;
+    }
+    @media (hover: hover) and (pointer: fine) {
+      .related-card:hover {
+        border-color: var(--gold);
+        transform: translateY(-3px);
+        box-shadow: 0 16px 32px -16px rgba(30,45,31,.18);
+      }
+    }
+    .related-card:active { transform: scale(0.985); transition-duration: 140ms; }
+    .related-card .rc-arrow-anim { transition: transform 240ms var(--ease-out); display: inline-block; }
+    @media (hover: hover) and (pointer: fine) {
+      .related-card:hover .rc-arrow { transform: translateX(4px); }
+    }
+    .related-card .rc-arrow { transition: transform 240ms var(--ease-out); display: inline-block; }
+    .related-card .rc-label {
+      font-family: 'Fira Sans', sans-serif; font-size: 10px; font-weight: 400;
+      letter-spacing: 2.5px; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 10px;
+    }
+    .related-card .rc-title {
+      font-family: 'BebasNeueCyrillic', sans-serif;
+      font-size: 22px; font-weight: normal;
+      color: var(--green); line-height: 1.05; margin-bottom: 10px;
+      letter-spacing: .01em;
+    }
+    .related-card .rc-title em {
+      font-family: 'Salina', serif; font-style: italic;
+      color: var(--gold); font-size: 0.75em;
+    }
+    .related-card .rc-desc {
+      font-family: 'Fira Sans', sans-serif; font-size: 12px; font-weight: 300;
+      color: var(--text); line-height: 1.65; opacity: .75;
+      flex: 1; margin-bottom: 12px;
+    }
+    .related-card .rc-arrow {
+      font-family: 'Fira Sans', sans-serif; font-size: 11px; font-weight: 500;
+      color: var(--gold); letter-spacing: 1.5px; text-transform: uppercase;
+    }
+    @media (max-width: 760px) {
+      .related { padding: 48px 20px; }
+      .related-grid { grid-template-columns: 1fr; gap: 12px; }
+      .related-card { padding: 22px 20px; }
+    }
+
+    /* ── FEEDBACK CTA · bexxly-style canvas waves ── */
+    .feedback {
+      background: linear-gradient(135deg, var(--cream-2) 0%, #eee5d4 100%);
+      padding: 100px 40px;
+      text-align: center;
+      border-top: 1px solid rgba(196,168,130,.3);
+      position: relative;
+      overflow: hidden;
+    }
+    .feedback-waves {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      display: block; pointer-events: none;
+      z-index: 0;
+    }
+    .feedback-overlay {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 80% 70% at 50% 50%, rgba(196,168,130,0.08) 0%, transparent 65%),
+        radial-gradient(ellipse 55% 55% at 20% 80%, rgba(30,45,31,0.04) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 1;
+    }
+    .feedback-inner {
+      max-width: 640px; margin: 0 auto;
+      position: relative; z-index: 2;
+    }
+    .feedback-eyebrow {
+      font-family: var(--sans); font-size: 10px; font-weight: 500;
+      letter-spacing: 3px; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 14px;
+    }
+    .feedback h2 {
+      font-family: 'BebasNeueCyrillic', sans-serif;
+      font-size: clamp(28px, 4vw, 42px);
+      color: var(--green); line-height: 1; letter-spacing: .01em;
+      margin-bottom: 16px; font-weight: normal;
+    }
+    .feedback h2 em {
+      font-family: 'Salina', serif; font-style: italic;
+      color: var(--gold); font-size: 0.65em;
+    }
+    .feedback p {
+      font-size: 14.5px; color: var(--text);
+      line-height: 1.7; margin: 0 auto 32px;
+      max-width: 520px; font-weight: 300;
+    }
+    .feedback-btn {
+      display: inline-flex; align-items: center; gap: 12px;
+      background: var(--green); color: var(--cream);
+      font-family: var(--sans); font-weight: 500;
+      font-size: 14px; letter-spacing: .8px;
+      padding: 18px 36px;
+      border: none;
+      border-radius: 60px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background 220ms var(--ease-out), color 220ms var(--ease-out), transform 220ms var(--ease-out), box-shadow 220ms var(--ease-out);
+      box-shadow: 0 6px 20px rgba(30,45,31,.15);
+      will-change: transform;
+    }
+    @media (hover: hover) and (pointer: fine) {
+      .feedback-btn:hover {
+        background: var(--gold); color: var(--green);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(30,45,31,.2);
+      }
+    }
+    .feedback-btn:active { transform: scale(0.97); transition-duration: 140ms; }
+    .feedback-btn .tg-icon {
+      width: 20px; height: 20px;
+      fill: currentColor;
+      flex-shrink: 0;
+    }
+    @media (max-width: 760px) {
+      .feedback { padding: 60px 22px; }
+      .feedback-btn { padding: 16px 28px; font-size: 13px; }
+      .feedback p { font-size: 13.5px; }
+    }
+
+    /* ── HERO ENTRANCE (load-time stagger) ── */
+    @keyframes heroRise {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .hero-top-label { animation: heroRise 700ms var(--ease-out) both; animation-delay: 60ms; }
+    .hero-content > *:nth-child(1) { animation: heroRise 800ms var(--ease-out) both; animation-delay: 140ms; }
+    .hero-content > *:nth-child(2) { animation: heroRise 800ms var(--ease-out) both; animation-delay: 240ms; }
+    .hero-content > *:nth-child(3) { animation: heroRise 800ms var(--ease-out) both; animation-delay: 360ms; }
+    .hero-content > *:nth-child(4) { animation: heroRise 800ms var(--ease-out) both; animation-delay: 480ms; }
+    .hero-content > *:nth-child(5) { animation: heroRise 800ms var(--ease-out) both; animation-delay: 600ms; }
+
+    /* ── WIZARD STEP: smooth fade between steps ── */
+    .step {
+      animation: stepFadeIn 480ms var(--ease-out) both;
+    }
+    @keyframes stepFadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── STAGGER REVEAL (grids, tags) ── */
+    [data-reveal-stagger] > * {
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 600ms var(--ease-out), transform 600ms var(--ease-out);
+    }
+    [data-reveal-stagger].visible > *:nth-child(1) { transition-delay: 0ms;   opacity: 1; transform: translateY(0); }
+    [data-reveal-stagger].visible > *:nth-child(2) { transition-delay: 60ms;  opacity: 1; transform: translateY(0); }
+    [data-reveal-stagger].visible > *:nth-child(3) { transition-delay: 120ms; opacity: 1; transform: translateY(0); }
+    [data-reveal-stagger].visible > *:nth-child(4) { transition-delay: 180ms; opacity: 1; transform: translateY(0); }
+    [data-reveal-stagger].visible > *:nth-child(5) { transition-delay: 240ms; opacity: 1; transform: translateY(0); }
+    [data-reveal-stagger].visible > *:nth-child(6) { transition-delay: 300ms; opacity: 1; transform: translateY(0); }
+    [data-reveal-stagger].visible > *:nth-child(7) { transition-delay: 360ms; opacity: 1; transform: translateY(0); }
+    [data-reveal-stagger].visible > *:nth-child(8) { transition-delay: 420ms; opacity: 1; transform: translateY(0); }
+    [data-reveal-stagger].visible > *:nth-child(9) { transition-delay: 480ms; opacity: 1; transform: translateY(0); }
+
+    /* ── A11Y: reduced motion ── */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.001ms !important;
+        animation-delay: 0ms !important;
+        transition-duration: 0.001ms !important;
+      }
+      .r, [data-reveal-stagger] > * { opacity: 1 !important; transform: none !important; }
+      .ticker-track { animation: none !important; }
+      .btn:hover, .grid-btn:hover, .related-card:hover { transform: none !important; }
+    }
+  </style>
+  <!-- ═══ SEO: Open Graph image ═══ -->
+  <meta property="og:image" content="https://nativastu.com/78456b68b9b199deb6da48c61d5a48d7.jpg">
+  <meta property="og:image:secure_url" content="https://nativastu.com/78456b68b9b199deb6da48c61d5a48d7.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="800">
+  <meta property="og:image:alt" content="Калькулятор направления сна по Васту">
+  <meta property="og:locale" content="ru_RU">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://nativastu.com/78456b68b9b199deb6da48c61d5a48d7.jpg">
+  <meta name="twitter:image:alt" content="Калькулятор направления сна по Васту">
+  <meta name="twitter:creator" content="@nativastu">
+  <meta name="twitter:site" content="@nativastu">
+
+  <!-- ═══ Favicon + PWA ═══ -->
+  <link rel="icon" href="https://nativastu.com/favicon.ico" sizes="32x32">
+  <link rel="icon" type="image/svg+xml" href="https://nativastu.com/favicon.svg">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://nativastu.com/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://nativastu.com/favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://nativastu.com/apple-touch-icon.png">
+  <link rel="manifest" href="https://nativastu.com/site.webmanifest">
+  <meta name="theme-color" content="#1E2D1F">
+
+  <!-- ═══ Schema.org structured data ═══ -->
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Калькулятор направления сна по Васту","description":"Интерактивный калькулятор: выбери сектор и направление головы - получи разбор влияния на качество сна.","url":"https://nativastu.com/sleep-calculator","image":"https://nativastu.com/78456b68b9b199deb6da48c61d5a48d7.jpg","applicationCategory":"LifestyleApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"author":{"@type":"Person","name":"Натия Квачантирадзе"},"inLanguage":"ru"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://nativastu.com/"},{"@type":"ListItem","position":2,"name":"Калькулятор сна","item":"https://nativastu.com/sleep-calculator"}]}</script>
+
+  <!-- ═══ Schema.org: FAQPage ═══ -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Как работает калькулятор направления сна?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Калькулятор задаёт два простых вопроса: в каком секторе квартиры находится ваша спальня и в какую сторону направлена голова во время сна. На основе этой комбинации он выдаёт детальный разбор, как такое расположение влияет на качество сна, энергию и общее состояние."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Что нужно знать перед использованием калькулятора?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Нужно знать сектор спальни в вашей квартире (определяется по васту карте) и направление, в которое смотрит голова во время сна. Если карты ещё нет, постройте её бесплатно в конструкторе на главной странице."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Калькулятор бесплатный?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Да, калькулятор полностью бесплатный, без регистрации и ограничений. Можно проверить любое количество комбинаций секторов и направлений."
+        }
+      }
+    ]
+  }
+  </script>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=109158007', 'ym');
+
+    ym(109158007, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/109158007" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+</head>
+<body>
+
+<header>
+  <div>
+    <a href="https://nativastu.com/" class="logo">Васту Карта</a>
+    <a href="https://www.instagram.com/nativastu" target="_blank" class="logo-handle">@nativastu</a>
+  </div>
+  <nav>
+    <a href="https://nativastu.com/">конструктор</a>
+    <a href="https://nativastu.com/abt.html">о методе</a>
+    <a href="https://nativastu.com/sleep-article.html">код сна</a>
+    <a href="https://nativastu.com/sleep-calculator.html" class="active">калькулятор</a>
+    <a href="https://nativastu.com/akshaya-tritya.html">акшая тритья</a>
+    <a href="https://nativastu.com/elements-cleaning.html">чистка</a>
+  </nav>
+</header>
+
+<!-- ══ HERO ══ -->
+<section class="hero" id="step-0">
+  <video class="hero-video" muted autoplay loop playsinline webkit-playsinline preload="auto" disableRemotePlayback x5-playsinline aria-hidden="true">
+    <source src="https://nativastu.com/2770a102eafefdc79514561d69ed5114.mp4" type="video/mp4">
+  </video>
+  <div class="hero-top-label">@nativastu · калькулятор сна</div>
+  <div class="hero-content">
+    <h1>что васту говорит<br><em>о твоём месте сна?</em></h1>
+    <p class="hero-sub">узнай, как сектор и направление головы влияют на качество сна, энергию и состояние - каждую ночь</p>
+    <button class="btn" onclick="startWizard()">у меня есть карта - начать &rarr;</button>
+    <a href="https://nativastu.com/" target="_blank" class="hero-link">построить карту бесплатно &rarr;</a>
+  </div>
+</section>
+
+<!-- ══ TICKER ══ -->
+<div class="ticker">
+  <div class="ticker-track">
+    <span class="t-item"><span class="t-dot">✦</span>300+ разобранных квартир</span>
+    <span class="t-item"><span class="t-dot">✦</span>васту + астрология - уникальная специализация</span>
+    <span class="t-item"><span class="t-dot">✦</span>пространственная логика и точный расчёт</span>
+    <span class="t-item"><span class="t-dot">✦</span>первые изменения через 2-7 дней</span>
+        <span class="t-item" aria-hidden="true"><span class="t-dot">✦</span>300+ разобранных квартир</span>
+    <span class="t-item" aria-hidden="true"><span class="t-dot">✦</span>васту + астрология - уникальная специализация</span>
+    <span class="t-item" aria-hidden="true"><span class="t-dot">✦</span>пространственная логика и точный расчёт</span>
+    <span class="t-item" aria-hidden="true"><span class="t-dot">✦</span>первые изменения через 2-7 дней</span>
+      </div>
+</div>
+
+<!-- ══ STEP 1: SECTOR ══ -->
+<section class="sec step" id="step-1">
+  <div class="inner">
+    <div class="narrow r">
+      <div class="label">шаг 1 из 2</div>
+      <h2>в каком секторе<br><em>ваша кровать?</em></h2>
+      <p>посмотрите на вашу Васту-карту и определите, в какой из девяти зон расположена кровать</p>
+
+      <div class="grid-3x3" id="sector-grid" data-reveal-stagger>
+        <button class="grid-btn" data-sector="СЗ" onclick="selectSector(this)">СЗ</button>
+        <button class="grid-btn" data-sector="С" onclick="selectSector(this)">С</button>
+        <button class="grid-btn" data-sector="СВ" onclick="selectSector(this)">СВ</button>
+        <button class="grid-btn" data-sector="З" onclick="selectSector(this)">З</button>
+        <button class="grid-btn center-btn" data-sector="Брахмастан" onclick="selectSector(this)">Брахмастан</button>
+        <button class="grid-btn" data-sector="В" onclick="selectSector(this)">В</button>
+        <button class="grid-btn" data-sector="ЮЗ" onclick="selectSector(this)">ЮЗ</button>
+        <button class="grid-btn" data-sector="Ю" onclick="selectSector(this)">Ю</button>
+        <button class="grid-btn" data-sector="ЮВ" onclick="selectSector(this)">ЮВ</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ STEP 2: HEAD DIRECTION ══ -->
+<section class="sec step" id="step-2">
+  <div class="inner">
+    <div class="narrow r">
+      <div class="label">шаг 2 из 2</div>
+      <h2>куда направлена<br><em>голова?</em></h2>
+      <p>определите по компасу, в каком направлении находится изголовье кровати. направление ног определится автоматически - оно всегда противоположно голове</p>
+
+      <div class="grid-3x3" id="head-grid" data-reveal-stagger>
+        <button class="grid-btn" data-dir="СЗ" onclick="selectHead(this)">СЗ</button>
+        <button class="grid-btn" data-dir="С" onclick="selectHead(this)">С</button>
+        <button class="grid-btn" data-dir="СВ" onclick="selectHead(this)">СВ</button>
+        <button class="grid-btn" data-dir="З" onclick="selectHead(this)">З</button>
+        <button class="grid-btn empty-center"></button>
+        <button class="grid-btn" data-dir="В" onclick="selectHead(this)">В</button>
+        <button class="grid-btn" data-dir="ЮЗ" onclick="selectHead(this)">ЮЗ</button>
+        <button class="grid-btn" data-dir="Ю" onclick="selectHead(this)">Ю</button>
+        <button class="grid-btn" data-dir="ЮВ" onclick="selectHead(this)">ЮВ</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ STEP 3: RESULT ══ -->
+<section class="sec step" id="step-3">
+  <div class="inner">
+    <div class="narrow">
+      <div class="label r">результат</div>
+      <h2 class="r">ваш<br><em>анализ сна</em></h2>
+
+      <div class="result-tags r" id="result-summary"></div>
+      <div class="result-block r" id="result-sector"></div>
+      <div class="result-block r" id="result-direction"></div>
+
+      <div class="note-box r">
+        <strong>пространство влияет. но важно - как именно оно влияет на вас.</strong><br><br>
+        вы увидели общее влияние сектора и направления сна. это база. но она не учитывает вашу личную ситуацию.<br><br>
+        одно и то же положение кровати одной женщине даёт восстановление, другой усиливает тревогу, третьей блокирует деньги или отношения.<br><br>
+        потому что важно учитывать: ваш запрос, вашу роль в семье, общий баланс квартиры и взаимодействие секторов между собой. <strong>именно это и делает консультация.</strong>
+      </div>
+
+      <button class="btn-restart r" onclick="resetWizard()">&larr; начать заново</button>
+
+      <div class="cta-block r">
+        <h3>хотите<br><em><a href="https://nativastu.com/consult" target="_blank" style="color:var(--gold);text-decoration:underline;">точный анализ</a>?</em></h3>
+        <p>на консультации я разберу ваше направление сна в соответствии с вашим запросом - для вас и каждого члена семьи. учитываю конфигурацию квартиры, роли в семье и текущие задачи.</p>
+        <a href="https://nativastu.com/consult" target="_blank" class="btn">заказать консультацию &rarr;</a>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ══ FEEDBACK CTA (shown only after wizard is complete) ══ -->
+<section class="feedback" id="feedback" hidden>
+  <canvas class="feedback-waves" id="feedback-canvas" aria-hidden="true"></canvas>
+  <div class="feedback-overlay" aria-hidden="true"></div>
+  <div class="feedback-inner">
+    <div class="feedback-eyebrow">обратная связь</div>
+    <h2>напиши, <em>как откликнулось</em></h2>
+    <p>Если разбор сектора и направления совпал с вашим состоянием - или наоборот разошёлся - напишите. Мне важно слышать, как калькулятор попадает в реальную жизнь.</p>
+    <button type="button" class="feedback-btn feedback-trigger">
+      <svg class="tg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.39 7.36H22l-6.18 4.49L18.21 22 12 17.27 5.79 22l2.39-8.15L2 9.36h7.61L12 2z"/></svg>
+      <span>оставить отзыв</span>
+    </button>
+  </div>
+</section>
+
+<!-- ══ RELATED ARTICLES ══ -->
+<section class="related">
+  <div class="related-inner">
+    <div class="related-eyebrow">читайте также</div>
+    <h2>по теме<br><em>наших практик</em></h2>
+    <div class="related-grid" data-reveal-stagger>
+      <a href="https://nativastu.com/sleep-article.html" class="related-card">
+        <span class="rc-label">личный опыт</span>
+        <div class="rc-title">код <em>вашего сна</em></div>
+        <div class="rc-desc">как направление сна влияет на состояние, мысли и даже поведение детей.</div>
+        <span class="rc-arrow">читать &rarr;</span>
+      </a>
+      <a href="https://nativastu.com/abt.html" class="related-card">
+        <span class="rc-label">о методе</span>
+        <div class="rc-title">почему эта карта <em>точнее</em></div>
+        <div class="rc-desc">геометрический центр тяжести - брахмастан всегда внутри квартиры.</div>
+        <span class="rc-arrow">читать &rarr;</span>
+      </a>
+      <a href="https://nativastu.com/akshaya-tritya.html" class="related-card">
+        <span class="rc-label">ведический день</span>
+        <div class="rc-title">акшая <em>тритья</em></div>
+        <div class="rc-desc">7 шагов к исполнению желания. самый мощный день ведического календаря.</div>
+        <span class="rc-arrow">читать &rarr;</span>
+      </a>
+      <a href="https://nativastu.com/elements-cleaning.html" class="related-card">
+        <span class="rc-label">авторский метод</span>
+        <div class="rc-title">энергетическая <em>чистка</em></div>
+        <div class="rc-desc">обнуление и наполнение пространства по 5 стихиям. пошаговый гайд с бонусом.</div>
+        <span class="rc-arrow">читать &rarr;</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+
+
+<footer>
+  <div class="f-links">
+    <a href="https://t.me/nativastu" target="_blank">telegram</a>
+    <span style="color:rgba(247,243,237,.2);">·</span>
+    <a href="https://nativastu.com">nativastu.com</a>
+    <span style="color:rgba(247,243,237,.2);">·</span>
+    <a href="https://www.instagram.com/nativastu" target="_blank">instagram</a>
+  </div>
+  <div class="f-legal">
+    &copy; 2026 Квачантирадзе Натия Тенгизовна &middot; ИНН: 772799672001 &middot; Самозанятая &middot; natiguenos@gmail.com
+    <br>
+    <a href="https://nativastu.com/policy.html">Политика конфиденциальности</a>
+    <span style="color:rgba(247,243,237,.2);">·</span>
+    <a href="https://nativastu.com/oferta.html">Договор оферты</a>
+    <span style="color:rgba(247,243,237,.2);">·</span>
+    <a href="https://nativastu.com/privacy.html">Согласие на обработку данных</a>
+  </div>
+  <div class="f-disclaimer">
+    * Instagram принадлежит компании Meta, признанной экстремистской организацией и запрещённой в РФ
+  </div>
+</footer>
+
+<script>
+  // ── DATA ──
+  var opposites = {
+    'С': 'Ю', 'Ю': 'С',
+    'СВ': 'ЮЗ', 'ЮЗ': 'СВ',
+    'В': 'З', 'З': 'В',
+    'ЮВ': 'СЗ', 'СЗ': 'ЮВ'
+  };
+
+  var sectorData = {
+    'С': { title: 'Север - сектор притока и денег', image: 'сектор сна север.png', html: '<p>Этот сектор связан с движением ресурсов и возможностями. Его энергия активная и направлена на поток.</p><p><strong>Сон требует остановки и фиксации. Север не совпадает с этой задачей.</strong> Во сне в этом секторе энергия продолжает движение. Подсознание не фиксируется.</p><p>Что вы получаете при таком положении:</p><ul><li>поверхностный сон</li><li>активный ум ночью</li><li>неполное восстановление</li></ul><p class="desc-warning">Кровать в этом секторе утяжеляет зону притока. Это нарушает движение ресурсов и отражается на доходе.</p><p class="desc-warning">Север не подходит для постоянного сна, особенно для хозяев дома. Этот сектор должен оставаться свободным.</p>' },
+    'СВ': { title: 'Северо-восток - сектор воды и тонкой энергии', image: 'сектор сна cеверо-восток.png', html: '<p>Этот сектор связан с чистотой, притоком и чувствительностью. Его энергия лёгкая и нестабильная. Сон требует фиксации и плотности. Эти энергии не совпадают.</p><p>Что вы чувствуете при таком положении:</p><ul><li>поверхностный сон</li><li>внутреннюю неустойчивость</li><li>повышенную чувствительность</li><li>трудности с концентрацией</li></ul><p class="desc-warning">Подсознание остаётся открытым. Глубокой остановки не происходит.</p><p><strong>Длительный сон в этом секторе приводит к:</strong></p><ul><li>рассеянности</li><li>эмоциональным колебаниям</li><li>ощущению отсутствия опоры</li><li>сложности в принятии решений</li></ul><p class="desc-warning">Северо-восток не подходит для постоянного сна взрослых.</p>' },
+    'В': { title: 'Восток - сектор притока и активности', image: 'сектор сна восток.png', html: '<p>Этот сектор связан с солнечной энергией и запуском процессов. Он усиливает бодрствование, ясность и включённость.</p><p><strong>Сон требует восстановления и остановки. Восток не совпадает с этой задачей.</strong></p><p>Что происходит при таком положении:</p><ul><li>сон становится короче</li><li>пробуждения происходят раньше</li><li>тело не проходит полное восстановление</li></ul><p>Восток подходит как временная настройка режима:</p><ul><li>вставать раньше</li><li>усилить дисциплину</li><li>быстрее включаться в день</li></ul><p class="desc-warning">Для постоянного сна взрослого - восток не подходит. Длительное нахождение здесь приводит к накоплению усталости.</p>' },
+    'ЮВ': { title: 'Юго-восток - самый неблагоприятный сектор для сна', image: 'сектор сна юго-восток.png', html: '<p>Юго-восток связан с энергией огня. Сон связан с остановкой и восстановлением. Эти процессы не совпадают.</p><p>Во сне в этом секторе возникает перевозбуждение. Сон становится поверхностным. Появляются яркие сны. Усталость накапливается.</p><p><strong>Результат:</strong></p><ul><li>раздражение</li><li>агрессия</li><li>эмоциональное истощение</li><li>напряжение без причины</li></ul><p class="desc-warning"><strong>Человек спит много. Состояние не восстанавливается.</strong> Этот сектор не подходит для сна. Кровать из этого сектора нужно убрать.</p>' },
+    'Ю': { title: 'Юг - сектор активной мужской энергии', image: 'сектор сна Юг.png', html: '<p>Южный сектор усиливает действие, ответственность и волю. Это сектор движения, не остановки.</p><p><strong>Во время сна влияние юга проявляется по-разному у женщин и мужчин.</strong></p><p><strong>Для женщин</strong> сон в южном секторе благоприятен. Женщина получает внешнюю мужскую опору. Снижается внутреннее напряжение.</p><p class="desc-good">Результат: больше мягкости, расслабления, устойчивости, ощущение защиты.</p><p><strong>Для мужчин</strong> южный сектор даёт активацию. Подходит при апатии и потере мотивации. Эффект временный - до 3-4 недель.</p><p class="desc-warning">При длительном сне влияние становится неблагоприятным. Напряжение выходит через тело: воспаления, травмы, боли. Это сигнал сменить место сна.</p>' },
+    'ЮЗ': { title: 'Юго-запад - главный сектор сна', image: 'сектор сна юго-запад.png', html: '<p>Юго-запад связан с энергией Земли. Это энергия фиксации и устойчивости. <strong>Эти энергии совпадают с задачей сна.</strong></p><p><strong>Поэтому в этом секторе сон даёт самое глубокое восстановление.</strong></p><ul><li>стабильный сон</li><li>плотное восстановление</li><li>спокойную психику</li><li>ощущение опоры</li></ul><p><strong>Этот сектор подходит для хозяина дома.</strong> Тот, кто спит здесь, занимает главную позицию в системе.</p><p class="desc-warning">Юго-запад не подходит детям и пожилым. Они начинают брать на себя роль главного. Это нарушает семейную иерархию.</p>' },
+    'З': { title: 'Запад - сектор остановки и стабилизации', image: 'сектор сна запад.png', html: '<p>Запад усиливает сдержанность, дисциплину и контроль. Во сне он снижает импульсивность.</p><p>Что даёт сон на западе:</p><ul><li>спокойствие</li><li>ровный эмоциональный фон</li><li>снижение перегрузки</li><li>больше концентрации</li></ul><p><strong>Кому подходит:</strong></p><ul><li>активным и гиперактивным детям</li><li>при сложностях с режимом</li><li>в период стресса и перегрузки</li><li>людям старшего возраста</li></ul><p class="desc-warning">Не подходит тихим и замкнутым детям, людям с низкой социальной активностью. Запад усиливает закрытость.</p>' },
+    'СЗ': { title: 'Северо-запад - сектор движения и перемен', image: 'сектор сна северо-запад.png', html: '<p>Его энергия подвижная и динамичная. Она направлена на изменения, а не на фиксацию.</p><p><strong>Сон требует остановки и стабильности. Северо-запад не совпадает.</strong></p><ul><li>поверхностный сон</li><li>ощущение внутренней активности</li><li>недостаток покоя</li><li>неполное восстановление</li></ul><p>Может подойти тем, кто застрял - в период переезда, перемен или переходного этапа.</p><p class="desc-warning">Для постоянного сна выбирают более стабильные сектора.</p>' },
+    'Брахмастан': { title: 'Брахмастан - центр дома и точка баланса', image: 'сектор сна брахмастан.png', html: '<p>Это зона чистого пространства и распределения энергии. Сон требует восстановления. Центр дома не даёт этого состояния.</p><p>Когда кровать стоит в центре, человек получает влияние всех направлений сразу. Энергии смешиваются. Фокуса нет.</p><ul><li>поверхностный сон</li><li>ощущение усталости утром</li><li>рассеянность днём</li></ul><p>В маленьких квартирах такое положение иногда вынуждено. Это не критично. Но влияние нужно учитывать.</p><p class="desc-warning"><strong>Центр дома должен оставаться свободным.</strong> Тяжёлая мебель нарушает распределение энергии.</p>' }
+  };
+
+  var directionData = {
+    'С': { title: 'Голова на север, ноги на юг - неблагоприятное положение', image: 'голова на север  ноги на юг.png', html: '<p>При таком положении человек получает влияние <strong>энергии Марса</strong> - активности, напряжения и агрессии.</p><p>Энергия <strong>не останавливается</strong>, а усиливается. Вместо восстановления - раздражительность, вспыльчивость, давление.</p><p><strong>Усталость не разрушается</strong>, а накапливается. Агрессивная энергия воздействует напрямую на подсознание через голову.</p><ul><li>усиливает агрессивность и напряжение</li><li>не даёт полноценного восстановления</li><li>нарушает спокойствие сна</li><li>считается неблагоприятным положением</li></ul>' },
+    'Ю': { title: 'Голова на юг, ноги на север - допустимое и нейтральное положение', image: 'голова на юг  ноги на север.png', html: '<p>Юг связан с активной, марсианской энергией. Но в этом положении <strong>активная энергия не входит напрямую через голову</strong>. Подсознание не перегружается, состояние остаётся стабильным.</p><ul><li>не усиливает агрессию</li><li>не перегружает подсознание</li><li>считается допустимым и нейтральным вариантом</li><li>предпочтительнее, чем головой на север</li></ul>' },
+    'В': { title: 'Голова на восток, ноги на запад - активное положение', image: 'голова на восток  ноги на запад.png', html: '<p>Восток связан с Солнцем и активной энергией. Он усиливает бодрствование, а не остановку.</p><p><strong>Пробуждение становится более лёгким:</strong> проще вставать рано, быстрее включаться в день.</p><p>Подходит <strong>временно</strong> - когда есть задача:</p><ul><li>наладить ранние подъёмы</li><li>повысить организованность</li><li>перестроить режим сна</li></ul><p>Не предназначено для глубокого восстановления. Не рекомендуется как постоянное положение.</p>' },
+    'З': { title: 'Голова на запад, ноги на восток - стабилизирующее положение', image: 'голова на запад  ноги на восток.png', html: '<p>Запад связан с энергией остановки, сдержанности и дисциплины. Сон становится более спокойным и ровным.</p><p><strong>Подходит:</strong></p><ul><li>людям с повышенной активностью или тревожностью</li><li>тем, кому важно замедлиться</li><li>при необходимости усилить концентрацию</li></ul><p class="desc-warning">Если человек уже в пассивности или замкнутости - положение головой на запад может усилить инертность.</p>' },
+    'ЮЗ': { title: 'Голова на юго-запад, ноги на северо-восток - благоприятное положение', image: 'голова на юго-запад ноги на северо-восток.png', html: '<p>Юго-запад - <strong>ключевой сектор для восстановления.</strong> Включается энергия остановки, фиксации и глубокой регенерации.</p><p>Сон становится плотным, устойчивым. Подсознание получает ощущение опоры, уверенности и внутренней устойчивости.</p><p>Юго-запад связан с влиянием и авторитетом. Усиливается уверенность, способность удерживать границы.</p><ul><li>поддерживает глубокое восстановление</li><li>усиливает ощущение опоры и стабильности</li><li>укрепляет внутреннюю уверенность</li><li>особенно благоприятно для хозяина дома</li></ul>' },
+    'СВ': { title: 'Голова на северо-восток, ноги на юго-запад - нестабильное положение', image: 'голова на северо-восток  ноги на юго-запад.png', html: '<p>Северо-восток - зона тонких процессов и высокой чувствительности. Сон может быть <strong>неглубоким и нестабильным.</strong></p><p>Тело стремится к стабильности, а психика остаётся в состоянии открытости и напряжения.</p><ul><li>снижает качество восстановления</li><li>делает сон поверхностным</li><li>создаёт дисбаланс между телом и психикой</li><li>со временем усиливает усталость</li></ul>' },
+    'СЗ': { title: 'Голова на северо-запад, ноги на юго-восток - неблагоприятное положение', image: 'голова на северо-запад ноги на Юго-восток.png', html: '<p>Северо-запад - сектор движения и перемен. Эта энергия напрямую воздействует на подсознание.</p><p><strong>Сон становится нестабильным:</strong> частые пробуждения, невозможность «остановиться». Юго-восток со стороны ног <strong>усиливает дисбаланс</strong> - сектор Огня.</p><ul><li>не даёт полноценного восстановления</li><li>усиливает внутреннюю нестабильность</li><li>нарушает глубину и качество сна</li><li>не рекомендуется как положение для сна</li></ul>' },
+    'ЮВ': { title: 'Голова на юго-восток, ноги на северо-запад - неблагоприятное положение', image: 'голова на Юго-восток ноги на северо-запад.png', html: '<p><strong>Юго-восток - сектор Огня.</strong> Сон связан с остановкой. Эти энергии несовместимы.</p><p>Человек <strong>напрямую получает огненную энергию через подсознание.</strong> Перевозбуждение, яркие и беспокойные сны.</p><p>Усиливается страсть и желание обладать. Энергия распыляется - <strong>не происходит ни восстановления, ни реализации.</strong></p><ul><li>не даёт полноценного восстановления</li><li>усиливает возбуждение и напряжение</li><li>приводит к ярким и беспокойным снам</li><li>считается одним из самых неблагоприятных положений</li></ul>' }
+  };
+
+  // ── STATE ──
+  var selectedSector = null;
+  var selectedHead = null;
+
+  // ── FUNCTIONS ──
+  function smoothScrollTo(el) {
+    setTimeout(function() {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 150);
+  }
+
+  function startWizard() {
+    document.getElementById('step-0').style.display = 'none';
+    var step1 = document.getElementById('step-1');
+    step1.classList.add('active');
+    smoothScrollTo(step1);
+    revealAll(step1);
+  }
+
+  function selectSector(btn) {
+    var btns = document.querySelectorAll('#sector-grid .grid-btn');
+    btns.forEach(function(b) { b.classList.remove('selected'); });
+    btn.classList.add('selected');
+    selectedSector = btn.dataset.sector;
+    setTimeout(function() {
+      var step2 = document.getElementById('step-2');
+      step2.classList.add('active');
+      smoothScrollTo(step2);
+      revealAll(step2);
+    }, 400);
+  }
+
+  function selectHead(btn) {
+    var btns = document.querySelectorAll('#head-grid .grid-btn');
+    btns.forEach(function(b) { b.classList.remove('selected'); });
+    btn.classList.add('selected');
+    selectedHead = btn.dataset.dir;
+    var selectedFeet = opposites[selectedHead];
+    setTimeout(function() { showResult(selectedFeet); }, 400);
+  }
+
+  function showResult(feet) {
+    var step3 = document.getElementById('step-3');
+    step3.classList.add('active');
+
+    var summaryHTML = '<div class="result-tag">сектор: <span>' + selectedSector + '</span></div>';
+    summaryHTML += '<div class="result-tag">голова: <span>' + selectedHead + '</span></div>';
+    summaryHTML += '<div class="result-tag">ноги: <span>' + feet + '</span></div>';
+    document.getElementById('result-summary').innerHTML = summaryHTML;
+
+    var sData = sectorData[selectedSector];
+    var sectorEl = document.getElementById('result-sector');
+    var sImgTag = sData.image ? '<img src="https://nativastu.com/' + encodeURI(sData.image) + '" alt="" class="r-img">' : '';
+    sectorEl.innerHTML = '<span class="r-title">' + sData.title + '</span>' + sImgTag + sData.html;
+
+    var dData = directionData[selectedHead];
+    var dirEl = document.getElementById('result-direction');
+    if (dData) {
+      var dImgTag = dData.image ? '<img src="https://nativastu.com/' + encodeURI(dData.image) + '" alt="" class="r-img">' : '';
+      dirEl.innerHTML = '<span class="r-title">' + dData.title + '</span>' + dImgTag + dData.html;
+      dirEl.style.display = '';
+    } else {
+      dirEl.style.display = 'none';
+    }
+
+    smoothScrollTo(step3);
+    revealAll(step3);
+
+    var fb = document.getElementById('feedback');
+    if (fb) fb.hidden = false;
+  }
+
+  function resetWizard() {
+    selectedSector = null;
+    selectedHead = null;
+    document.querySelectorAll('.step').forEach(function(s) { s.classList.remove('active'); });
+    document.querySelectorAll('.grid-btn').forEach(function(b) { b.classList.remove('selected'); });
+    document.getElementById('step-0').style.display = '';
+    var fb = document.getElementById('feedback');
+    if (fb) fb.hidden = true;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ── REVEAL ON SCROLL ──
+  function revealAll(container) {
+    var els = container ? container.querySelectorAll('.r') : document.querySelectorAll('.r');
+    els.forEach(function(el, i) {
+      setTimeout(function() { el.classList.add('visible'); }, i * 100);
+    });
+  }
+
+  // ── Reveal observer (Emil Kowalski framework) ──
+  (function() {
+    var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var targets = document.querySelectorAll('.article .r, [data-reveal-stagger]');
+    if (reduceMotion || !('IntersectionObserver' in window)) {
+      targets.forEach(function(el) { el.classList.add('visible'); });
+      return;
+    }
+    var ro = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          ro.unobserve(e.target);
+        }
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.12 });
+    targets.forEach(function(el) { ro.observe(el); });
+  })();
+</script>
+
+
+<script>
+// Force video autoplay on mobile (iOS/Android)
+(function() {
+  var videos = document.querySelectorAll('video.hero-video');
+  videos.forEach(function(v) {
+    v.muted = true;
+    v.setAttribute('muted', '');
+    v.setAttribute('playsinline', '');
+    v.setAttribute('webkit-playsinline', '');
+    var tryPlay = function() {
+      var p = v.play();
+      if (p && typeof p.catch === 'function') p.catch(function(){});
+    };
+    tryPlay();
+    document.addEventListener('touchstart', tryPlay, { once: true, passive: true });
+    document.addEventListener('click', tryPlay, { once: true });
+    document.addEventListener('visibilitychange', function() {
+      if (document.visibilityState === 'visible') tryPlay();
+    });
+  });
+})();
+</script>
+
+<!-- ── FEEDBACK CANVAS WAVES ───────────────────────────────────── -->
+<script>
+(function(){
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var section = document.getElementById('feedback');
+  var canvas = document.getElementById('feedback-canvas');
+  if (!section || !canvas) return;
+  var ctx = canvas.getContext('2d');
+  var w = 0, h = 0, time = 0;
+  function size() {
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    w = section.offsetWidth;
+    h = section.offsetHeight;
+    canvas.width = w * dpr;
+    canvas.height = h * dpr;
+    canvas.style.width = w + 'px';
+    canvas.style.height = h + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  size();
+  if (window.ResizeObserver) new ResizeObserver(size).observe(section);
+  window.addEventListener('resize', size);
+
+  var layers = [
+    { y:0.18, freq:0.004, amp:18, speed:0.008, fill:'rgba(30,45,31,0.03)',     stroke:'rgba(30,45,31,0.06)',     lw:0.6 },
+    { y:0.28, freq:0.005, amp:22, speed:0.010, fill:'rgba(30,45,31,0.04)',     stroke:'rgba(30,45,31,0.08)',     lw:0.7 },
+    { y:0.38, freq:0.006, amp:24, speed:0.013, fill:'rgba(196,168,130,0.04)',  stroke:'rgba(196,168,130,0.10)',  lw:0.8 },
+    { y:0.48, freq:0.005, amp:28, speed:0.011, fill:'rgba(196,168,130,0.06)',  stroke:'rgba(196,168,130,0.18)',  lw:1.2 },
+    { y:0.55, freq:0.007, amp:32, speed:0.015, fill:'rgba(196,168,130,0.07)',  stroke:'rgba(196,168,130,0.28)',  lw:1.6 },
+    { y:0.62, freq:0.006, amp:28, speed:0.012, fill:'rgba(196,168,130,0.05)',  stroke:'rgba(196,168,130,0.16)',  lw:1.1 },
+    { y:0.72, freq:0.005, amp:22, speed:0.009, fill:'rgba(196,168,130,0.03)',  stroke:'rgba(196,168,130,0.08)',  lw:0.7 },
+    { y:0.82, freq:0.004, amp:18, speed:0.007, fill:'rgba(30,45,31,0.03)',     stroke:'rgba(30,45,31,0.06)',     lw:0.6 },
+    { y:0.90, freq:0.003, amp:14, speed:0.006, fill:'rgba(30,45,31,0.02)',     stroke:'rgba(30,45,31,0.04)',     lw:0.5 }
+  ];
+  function drawLayer(layer, idx) {
+    var baseY = h * layer.y;
+    var nextY = idx < layers.length - 1 ? h * layers[idx+1].y + 30 : h;
+    ctx.beginPath();
+    for (var x = 0; x <= w; x += 2) {
+      var y = baseY
+        + Math.sin(x * layer.freq + time * layer.speed) * layer.amp
+        + Math.sin(x * layer.freq * 2.3 + time * layer.speed * 0.7) * layer.amp * 0.3;
+      x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    }
+    ctx.lineTo(w, nextY);
+    ctx.lineTo(0, nextY);
+    ctx.closePath();
+    ctx.fillStyle = layer.fill;
+    ctx.fill();
+    ctx.beginPath();
+    for (var x2 = 0; x2 <= w; x2 += 2) {
+      var y2 = baseY
+        + Math.sin(x2 * layer.freq + time * layer.speed) * layer.amp
+        + Math.sin(x2 * layer.freq * 2.3 + time * layer.speed * 0.7) * layer.amp * 0.3;
+      x2 === 0 ? ctx.moveTo(x2, y2) : ctx.lineTo(x2, y2);
+    }
+    ctx.strokeStyle = layer.stroke;
+    ctx.lineWidth = layer.lw;
+    ctx.stroke();
+  }
+  function Particle() { this.reset(true); }
+  Particle.prototype.reset = function(initial) {
+    this.x = Math.random() * w;
+    this.y = h * (0.2 + Math.random() * 0.6);
+    this.vy = -(0.08 + Math.random() * 0.22);
+    this.vx = (Math.random() - 0.5) * 0.25;
+    this.size = 0.7 + Math.random() * 1.3;
+    this.life = initial ? Math.floor(Math.random() * 400) : 0;
+    this.maxLife = 200 + Math.random() * 300;
+    this.gold = Math.random() > 0.4;
+  };
+  Particle.prototype.update = function() {
+    this.x += this.vx; this.y += this.vy; this.life++;
+    if (this.life > this.maxLife) this.reset(false);
+  };
+  Particle.prototype.draw = function() {
+    var p = this.life / this.maxLife;
+    var alpha = p < 0.15 ? p / 0.15 : p > 0.7 ? (1 - p) / 0.3 : 1;
+    ctx.fillStyle = this.gold
+      ? 'rgba(196,168,130,' + (alpha * 0.28) + ')'
+      : 'rgba(30,45,31,' + (alpha * 0.14) + ')';
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    ctx.fill();
+  };
+  var particles = [];
+  for (var i = 0; i < 18; i++) particles.push(new Particle());
+
+  function loop() {
+    ctx.clearRect(0, 0, w, h);
+    for (var i = 0; i < layers.length; i++) drawLayer(layers[i], i);
+    for (var j = 0; j < particles.length; j++) { particles[j].update(); particles[j].draw(); }
+    time++;
+    requestAnimationFrame(loop);
+  }
+  loop();
+})();
+</script>
+
+<!-- ── FEEDBACK WIDGET (Telegram bot) ───────────────────────────── -->
+<script src="https://nativastu.com/feedback-widget.js" data-tag="калькулятор-сна"></script>
+</body>
+</html>

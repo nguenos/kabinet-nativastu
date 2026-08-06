@@ -106,14 +106,19 @@ const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s).replace(/[&<>"]/g, (c)=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
 function ownedCard(p){
+  const free = p.free && !p.owned;
+  const meta = free
+    ? `<span class="pill open">Бесплатно</span><span class="m-note">доступно всем</span>`
+    : `<span class="pill open">Открыт</span><span class="m-note">${p.progress>0?('пройдено '+p.progress+'%'):'не начато'}</span>`;
+  const progress = free ? '' : `<div class="progress"><i style="width:${p.progress}%"></i></div>`;
   return `<article class="card">
     <div class="cover ${p.cover}"><span class="tbadge">${esc(p.type)}</span><span class="sym">${esc(p.sym)}</span></div>
     <div class="card-body">
       <h3>${esc(p.title)}</h3>
       <p class="desc">${esc(p.desc)}</p>
-      <div class="meta"><span class="pill open">Открыт</span><span class="m-note">${p.progress>0?('пройдено '+p.progress+'%'):'не начато'}</span></div>
-      <div class="progress"><i style="width:${p.progress}%"></i></div>
-      <div class="actions"><a class="btn pri" href="/guide/${encodeURIComponent(p.slug)}">${p.progress>0?'Продолжить':'Открыть'}</a></div>
+      <div class="meta">${meta}</div>
+      ${progress}
+      <div class="actions"><a class="btn pri" href="/guide/${encodeURIComponent(p.slug)}">${(!free&&p.progress>0)?'Продолжить':'Открыть'}</a></div>
     </div>
   </article>`;
 }
@@ -139,8 +144,8 @@ async function load(){
   $('uEmail').textContent = d.user.email;
   $('uAvatar').textContent = (name[0]||'•').toUpperCase();
 
-  const owned = d.products.filter(p=>p.owned);
-  const locked = d.products.filter(p=>!p.owned);
+  const owned = d.products.filter(p=>p.owned || p.free);
+  const locked = d.products.filter(p=>!p.owned && !p.free);
 
   $('sOwned').textContent = d.stats.owned;
   $('sStarted').textContent = d.stats.started;

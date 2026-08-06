@@ -68,6 +68,7 @@ app.get('/api/me', requireAuth('api'), wrap(async (req, res) => {
     return {
       id: p.id, title: p.title, type: p.type, desc: p.desc,
       cover: p.cover, sym: p.sym, slug: p.slug, price: p.price, landing: p.landing || '',
+      free: !!p.free,
       owned: !!rec, progress: rec ? rec.progress : 0,
     };
   });
@@ -86,7 +87,8 @@ app.get('/api/me', requireAuth('api'), wrap(async (req, res) => {
 app.get('/guide/:slug', requireAuth('page'), wrap(async (req, res) => {
   const product = db.productBySlug(req.params.slug);
   if (!product) return res.status(404).send('Материал не найден');
-  if (!(await db.hasPurchase(req.userId, product.id))) {
+  // Бесплатные продукты открыты любому вошедшему; платные — только при покупке.
+  if (!product.free && !(await db.hasPurchase(req.userId, product.id))) {
     return res.redirect('/app?locked=' + encodeURIComponent(product.id));
   }
   const file = join(__dirname, 'guides', product.slug + '.html');
