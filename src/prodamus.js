@@ -42,13 +42,24 @@ export function verifySignature(data) {
 }
 
 // Сопоставление оплаченного товара с нашим product.id.
-// 1) Если в заказе передан наш параметр nv_product — используем его.
-// 2) Иначе сопоставляем по названию товара из PRODUCT_MAP.
+// Приоритет: 1) параметр nv_product в заказе; 2) точное имя товара; 3) сумма заказа.
+// Имена — как они заданы в Prodamus (реальные названия из платёжных ссылок).
 const PRODUCT_MAP = {
+  'Гайд - глубокая энергетическая чистка': 'clean5',
   'Чистка по 5 элементам': 'clean5',
   'Протокол Венеры': 'venus',
+  'Экспресс-консультация': 'consult-express',
+  'Полная консультация': 'consult-full',
   'Код сна': 'sleep',
   'Синяя бутылка': 'bluebottle',
+};
+
+// Запасной вариант — по сумме заказа (у каждого продукта своя цена).
+const PRICE_MAP = {
+  888: 'clean5',
+  252: 'venus',
+  9800: 'consult-express',
+  36800: 'consult-full',
 };
 
 export function extractOrder(data) {
@@ -56,15 +67,20 @@ export function extractOrder(data) {
   const phone = data.customer_phone || data.customer_phone_number || '';
   const orderId = data.order_id || data.order_num || null;
   const status = (data.payment_status || data.paymentStatus || '').toLowerCase();
+  const sum = Math.round(parseFloat(data.sum || data.amount || '0'));
 
-  // Определяем productId.
+  // 1) Явный параметр nv_product (если добавлен в платёжную ссылку).
   let productId = data.nv_product || data._param_nv_product || null;
+
+  // 2) По названию товара.
   if (!productId && data.products) {
-    // products может прийти как products[0][name] (Prodamus form) — express парсит в массив/объект.
-    const first = Array.isArray(data.products) ? data.products[0] : data.products['0'] || data.products;
+    const first = Array.isArray(data.products) ? data.products[0] : (data.products['0'] || data.products);
     const name = first && (first.name || first.title);
     if (name && PRODUCT_MAP[name]) productId = PRODUCT_MAP[name];
   }
 
-  return { email, phone, orderId, status, productId, paid: status === 'success' || status === 'paid' };
+  // 3) По сумме заказа.
+  if (!productId && PRICE_MAP[sum]) productId = PRICE_MAP[sum];
+
+  return { email, phone, orderId, status, sum, productId, paid: status === 'success' || status === 'paid' };
 }

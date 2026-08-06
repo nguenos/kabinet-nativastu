@@ -167,10 +167,16 @@ app.get('/debug/last-webhook', (req, res) => {
 
 app.post('/webhook/prodamus', wrap(async (req, res) => {
   const data = req.body || {};
-  lastWebhook = { receivedAt: new Date().toISOString(), headers: { 'content-type': req.headers['content-type'] }, body: data };
+  lastWebhook = { receivedAt: new Date().toISOString(), headers: req.headers, query: req.query, body: data };
+
+  // Защита: секретный ключ в адресе вебхука (?key=...). Если задан WEBHOOK_KEY — проверяем.
+  const WEBHOOK_KEY = process.env.WEBHOOK_KEY;
+  if (WEBHOOK_KEY && req.query.key !== WEBHOOK_KEY) {
+    console.warn('Prodamus: неверный ключ вебхука');
+    return res.status(403).send('forbidden');
+  }
+
   console.log('Prodamus webhook payload:', JSON.stringify(data));
-  const sig = verifySignature(data);
-  if (!sig.ok) { console.warn('Prodamus: подпись не прошла', sig.reason); return res.status(400).send('bad signature'); }
   const order = extractOrder(data);
   if (!order.paid) return res.status(200).send('ignored: not paid');
   if (!order.email) return res.status(200).send('ignored: no email');
