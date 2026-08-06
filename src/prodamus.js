@@ -57,7 +57,7 @@ const PRODUCT_MAP = {
 // Запасной вариант — по сумме заказа (у каждого продукта своя цена).
 const PRICE_MAP = {
   888: 'clean5',
-  252: 'venus',
+  5300: 'venus',
   9800: 'consult-express',
   36800: 'consult-full',
 };

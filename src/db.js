@@ -20,7 +20,7 @@ const products = [
     cover: 'g1', sym: 'V', slug: 'elements-cleaning', price: 888 },
   { id: 'venus', title: 'Протокол Венеры', type: 'Протокол',
     desc: 'Персональная практика по знаку вашей Венеры и встроенный калькулятор.',
-    cover: 'g2', sym: '♀', slug: 'venus-landing', price: 252 },
+    cover: 'g2', sym: '♀', slug: 'venus-landing', price: 5300 },
   { id: 'consult-express', title: 'Экспресс-консультация', type: 'Консультация',
     desc: 'Запись вашего разбора и конспект с рекомендациями по зонам.',
     cover: 'g4', sym: '◉', slug: 'consult-express', price: 9800 },
