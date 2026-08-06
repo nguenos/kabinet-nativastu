@@ -10,7 +10,7 @@ const OUTBOX = join(__dirname, '..', 'data', 'outbox.log');
 const hasSMTP = !!(process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS);
 export const mailerMode = hasSMTP ? 'smtp' : 'console';
 
-const SITE = process.env.PUBLIC_URL || 'https://kabinet-nativastu.onrender.com';
+const SITE = process.env.PUBLIC_URL || 'https://lk.nativastu.com';
 
 let _transport = null;
 async function transport() {
