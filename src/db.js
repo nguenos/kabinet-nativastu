@@ -15,24 +15,31 @@ const pid = () => 'p_' + Math.random().toString(36).slice(2, 10);
 
 // ---------- КАТАЛОГ ПРОДУКТОВ (статичен, живёт в коде) ----------
 const products = [
+  // landing — страница продаж (открывается, когда доступа НЕТ).
   { id: 'clean5', title: 'Чистка по 5 элементам', type: 'Гайд',
     desc: 'Метод обнуления и наполнения дома. 13 блоков, читается онлайн.',
-    cover: 'g1', sym: 'V', slug: 'elements-cleaning', price: 888 },
+    cover: 'g1', sym: 'V', slug: 'elements-cleaning', price: 888,
+    landing: 'https://nativastu.com/elements-cleaning' },
   { id: 'venus', title: 'Протокол Венеры', type: 'Протокол',
     desc: 'Персональная практика по знаку вашей Венеры и встроенный калькулятор.',
-    cover: 'g2', sym: '♀', slug: 'venus-landing', price: 5300 },
+    cover: 'g2', sym: '♀', slug: 'venus-landing', price: 5300,
+    landing: 'https://nativastu.com/venus' },
   { id: 'consult-express', title: 'Экспресс-консультация', type: 'Консультация',
     desc: 'Запись вашего разбора и конспект с рекомендациями по зонам.',
-    cover: 'g4', sym: '◉', slug: 'consult-express', price: 9800 },
+    cover: 'g4', sym: '◉', slug: 'consult-express', price: 9800,
+    landing: 'https://nativastu.com/consult' },
   { id: 'consult-full', title: 'Полная консультация', type: 'Консультация',
     desc: 'Карта зон дома, приоритеты и пошаговый план на 3 месяца, запись созвона.',
-    cover: 'g1', sym: '☰', slug: 'consult-full', price: 36800 },
+    cover: 'g1', sym: '☰', slug: 'consult-full', price: 36800,
+    landing: 'https://nativastu.com/consult' },
   { id: 'sleep', title: 'Код сна', type: 'Гайд',
     desc: 'Направление сна и качество жизни. Разбор по сторонам света.',
-    cover: 'g4', sym: '☾', slug: 'sleep-article', price: 0 },
+    cover: 'g4', sym: '☾', slug: 'sleep-article', price: 0,
+    landing: 'https://nativastu.com/sleep-article' },
   { id: 'bluebottle', title: 'Синяя бутылка', type: 'Практика',
     desc: 'Практика солнечной воды для энергии пространства.',
-    cover: 'g3', sym: '◐', slug: 'blue-bottle', price: 0 },
+    cover: 'g3', sym: '◐', slug: 'blue-bottle', price: 0,
+    landing: 'https://nativastu.com/blue-bottle' },
 ];
 
 const catalog = {

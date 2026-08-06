@@ -125,7 +125,7 @@ function lockedCard(p){
       <h3>${esc(p.title)}</h3>
       <p class="desc">${esc(p.desc)}</p>
       <div class="meta"><span class="pill locked">Нет доступа</span></div>
-      <div class="actions"><a class="btn pri" href="https://nativastu.com/" target="_blank">Открыть · ${price}</a></div>
+      <div class="actions"><a class="btn pri" href="${esc(p.landing||'https://nativastu.com/')}" target="_blank">Открыть · ${price}</a></div>
     </div>
   </article>`;
 }

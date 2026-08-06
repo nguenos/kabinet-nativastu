@@ -67,7 +67,7 @@ app.get('/api/me', requireAuth('api'), wrap(async (req, res) => {
     const rec = ownedMap.get(p.id);
     return {
       id: p.id, title: p.title, type: p.type, desc: p.desc,
-      cover: p.cover, sym: p.sym, slug: p.slug, price: p.price,
+      cover: p.cover, sym: p.sym, slug: p.slug, price: p.price, landing: p.landing || '',
       owned: !!rec, progress: rec ? rec.progress : 0,
     };
   });
