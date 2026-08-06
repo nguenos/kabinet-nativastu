@@ -50,6 +50,8 @@ const PRODUCT_MAP = {
   'Протокол Венеры': 'venus',
   'Экспресс-консультация': 'consult-express',
   'Полная консультация': 'consult-full',
+  'Бизнес консультация': 'consult-business',
+  'Васту консультация по дому': 'consult-express',
   'Код сна': 'sleep',
   'Синяя бутылка': 'bluebottle',
 };
@@ -60,6 +62,7 @@ const PRICE_MAP = {
   5300: 'venus',
   9800: 'consult-express',
   36800: 'consult-full',
+  53000: 'consult-business',
 };
 
 // Помощники для массовой загрузки учениц из истории Prodamus.

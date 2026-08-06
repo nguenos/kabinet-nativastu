@@ -16,7 +16,7 @@ const pid = () => 'p_' + Math.random().toString(36).slice(2, 10);
 // ---------- КАТАЛОГ ПРОДУКТОВ (статичен, живёт в коде) ----------
 const products = [
   // landing — страница продаж (открывается, когда доступа НЕТ).
-  { id: 'clean5', title: 'Чистка по 5 элементам', type: 'Гайд',
+  { id: 'clean5', title: 'Энергетическая чистка', type: 'Гайд',
     desc: 'Убирает энергетические наслоения, возвращает ощущение себя, очищает пространство и внутренний баланс.',
     cover: 'g1', sym: 'V', slug: 'elements-cleaning', price: 888,
     coverVideo: 'https://nativastu.com/copy_6F88210E-62C5-4FAC-9FE0-8C1932C4BD65.mp4',
@@ -35,6 +35,11 @@ const products = [
     desc: 'Дом по всем секторам, приоритеты и пошаговый план на 3 месяца, с записью созвона.',
     cover: 'g1', sym: '☰', slug: 'consult-full', price: 36800,
     coverVideo: '/static/assets/consult-full.mp4',
+    landing: 'https://nativastu.com/consult' },
+  { id: 'consult-business', title: 'Бизнес консультация', type: 'Консультация',
+    desc: 'Офис, кабинет, точка продаж или рабочее место дома. Разбираю сектора влияния на доход, репутацию и команду.',
+    cover: 'g3', sym: '⌘', slug: 'consult-business', price: 53000,
+    coverVideo: 'https://nativastu.com/media/business.mp4',
     landing: 'https://nativastu.com/consult' },
   { id: 'sleep', title: 'Калькулятор сна', type: 'Инструмент',
     desc: 'Направление сна и качество жизни. Расчёт по сторонам света.',
