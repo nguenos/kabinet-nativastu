@@ -37,8 +37,11 @@
   .when{font-size:11px;color:var(--muted);}
   .tags{display:flex;flex-wrap:wrap;gap:6px;}
   .tag{display:inline-flex;align-items:center;gap:6px;font-size:11px;background:var(--bg);border:1px solid var(--border);border-radius:60px;padding:4px 6px 4px 11px;}
-  .tag button{border:none;background:none;color:var(--red);cursor:pointer;font-size:14px;line-height:1;padding:0 4px;border-radius:50%;}
-  .tag button:hover{background:rgba(139,64,64,.12);}
+  .tag button{border:none;background:none;cursor:pointer;line-height:1;padding:0 4px;font-family:inherit;}
+  .tag button.del{color:var(--red);font-size:14px;border-radius:50%;}
+  .tag button.del:hover{background:rgba(139,64,64,.12);}
+  .tag button.lnk{color:var(--accent2);font-size:10px;letter-spacing:.3px;padding:3px 7px;background:var(--bg);border:1px solid var(--border);border-radius:8px;}
+  .tag button.lnk:hover{border-color:var(--gold);color:var(--gold);}
   .tag .src{color:var(--muted);font-size:9px;text-transform:uppercase;letter-spacing:.5px;}
   .none{color:var(--muted);font-size:12px;}
   .scroll{overflow-x:auto;}
@@ -129,7 +132,12 @@ async function load(){
 
   const rows = d.users.map(u=>{
     const tags = u.purchases.length
-      ? u.purchases.map(p=>`<span class="tag">${esc(p.title)} <span class="src">${esc(p.source)}</span><button title="Снять доступ" data-user="${u.id}" data-product="${p.productId}">×</button></span>`).join('')
+      ? u.purchases.map(p=>{
+          const lnk = p.type==='Консультация'
+            ? `<button class="lnk" title="Личная ссылка на документ" data-lu="${u.id}" data-lp="${p.productId}" data-link="${esc(p.docLink||'')}">${p.docLink?'🔗':'＋ссылка'}</button>`
+            : '';
+          return `<span class="tag">${esc(p.title)} <span class="src">${esc(p.source)}</span>${lnk}<button class="del" title="Снять доступ" data-user="${u.id}" data-product="${p.productId}">×</button></span>`;
+        }).join('')
       : '<span class="none">нет доступов</span>';
     return `<tr>
       <td class="email">${esc(u.email)}</td>
@@ -141,10 +149,18 @@ async function load(){
   $('rows').innerHTML = rows;
   $('empty').style.display = d.users.length ? 'none':'block';
 
-  document.querySelectorAll('.tag button').forEach(b=>b.addEventListener('click', async ()=>{
+  document.querySelectorAll('.tag button.del').forEach(b=>b.addEventListener('click', async ()=>{
     if(!confirm('Снять этот доступ?')) return;
     await fetch('/api/admin/revoke',{method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({userId:b.dataset.user,productId:b.dataset.product})});
+    load();
+  }));
+  document.querySelectorAll('.tag button.lnk').forEach(b=>b.addEventListener('click', async ()=>{
+    const cur = b.dataset.link || '';
+    const link = prompt('Ссылка на личный документ консультации (оставьте пустым, чтобы убрать):', cur);
+    if(link===null) return;
+    await fetch('/api/admin/set-link',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({userId:b.dataset.lu,productId:b.dataset.lp,link:link.trim()})});
     load();
   }));
 }

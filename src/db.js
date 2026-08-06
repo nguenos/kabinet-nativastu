@@ -93,6 +93,11 @@ function makePg() {
         text text NOT NULL, rating int, created_at timestamptz NOT NULL DEFAULT now())`);
       await q(`ALTER TABLE purchases ADD COLUMN IF NOT EXISTS duration_days int`);
       await q(`ALTER TABLE users ADD COLUMN IF NOT EXISTS phone text DEFAULT ''`);
+      await q(`ALTER TABLE purchases ADD COLUMN IF NOT EXISTS doc_link text`);
+    },
+    async setPurchaseLink(userId, productId, link) {
+      await q(`UPDATE purchases SET doc_link=$3 WHERE user_id=$1 AND product_id=$2`,
+        [userId, productId, link || null]);
     },
     async updateProfile(userId, { name, phone }) {
       const r = await q(`UPDATE users SET name=$2, phone=$3 WHERE id=$1 RETURNING *`,
@@ -193,7 +198,7 @@ function makePg() {
   };
 }
 const mapUser = (r) => ({ id: r.id, email: r.email, name: r.name || '', phone: r.phone || '', createdAt: r.created_at });
-const mapPurchase = (r) => ({ id: r.id, userId: r.user_id, productId: r.product_id, source: r.source, orderId: r.order_id, progress: r.progress, durationDays: r.duration_days ?? null, createdAt: r.created_at });
+const mapPurchase = (r) => ({ id: r.id, userId: r.user_id, productId: r.product_id, source: r.source, orderId: r.order_id, progress: r.progress, durationDays: r.duration_days ?? null, docLink: r.doc_link ?? null, createdAt: r.created_at });
 const mapReview = (r) => ({ id: r.id, userId: r.user_id, productId: r.product_id, text: r.text, rating: r.rating, createdAt: r.created_at });
 
 // require в ESM (для ленивой загрузки pg только когда нужен)
@@ -256,6 +261,10 @@ function makeFile() {
     async renewPurchase(userId, productId, durationDays) {
       const rec = s.purchases.find((p) => p.userId === userId && p.productId === productId);
       if (rec) { rec.createdAt = new Date().toISOString(); rec.durationDays = durationDays; save(); }
+    },
+    async setPurchaseLink(userId, productId, link) {
+      const rec = s.purchases.find((p) => p.userId === userId && p.productId === productId);
+      if (rec) { rec.docLink = link || null; save(); }
     },
     async removePurchase(userId, productId) {
       const before = s.purchases.length;

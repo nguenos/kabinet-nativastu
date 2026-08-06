@@ -93,6 +93,7 @@ app.get('/api/me', requireAuth('api'), wrap(async (req, res) => {
       tiers: p.tiers || null,
       owned: !!rec && st.active, expired: !!rec && st.expired,
       daysLeft: st.daysLeft, progress: rec ? rec.progress : 0,
+      docLink: rec ? (rec.docLink || '') : '',
     };
   });
 
@@ -170,7 +171,8 @@ app.get('/api/admin/data', requireAdmin('api'), wrap(async (req, res) => {
       purchases: purchases.map((p) => ({
         productId: p.productId,
         title: (db.productById(p.productId) || {}).title || p.productId,
-        source: p.source, createdAt: p.createdAt,
+        type: (db.productById(p.productId) || {}).type || '',
+        source: p.source, docLink: p.docLink || '', createdAt: p.createdAt,
       })),
     });
   }
@@ -201,6 +203,15 @@ app.post('/api/admin/grant', requireAdmin('api'), wrap(async (req, res) => {
 app.post('/api/admin/revoke', requireAdmin('api'), wrap(async (req, res) => {
   const removed = await db.removePurchase(String(req.body.userId || ''), String(req.body.productId || ''));
   res.json({ ok: true, removed });
+}));
+
+// Личная ссылка на документ консультации (для конкретной ученицы).
+app.post('/api/admin/set-link', requireAdmin('api'), wrap(async (req, res) => {
+  const userId = String(req.body.userId || '').trim();
+  const productId = String(req.body.productId || '').trim();
+  const link = String(req.body.link || '').trim().slice(0, 500);
+  await db.setPurchaseLink(userId, productId, link);
+  res.json({ ok: true });
 }));
 
 // Массовая загрузка учениц из истории Prodamus — БЕЗ отправки писем.

@@ -184,9 +184,17 @@ function ownedCard(p){
       <p class="desc">${esc(p.desc)}</p>
       <div class="meta">${meta}</div>
       ${progress}
-      <div class="actions"><a class="btn pri" href="/guide/${encodeURIComponent(p.slug)}">${(!free&&!timed&&p.progress>0)?'Продолжить':'Открыть'}</a></div>
+      <div class="actions">${ownedAction(p, free, timed)}</div>
     </div>
   </article>`;
+}
+function ownedAction(p, free, timed){
+  if(p.type === 'Консультация'){
+    return p.docLink
+      ? `<a class="btn pri" href="${esc(p.docLink)}" target="_blank">Открыть документ</a>`
+      : `<button class="btn pri" type="button" disabled>Документ готовится</button>`;
+  }
+  return `<a class="btn pri" href="/guide/${encodeURIComponent(p.slug)}">${(!free&&!timed&&p.progress>0)?'Продолжить':'Открыть'}</a>`;
 }
 function expiredCard(p){
   const price = p.price>0 ? (p.price.toLocaleString('ru-RU')+' ₽') : 'бесплатно';
