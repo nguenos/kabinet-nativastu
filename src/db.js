@@ -44,6 +44,7 @@ const products = [
   { id: 'bluebottle', title: 'Синяя бутылка', type: 'Практика',
     desc: 'Практика солнечной воды для энергии пространства.',
     cover: 'g3', sym: '◐', slug: 'blue-bottle', price: 0,
+    coverVideo: '/static/assets/bluebottle.mp4',
     landing: 'https://nativastu.com/blue-bottle' },
 ];
 
