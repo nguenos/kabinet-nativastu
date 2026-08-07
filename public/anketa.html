@@ -73,14 +73,23 @@
     <label>Что сейчас беспокоит в доме или в жизни</label>
     <textarea name="Что беспокоит"></textarea>
 
+    <label>Что вы заметили, что изменилось в жизни после переезда сюда</label>
+    <textarea name="Что изменилось после переезда"></textarea>
+
     <label>Дата, время и место рождения <span class="hint">для астрологической части</span></label>
     <input name="Рождение" placeholder="например: 01.02.1988, 14:30, Москва">
 
     <label>Дополнительные пожелания</label>
     <textarea name="Пожелания"></textarea>
 
+    <label>План БТИ вашего жилья <span class="hint">фото или PDF, до 25 МБ</span></label>
+    <input type="file" id="plan" accept="image/*,.pdf,application/pdf">
+
     <div class="note">
-      План помещения и фото компаса у входной двери пришлите, пожалуйста, отдельно в Telegram или на почту natiyaguenos@gmail.com. Это поможет разобрать ваш дом точнее.
+      <b style="color:#1E2D1F">Видео-обход.</b> Снимите видео от входной двери и медленно пройдите по всему периметру квартиры или дома, показывая все комнаты, углы и окна. Видео обычно тяжёлое, поэтому пришлите его в наш Telegram-бот одной кнопкой, он принимает большие файлы:
+      <div style="margin-top:12px">
+        <a href="https://t.me/bazanativastu_bot" target="_blank" rel="noopener" style="display:inline-block;background:#1E2D1F;color:#F7F3ED;text-decoration:none;font-weight:500;padding:11px 22px;border-radius:60px">Прислать видео в Telegram</a>
+      </div>
     </div>
 
     <button type="submit" id="btn">Отправить анкету</button>
@@ -96,20 +105,37 @@
 
 <script>
   var f = document.getElementById('f'), btn = document.getElementById('btn'), err = document.getElementById('err');
+
+  function fail(msg){
+    btn.disabled = false; btn.textContent = 'Отправить анкету';
+    err.textContent = msg || 'Не удалось отправить. Попробуйте ещё раз.';
+    err.style.display = 'block';
+  }
+  function post(payload){
+    fetch('/api/anketa', {
+      method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)
+    }).then(function(r){ return r.json(); }).then(function(res){
+      if (res && res.ok) { f.style.display='none'; document.getElementById('ok').style.display='block'; window.scrollTo(0,0); }
+      else throw new Error();
+    }).catch(function(){ fail(); });
+  }
+
   f.addEventListener('submit', function(e){
     e.preventDefault();
     err.style.display = 'none';
     btn.disabled = true; btn.textContent = 'Отправляю...';
     var data = {};
-    new FormData(f).forEach(function(v,k){ data[k] = v; });
-    fetch('/api/anketa', {
-      method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ fields: data })
-    }).then(function(r){ return r.json(); }).then(function(res){
-      if (res && res.ok) { f.style.display='none'; document.getElementById('ok').style.display='block'; window.scrollTo(0,0); }
-      else throw new Error();
-    }).catch(function(){
-      btn.disabled = false; btn.textContent = 'Отправить анкету'; err.style.display = 'block';
-    });
+    new FormData(f).forEach(function(v,k){ if (typeof v === 'string') data[k] = v; });
+    var planFile = document.getElementById('plan').files[0];
+    if (planFile) {
+      if (planFile.size > 25 * 1024 * 1024) { return fail('План слишком большой (до 25 МБ). Пришлите его вместе с видео в бот.'); }
+      var reader = new FileReader();
+      reader.onload = function(){ post({ fields: data, plan: { name: planFile.name, dataBase64: String(reader.result).split(',')[1] } }); };
+      reader.onerror = function(){ fail('Не удалось прочитать файл плана.'); };
+      reader.readAsDataURL(planFile);
+    } else {
+      post({ fields: data });
+    }
   });
 </script>
 </body>

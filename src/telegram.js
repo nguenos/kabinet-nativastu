@@ -16,3 +16,16 @@ export async function sendTelegram(text) {
   if (!data.ok) throw new Error('Telegram: ' + JSON.stringify(data));
   return data;
 }
+
+// Отправка файла (план БТИ) в бот как документ. buffer - Buffer, до 50 МБ (лимит бота).
+export async function sendTelegramDocument(buffer, filename, caption) {
+  if (!TG_TOKEN) { console.warn('[TG отключён: нет TELEGRAM_BOT_TOKEN]'); return { ok: false, disabled: true }; }
+  const form = new FormData();
+  form.set('chat_id', TG_CHAT);
+  if (caption) form.set('caption', caption);
+  form.set('document', new Blob([buffer]), filename || 'file');
+  const res = await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendDocument`, { method: 'POST', body: form });
+  const data = await res.json().catch(() => ({}));
+  if (!data.ok) throw new Error('Telegram doc: ' + JSON.stringify(data));
+  return data;
+}

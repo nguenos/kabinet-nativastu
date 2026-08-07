@@ -6,7 +6,7 @@ import { existsSync } from 'node:fs';
 import { db, backend } from './src/db.js';
 import { setSession, clearSession, getUserId, requireAuth, genCode, isAdminEmail } from './src/auth.js';
 import { sendCode, sendPurchaseEmail, sendConsultEmail, mailerMode } from './src/mailer.js';
-import { sendTelegram } from './src/telegram.js';
+import { sendTelegram, sendTelegramDocument } from './src/telegram.js';
 import { extractOrder, productIdByName, productIdByAmount, KNOWN_AMOUNTS } from './src/prodamus.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -14,7 +14,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const isDev = process.env.NODE_ENV !== 'production';
 
-app.use(express.json());
+app.use(express.json({ limit: '30mb' })); // 30mb: анкета может нести план БТИ (фото/PDF) в base64
 app.use(express.urlencoded({ extended: true }));
 app.use('/static', express.static(join(__dirname, 'public')));
 
@@ -82,9 +82,17 @@ app.post('/api/anketa', requireAuth('api'), wrap(async (req, res) => {
   const lines = Object.entries(fields)
     .map(([k, v]) => `<b>${String(k)}:</b> ${String(v || '').trim() || '-'}`)
     .join('\n');
-  const head = `<b>Анкета к консультации</b>\nОт: ${user ? user.email : req.userId}` +
+  const who = (user ? user.email : req.userId) +
     (user && user.name ? ` (${user.name})` : '') + (user && user.phone ? `, тел. ${user.phone}` : '');
-  await sendTelegram(`${head}\n\n${lines}`);
+  await sendTelegram(`<b>Анкета к консультации</b>\nОт: ${who}\n\n${lines}`);
+  // План БТИ (фото/PDF) приходит в base64 - отправляем в бот как документ.
+  const plan = req.body && req.body.plan;
+  if (plan && plan.dataBase64) {
+    try {
+      const buf = Buffer.from(plan.dataBase64, 'base64');
+      await sendTelegramDocument(buf, plan.name || 'plan', `План БТИ от ${who}`);
+    } catch (e) { console.error('План БТИ не отправлен в Telegram:', e.message); }
+  }
   res.json({ ok: true });
 }));
 
