@@ -67,28 +67,29 @@ export async function sendCode(email, code) {
 // ---------- ПРИВЕТСТВИЕ ПОСЛЕ ПОКУПКИ ----------
 export async function sendPurchaseEmail(email, productTitle) {
   const loginUrl = `${SITE}/login`;
-  const subject = `Доступ открыт · ${productTitle} · Nati Vastu`;
+  const subject = `Оплата получена · ${productTitle} · Nati Vastu`;
   const text =
-    `Спасибо за покупку!\n\n` +
-    `Ваш продукт «${productTitle}» уже ждёт вас в личном кабинете.\n\n` +
-    `Как открыть:\n` +
+    `Оплата получена. Спасибо за доверие.\n\n` +
+    `Доступ к продукту «${productTitle}» уже открыт в вашем личном кабинете.\n\n` +
+    `Как войти:\n` +
     `1. Перейдите по ссылке: ${loginUrl}\n` +
     `2. Введите этот email (${email}) и получите код.\n` +
-    `3. Введите код — и материал откроется.\n\n` +
-    `Доступ сохраняется навсегда, возвращайтесь к практикам, когда нужно.\n\n` +
+    `3. Введите код, и продукт откроется.\n\n` +
+    `Если возникнут вопросы, просто ответьте на это письмо.\n\n` +
     `С теплом, Нати`;
   const html = wrap(`
-    <p style="margin:0 0 6px;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#C4A882">Доступ открыт</p>
-    <h1 style="margin:0 0 18px;font-size:24px;color:#1E2D1F;font-weight:600">${productTitle}</h1>
-    <p style="margin:0 0 18px;color:#333">Спасибо за покупку. Ваш продукт уже ждёт вас в личном кабинете.</p>
-    <a href="${loginUrl}" style="display:inline-block;background:#C4A882;color:#1E2D1F;text-decoration:none;font-weight:600;padding:14px 28px;border-radius:60px;margin:0 0 20px">Войти в кабинет →</a>
-    <p style="margin:0 0 6px;color:#8B7355">Как открыть:</p>
-    <p style="margin:0 0 18px;color:#333;line-height:1.7">
-      1. Перейдите по кнопке выше.<br>
+    <p style="margin:0 0 6px;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#C4A882">Оплата получена</p>
+    <h1 style="margin:0 0 16px;font-size:24px;color:#1E2D1F;font-weight:600">${productTitle}</h1>
+    <p style="margin:0 0 10px;color:#333">Спасибо за доверие. Ваша оплата получена.</p>
+    <p style="margin:0 0 20px;color:#333">Доступ к продукту уже открыт в вашем личном кабинете, он ждёт вас.</p>
+    <a href="${loginUrl}" style="display:inline-block;background:#C4A882;color:#1E2D1F;text-decoration:none;font-weight:600;padding:14px 30px;border-radius:60px;margin:0 0 22px">Открыть личный кабинет</a>
+    <p style="margin:0 0 6px;color:#8B7355">Как войти:</p>
+    <p style="margin:0 0 20px;color:#333;line-height:1.8">
+      1. Нажмите кнопку выше.<br>
       2. Введите этот email (<b>${email}</b>) и получите код.<br>
-      3. Введите код — и материал откроется.
+      3. Введите код, и продукт откроется.
     </p>
-    <p style="margin:0;color:#b3a894;font-size:13px">Доступ сохраняется навсегда. С теплом, Нати</p>
+    <p style="margin:0;color:#b3a894;font-size:13px">Если появятся вопросы, просто ответьте на это письмо. С теплом, Нати</p>
   `);
   return send({ to: email, subject, text, html });
 }
