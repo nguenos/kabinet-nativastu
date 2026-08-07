@@ -49,6 +49,7 @@ app.get('/app', requireAuth('page'), (req, res) => {
 });
 
 app.get('/anketa', requireAuth('page'), (req, res) => {
+  res.set('Cache-Control', 'no-store'); // всегда свежая страница, без кэша браузера
   res.sendFile(join(__dirname, 'public', 'anketa.html'));
 });
 
@@ -87,6 +88,10 @@ app.post('/api/anketa', requireAuth('api'), wrap(async (req, res) => {
   await sendTelegram(`<b>Анкета к консультации</b>\nОт: ${who}\n\n${lines}`);
   // Файлы (план БТИ, васту-карта) приходят в base64 - каждый отправляем в бот как документ.
   const files = (req.body && req.body.files) || [];
+  // Совместимость со старым клиентом, который слал один план в поле plan.
+  if (req.body && req.body.plan && req.body.plan.dataBase64) {
+    files.push({ label: 'План БТИ', name: req.body.plan.name, dataBase64: req.body.plan.dataBase64 });
+  }
   for (const fl of files) {
     if (!fl || !fl.dataBase64) continue;
     try {
