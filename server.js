@@ -33,6 +33,11 @@ function accessStatus(purchase) {
 // ---------- СТРАНИЦЫ ----------
 app.get('/', (req, res) => res.redirect(getUserId(req) ? '/app' : '/login'));
 
+// Юридические документы (доступны без входа)
+app.get('/oferta', (req, res) => res.sendFile(join(__dirname, 'public', 'legal', 'oferta.html')));
+app.get('/politika', (req, res) => res.sendFile(join(__dirname, 'public', 'legal', 'politika.html')));
+app.get('/soglasie', (req, res) => res.sendFile(join(__dirname, 'public', 'legal', 'soglasie.html')));
+
 app.get('/login', (req, res) => {
   if (getUserId(req)) return res.redirect('/app');
   res.sendFile(join(__dirname, 'public', 'login.html'));
