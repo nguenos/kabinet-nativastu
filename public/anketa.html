@@ -85,6 +85,9 @@
     <label>План БТИ вашего жилья <span class="hint">фото или PDF, до 25 МБ</span></label>
     <input type="file" id="plan" accept="image/*,.pdf,application/pdf">
 
+    <label>Васту-карта, если уже есть <span class="hint">фото или PDF, необязательно</span></label>
+    <input type="file" id="vastu" accept="image/*,.pdf,application/pdf">
+
     <div class="note">
       <b style="color:#1E2D1F">Видео-обход.</b> Снимите видео от входной двери и медленно пройдите по всему периметру квартиры или дома, показывая все комнаты, углы и окна. Видео обычно тяжёлое, поэтому пришлите его в наш Telegram-бот одной кнопкой, он принимает большие файлы:
       <div style="margin-top:12px">
@@ -120,22 +123,26 @@
     }).catch(function(){ fail(); });
   }
 
+  var FILES = [ { id: 'plan', label: 'План БТИ' }, { id: 'vastu', label: 'Васту-карта' } ];
+  function readFile(file){ return new Promise(function(res, rej){ var r = new FileReader(); r.onload = function(){ res(String(r.result).split(',')[1]); }; r.onerror = rej; r.readAsDataURL(file); }); }
+
   f.addEventListener('submit', function(e){
     e.preventDefault();
     err.style.display = 'none';
     btn.disabled = true; btn.textContent = 'Отправляю...';
     var data = {};
     new FormData(f).forEach(function(v,k){ if (typeof v === 'string') data[k] = v; });
-    var planFile = document.getElementById('plan').files[0];
-    if (planFile) {
-      if (planFile.size > 25 * 1024 * 1024) { return fail('План слишком большой (до 25 МБ). Пришлите его вместе с видео в бот.'); }
-      var reader = new FileReader();
-      reader.onload = function(){ post({ fields: data, plan: { name: planFile.name, dataBase64: String(reader.result).split(',')[1] } }); };
-      reader.onerror = function(){ fail('Не удалось прочитать файл плана.'); };
-      reader.readAsDataURL(planFile);
-    } else {
-      post({ fields: data });
+    var chosen = [];
+    for (var i = 0; i < FILES.length; i++) {
+      var el = document.getElementById(FILES[i].id), file = el && el.files[0];
+      if (file) {
+        if (file.size > 25 * 1024 * 1024) { return fail(FILES[i].label + ': файл больше 25 МБ. Пришлите его в бот вместе с видео.'); }
+        chosen.push({ label: FILES[i].label, name: file.name, file: file });
+      }
     }
+    Promise.all(chosen.map(function(c){ return readFile(c.file).then(function(b64){ return { label: c.label, name: c.name, dataBase64: b64 }; }); }))
+      .then(function(files){ post({ fields: data, files: files }); })
+      .catch(function(){ fail('Не удалось прочитать файл.'); });
   });
 </script>
 </body>

@@ -85,13 +85,14 @@ app.post('/api/anketa', requireAuth('api'), wrap(async (req, res) => {
   const who = (user ? user.email : req.userId) +
     (user && user.name ? ` (${user.name})` : '') + (user && user.phone ? `, тел. ${user.phone}` : '');
   await sendTelegram(`<b>Анкета к консультации</b>\nОт: ${who}\n\n${lines}`);
-  // План БТИ (фото/PDF) приходит в base64 - отправляем в бот как документ.
-  const plan = req.body && req.body.plan;
-  if (plan && plan.dataBase64) {
+  // Файлы (план БТИ, васту-карта) приходят в base64 - каждый отправляем в бот как документ.
+  const files = (req.body && req.body.files) || [];
+  for (const fl of files) {
+    if (!fl || !fl.dataBase64) continue;
     try {
-      const buf = Buffer.from(plan.dataBase64, 'base64');
-      await sendTelegramDocument(buf, plan.name || 'plan', `План БТИ от ${who}`);
-    } catch (e) { console.error('План БТИ не отправлен в Telegram:', e.message); }
+      const buf = Buffer.from(fl.dataBase64, 'base64');
+      await sendTelegramDocument(buf, fl.name || 'file', `${fl.label || 'Файл'} от ${who}`);
+    } catch (e) { console.error('Файл не отправлен в Telegram:', e.message); }
   }
   res.json({ ok: true });
 }));
