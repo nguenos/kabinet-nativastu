@@ -6,7 +6,7 @@ import { existsSync } from 'node:fs';
 import { db, backend } from './src/db.js';
 import { setSession, clearSession, getUserId, requireAuth, genCode, isAdminEmail } from './src/auth.js';
 import { sendCode, sendPurchaseEmail, sendConsultEmail, mailerMode } from './src/mailer.js';
-import { sendTelegram, sendTelegramDocument } from './src/telegram.js';
+import { sendTelegram, sendTelegramDocument, tgEnabled } from './src/telegram.js';
 import { extractOrder, productIdByName, productIdByAmount, KNOWN_AMOUNTS } from './src/prodamus.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -330,7 +330,7 @@ app.post('/webhook/prodamus', wrap(async (req, res) => {
   res.status(200).send('success');
 }));
 
-app.get('/healthz', (req, res) => res.json({ ok: true, backend, mailer: mailerMode }));
+app.get('/healthz', (req, res) => res.json({ ok: true, backend, mailer: mailerMode, tg: tgEnabled }));
 
 // глобальный обработчик ошибок
 app.use((err, req, res, next) => {
