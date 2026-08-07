@@ -108,41 +108,57 @@
 
 <script>
   var f = document.getElementById('f'), btn = document.getElementById('btn'), err = document.getElementById('err');
+  var FILES = [ { id: 'plan', label: 'План БТИ' }, { id: 'vastu', label: 'Васту-карта' } ];
 
   function fail(msg){
     btn.disabled = false; btn.textContent = 'Отправить анкету';
-    err.textContent = msg || 'Не удалось отправить. Попробуйте ещё раз.';
+    err.textContent = msg || 'Не удалось отправить. Попробуйте ещё раз или напишите Нати в Telegram @natiguenos.';
     err.style.display = 'block';
   }
-  function post(payload){
-    fetch('/api/anketa', {
-      method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)
-    }).then(function(r){ return r.json(); }).then(function(res){
-      if (res && res.ok) { f.style.display='none'; document.getElementById('ok').style.display='block'; window.scrollTo(0,0); }
-      else throw new Error();
-    }).catch(function(){ fail(); });
-  }
-
-  var FILES = [ { id: 'plan', label: 'План БТИ' }, { id: 'vastu', label: 'Васту-карта' } ];
-  function readFile(file){ return new Promise(function(res, rej){ var r = new FileReader(); r.onload = function(){ res(String(r.result).split(',')[1]); }; r.onerror = rej; r.readAsDataURL(file); }); }
+  function done(){ f.style.display='none'; document.getElementById('ok').style.display='block'; window.scrollTo(0,0); }
 
   f.addEventListener('submit', function(e){
     e.preventDefault();
     err.style.display = 'none';
     btn.disabled = true; btn.textContent = 'Отправляю...';
+
     var data = {};
     new FormData(f).forEach(function(v,k){ if (typeof v === 'string') data[k] = v; });
     var chosen = [];
     for (var i = 0; i < FILES.length; i++) {
       var el = document.getElementById(FILES[i].id), file = el && el.files[0];
       if (file) {
-        if (file.size > 25 * 1024 * 1024) { return fail(FILES[i].label + ': файл больше 25 МБ. Пришлите его в бот вместе с видео.'); }
-        chosen.push({ label: FILES[i].label, name: file.name, file: file });
+        if (file.size > 45 * 1024 * 1024) { return fail(FILES[i].label + ': файл больше 45 МБ. Пришлите его в Telegram @natiguenos.'); }
+        chosen.push({ label: FILES[i].label, file: file });
       }
     }
-    Promise.all(chosen.map(function(c){ return readFile(c.file).then(function(b64){ return { label: c.label, name: c.name, dataBase64: b64 }; }); }))
-      .then(function(files){ post({ fields: data, files: files }); })
-      .catch(function(){ fail('Не удалось прочитать файл.'); });
+
+    // Отправка в Telegram-бот из браузера (сервер РФ до Telegram не достаёт).
+    fetch('/api/tg-config').then(function(r){ return r.json(); }).then(function(cfg){
+      if (!cfg || !cfg.token) throw new Error('no-token');
+      var api = 'https://api.telegram.org/bot' + cfg.token;
+      var u = cfg.user || {};
+      var who = (u.email || '') + (u.name ? ' (' + u.name + ')' : '') + (u.phone ? ', тел. ' + u.phone : '');
+      var lines = Object.keys(data).map(function(k){ return k + ': ' + (data[k] || '-'); }).join('\n');
+      var msg = 'Анкета к консультации\nОт: ' + who + '\n\n' + lines;
+
+      return fetch(api + '/sendMessage', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ chat_id: cfg.chatId, text: msg })
+      }).then(function(r){ return r.json(); }).then(function(res){
+        if (!res || !res.ok) throw new Error('tg-text');
+        // Файлы отправляем по очереди.
+        return chosen.reduce(function(p, c){
+          return p.then(function(){
+            var fd = new FormData();
+            fd.append('chat_id', cfg.chatId);
+            fd.append('caption', c.label + ' от ' + who);
+            fd.append('document', c.file, c.file.name);
+            return fetch(api + '/sendDocument', { method: 'POST', body: fd }).then(function(r){ return r.json(); }).then(function(res){ if (!res || !res.ok) throw new Error('tg-file'); });
+          });
+        }, Promise.resolve());
+      });
+    }).then(done).catch(function(){ fail(); });
   });
 </script>
 </body>

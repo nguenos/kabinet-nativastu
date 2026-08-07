@@ -77,6 +77,18 @@ app.post('/api/auth/verify', wrap(async (req, res) => {
 app.post('/api/auth/logout', (req, res) => { clearSession(res); res.json({ ok: true }); });
 
 // ---------- АНКЕТА К КОНСУЛЬТАЦИИ ----------
+// Сервер Timeweb (РФ) не достукивается до api.telegram.org, поэтому анкета шлётся
+// в бот из браузера клиента. Отдаём странице токен из env и данные пользователя.
+app.get('/api/tg-config', requireAuth('api'), wrap(async (req, res) => {
+  const user = await db.findUserById(req.userId);
+  res.json({
+    token: process.env.TELEGRAM_BOT_TOKEN || '',
+    chatId: process.env.TELEGRAM_CHAT_ID || '866801756',
+    user: user ? { email: user.email, name: user.name || '', phone: user.phone || '' } : {},
+  });
+}));
+
+// Резервный путь (не используется страницей): сервер до Telegram не достаёт.
 app.post('/api/anketa', requireAuth('api'), wrap(async (req, res) => {
   const user = await db.findUserById(req.userId);
   const fields = (req.body && req.body.fields) || {};
