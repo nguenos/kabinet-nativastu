@@ -1,39 +1,45 @@
 // Отправка писем: код входа и приветствие после покупки.
-// DEV (нет SMTP): пишем в консоль и data/outbox.log.
-// PROD: SMTP через переменные окружения SMTP_* (Gmail и т.п.).
+// PROD: Unisender HTTP API (порт 443 — работает на Timeweb, где SMTP заблокирован).
+// DEV (нет ключа Unisender): пишем в консоль и data/outbox.log.
 import { appendFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const OUTBOX = join(__dirname, '..', 'data', 'outbox.log');
-const hasSMTP = !!(process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS);
-export const mailerMode = hasSMTP ? 'smtp' : 'console';
 
 const SITE = process.env.PUBLIC_URL || 'https://lk.nativastu.com';
 
-let _transport = null;
-async function transport() {
-  if (_transport) return _transport;
-  const nodemailer = (await import('nodemailer')).default;
-  _transport = nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: Number(process.env.SMTP_PORT || 587),
-    secure: Number(process.env.SMTP_PORT) === 465,
-    auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
-  });
-  return _transport;
-}
+// --- Unisender Go (UniOne) — транзакционный HTTP API ---
+const UNIGO_KEY = process.env.UNISENDER_GO_KEY || '';
+const SENDER_EMAIL = process.env.MAIL_FROM_EMAIL || 'noreply@nativastu.com';
+const SENDER_NAME = process.env.MAIL_FROM_NAME || 'Нати Гуенос';
+const hasUnigo = !!UNIGO_KEY;
+export const mailerMode = hasUnigo ? 'unisender-go' : 'console';
 
-// Базовая отправка. В dev — в консоль/лог, в prod — по SMTP.
+const UNIGO_SEND = 'https://goapi.unisender.ru/ru/transactional/api/v1/email/send.json';
+
+// Базовая отправка. Есть ключ Unisender Go — шлём по HTTP API, иначе пишем в консоль (dev).
 async function send({ to, subject, text, html }) {
-  if (hasSMTP) {
-    const t = await transport();
-    await t.sendMail({
-      from: process.env.MAIL_FROM || `Nati Vastu <${process.env.SMTP_USER}>`,
-      to, subject, text, html,
+  if (hasUnigo) {
+    const res = await fetch(UNIGO_SEND, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-API-KEY': UNIGO_KEY },
+      body: JSON.stringify({
+        message: {
+          recipients: [{ email: to }],
+          from_email: SENDER_EMAIL,
+          from_name: SENDER_NAME,
+          subject,
+          body: { html, plaintext: text },
+        },
+      }),
     });
-    return { delivered: 'smtp' };
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok || data.status === 'error' || data.failed_emails) {
+      throw new Error(`Unisender Go: ${JSON.stringify(data)}`);
+    }
+    return { delivered: 'unisender-go' };
   }
   const line = `[${new Date().toISOString()}] TO ${to} | ${subject}\n${text}\n`;
   try { appendFileSync(OUTBOX, line); } catch {}
