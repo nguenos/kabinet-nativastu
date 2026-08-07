@@ -28,8 +28,8 @@ const products = [
     coverVideo: 'https://nativastu.com/hero-venus.mp4',
     landing: 'https://nativastu.com/venus',
     tiers: [
-      { label: '30 дней', days: 30, price: 5300, url: 'https://nativastu.com/venus' },
-      { label: '6 месяцев', days: 180, price: 7100, url: 'https://payform.ru/ricdu4J/' },
+      { label: '30 дней', days: 30, price: 5300, url: 'https://payform.ru/7ccdT8v/' },
+      { label: '6 месяцев', days: 180, price: 7100, url: 'https://payform.ru/avcdTap/' },
     ] },
   { id: 'consult-express', title: 'Экспресс-консультация', type: 'Консультация',
     desc: 'Полный разбор квартиры или дома по всем секторам: где живут деньги, сон, отношения, и что переставить.',
