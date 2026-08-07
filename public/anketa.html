@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Анкета к консультации · Nati Vastu</title>
+<style>
+  :root{ --cream:#F7F3ED; --green:#1E2D1F; --gold:#C4A882; --gold2:#d4be9c; --taupe:#8B7355; --ink:#252525; }
+  *{ box-sizing:border-box; }
+  body{ margin:0; background:var(--cream); color:var(--ink);
+    font-family:-apple-system,'Segoe UI',Roboto,Arial,sans-serif; font-weight:300; line-height:1.6; }
+  .wrap{ max-width:620px; margin:0 auto; padding:44px 20px 70px; }
+  .brand{ text-align:center; letter-spacing:3px; text-transform:uppercase; color:var(--green); font-size:18px; margin-bottom:8px; }
+  .brand span{ color:var(--gold); }
+  h1{ font-size:23px; color:var(--green); font-weight:600; text-align:center; margin:6px 0 6px; }
+  .lead{ text-align:center; color:var(--taupe); font-size:14px; margin:0 auto 28px; max-width:480px; }
+  label{ display:block; font-size:14px; color:var(--green); font-weight:500; margin:18px 0 6px; }
+  .hint{ font-weight:300; color:var(--taupe); font-size:13px; }
+  input,select,textarea{ width:100%; padding:12px 14px; border:1px solid #d9cdb6; border-radius:12px;
+    background:#fff; font:inherit; color:var(--ink); }
+  textarea{ min-height:84px; resize:vertical; }
+  input:focus,select:focus,textarea:focus{ outline:none; border-color:var(--gold); }
+  .note{ background:#fff; border:1px solid #e3d9c6; border-radius:12px; padding:14px 16px; font-size:13.5px; color:var(--taupe); margin:22px 0 6px; }
+  button{ width:100%; margin-top:26px; padding:15px; border:0; border-radius:60px; background:var(--gold);
+    color:var(--green); font-weight:600; font-size:16px; cursor:pointer; }
+  button:hover{ background:var(--gold2); }
+  button:disabled{ opacity:.6; cursor:default; }
+  .ok{ display:none; text-align:center; padding:40px 10px; }
+  .ok h2{ color:var(--green); font-weight:600; }
+  .ok p{ color:var(--taupe); }
+  .err{ display:none; color:#8B4040; font-size:14px; margin-top:12px; text-align:center; }
+  .back{ display:inline-block; margin-top:18px; color:var(--taupe); text-decoration:none; font-size:14px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand">NATI <span>VASTU</span></div>
+
+  <form id="f">
+    <h1>Анкета к консультации</h1>
+    <p class="lead">Заполните, пожалуйста, эти поля, чтобы я подготовилась к вашей консультации. Это займёт несколько минут.</p>
+
+    <label>Ваше имя</label>
+    <input name="Имя" required>
+
+    <label>Город и страна проживания</label>
+    <input name="Город и страна" required>
+
+    <label>Тип жилья</label>
+    <select name="Тип жилья" required>
+      <option value="">Выберите</option>
+      <option>Квартира</option>
+      <option>Частный дом</option>
+      <option>Офис / коммерческое помещение</option>
+      <option>Другое</option>
+    </select>
+
+    <label>Этаж и этажность дома</label>
+    <input name="Этаж и этажность" placeholder="например: 4 этаж из 9">
+
+    <label>Площадь и количество комнат</label>
+    <input name="Площадь и комнаты" placeholder="например: 62 м², 2 комнаты">
+
+    <label>Как давно вы здесь живёте</label>
+    <input name="Срок проживания" placeholder="например: 3 года">
+
+    <label>Состав семьи <span class="hint">кто проживает вместе с вами</span></label>
+    <input name="Состав семьи">
+
+    <label>Главный запрос <span class="hint">что хотите улучшить</span></label>
+    <input name="Главный запрос" placeholder="деньги, здоровье, отношения, карьера, сон">
+
+    <label>Что сейчас беспокоит в доме или в жизни</label>
+    <textarea name="Что беспокоит"></textarea>
+
+    <label>Дата, время и место рождения <span class="hint">для астрологической части</span></label>
+    <input name="Рождение" placeholder="например: 01.02.1988, 14:30, Москва">
+
+    <label>Дополнительные пожелания</label>
+    <textarea name="Пожелания"></textarea>
+
+    <div class="note">
+      План помещения и фото компаса у входной двери пришлите, пожалуйста, отдельно в Telegram или на почту natiyaguenos@gmail.com. Это поможет разобрать ваш дом точнее.
+    </div>
+
+    <button type="submit" id="btn">Отправить анкету</button>
+    <div class="err" id="err">Не удалось отправить. Попробуйте ещё раз.</div>
+  </form>
+
+  <div class="ok" id="ok">
+    <h2>Спасибо, анкета отправлена</h2>
+    <p>Я получила ваши ответы и подготовлюсь к консультации. Скоро свяжусь с вами.</p>
+    <a class="back" href="/app">Вернуться в кабинет</a>
+  </div>
+</div>
+
+<script>
+  var f = document.getElementById('f'), btn = document.getElementById('btn'), err = document.getElementById('err');
+  f.addEventListener('submit', function(e){
+    e.preventDefault();
+    err.style.display = 'none';
+    btn.disabled = true; btn.textContent = 'Отправляю...';
+    var data = {};
+    new FormData(f).forEach(function(v,k){ data[k] = v; });
+    fetch('/api/anketa', {
+      method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ fields: data })
+    }).then(function(r){ return r.json(); }).then(function(res){
+      if (res && res.ok) { f.style.display='none'; document.getElementById('ok').style.display='block'; window.scrollTo(0,0); }
+      else throw new Error();
+    }).catch(function(){
+      btn.disabled = false; btn.textContent = 'Отправить анкету'; err.style.display = 'block';
+    });
+  });
+</script>
+</body>
+</html>

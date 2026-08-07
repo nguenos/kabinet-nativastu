@@ -94,6 +94,35 @@ export async function sendPurchaseEmail(email, productTitle) {
   return send({ to: email, subject, text, html });
 }
 
+// ---------- ПИСЬМО ПОСЛЕ ОПЛАТЫ КОНСУЛЬТАЦИИ ----------
+export async function sendConsultEmail(email, productTitle) {
+  const loginUrl = `${SITE}/login`;
+  const anketaUrl = `${SITE}/anketa`;
+  const subject = `Оплата получена · ${productTitle} · Nati Vastu`;
+  const text =
+    `Оплата получена. Спасибо за доверие.\n\n` +
+    `Вы записаны на «${productTitle}».\n\n` +
+    `Чтобы я подготовилась к нашей консультации, заполните, пожалуйста, короткую анкету:\n${anketaUrl}\n\n` +
+    `Личный кабинет с вашими продуктами: ${loginUrl}\n` +
+    `Вход по этому email (${email}) и коду из письма.\n\n` +
+    `Если возникнут вопросы, просто ответьте на это письмо.\n\n` +
+    `С теплом, Нати`;
+  const html = wrap(`
+    <p style="margin:0 0 6px;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#C4A882">Оплата получена</p>
+    <h1 style="margin:0 0 16px;font-size:24px;color:#1E2D1F;font-weight:600">${productTitle}</h1>
+    <p style="margin:0 0 10px;color:#333">Спасибо за доверие. Ваша оплата получена, вы записаны на консультацию.</p>
+    <p style="margin:0 0 18px;color:#333">Чтобы я подготовилась к нашей встрече, заполните, пожалуйста, короткую анкету.</p>
+    <a href="${anketaUrl}" style="display:inline-block;background:#C4A882;color:#1E2D1F;text-decoration:none;font-weight:600;padding:14px 30px;border-radius:60px;margin:0 0 22px">Заполнить анкету</a>
+    <p style="margin:0 0 6px;color:#8B7355">Личный кабинет:</p>
+    <p style="margin:0 0 18px;color:#333;line-height:1.8">
+      Все ваши продукты здесь: <a href="${loginUrl}" style="color:#8B7355">${SITE.replace('https://','')}/login</a><br>
+      Вход по этому email (<b>${email}</b>) и коду из письма.
+    </p>
+    <p style="margin:0;color:#b3a894;font-size:13px">Если появятся вопросы, просто ответьте на это письмо. С теплом, Нати</p>
+  `);
+  return send({ to: email, subject, text, html });
+}
+
 // Простая брендовая обёртка письма.
 function wrap(inner) {
   return `<div style="font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;max-width:520px;margin:0 auto;padding:32px 28px;background:#F7F3ED;border:1px solid #d4c9b5;border-radius:8px;color:#252525">

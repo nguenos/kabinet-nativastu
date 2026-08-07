@@ -5,7 +5,8 @@ import { existsSync } from 'node:fs';
 
 import { db, backend } from './src/db.js';
 import { setSession, clearSession, getUserId, requireAuth, genCode, isAdminEmail } from './src/auth.js';
-import { sendCode, sendPurchaseEmail, mailerMode } from './src/mailer.js';
+import { sendCode, sendPurchaseEmail, sendConsultEmail, mailerMode } from './src/mailer.js';
+import { sendTelegram } from './src/telegram.js';
 import { extractOrder, productIdByName, productIdByAmount, KNOWN_AMOUNTS } from './src/prodamus.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -47,6 +48,10 @@ app.get('/app', requireAuth('page'), (req, res) => {
   res.sendFile(join(__dirname, 'public', 'app.html'));
 });
 
+app.get('/anketa', requireAuth('page'), (req, res) => {
+  res.sendFile(join(__dirname, 'public', 'anketa.html'));
+});
+
 // ---------- ВХОД ПО EMAIL-КОДУ ----------
 app.post('/api/auth/request-code', wrap(async (req, res) => {
   const email = String(req.body.email || '').trim().toLowerCase();
@@ -69,6 +74,19 @@ app.post('/api/auth/verify', wrap(async (req, res) => {
 }));
 
 app.post('/api/auth/logout', (req, res) => { clearSession(res); res.json({ ok: true }); });
+
+// ---------- АНКЕТА К КОНСУЛЬТАЦИИ ----------
+app.post('/api/anketa', requireAuth('api'), wrap(async (req, res) => {
+  const user = await db.findUserById(req.userId);
+  const fields = (req.body && req.body.fields) || {};
+  const lines = Object.entries(fields)
+    .map(([k, v]) => `<b>${String(k)}:</b> ${String(v || '').trim() || '-'}`)
+    .join('\n');
+  const head = `<b>Анкета к консультации</b>\nОт: ${user ? user.email : req.userId}` +
+    (user && user.name ? ` (${user.name})` : '') + (user && user.phone ? `, тел. ${user.phone}` : '');
+  await sendTelegram(`${head}\n\n${lines}`);
+  res.json({ ok: true });
+}));
 
 // ---------- ПРОФИЛЬ ----------
 app.post('/api/profile', requireAuth('api'), wrap(async (req, res) => {
@@ -286,8 +304,11 @@ app.post('/webhook/prodamus', wrap(async (req, res) => {
   // Письмо покупателю — только при ПЕРВОЙ покупке (не на повторные вебхуки/продления).
   if (created) {
     const product = db.productById(order.productId);
+    const title = product ? product.title : 'ваш продукт';
     try {
-      await sendPurchaseEmail(order.email, product ? product.title : 'ваш продукт');
+      // Консультациям - письмо с просьбой заполнить анкету; остальным - обычное приветствие.
+      if (product && product.type === 'Консультация') await sendConsultEmail(order.email, title);
+      else await sendPurchaseEmail(order.email, title);
     } catch (e) {
       console.error('Не удалось отправить письмо о покупке:', e.message);
     }
