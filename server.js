@@ -114,6 +114,29 @@ app.post('/api/anketa', requireAuth('api'), wrap(async (req, res) => {
   res.json({ ok: true });
 }));
 
+// ---------- ПОДПИСКА НА РАССЫЛКУ (форма на странице консультации, Netlify) ----------
+// Публичный эндпоинт с CORS. Добавляет email в список Unisender (ключ в env, не в коде).
+app.post('/api/subscribe', wrap(async (req, res) => {
+  res.set('Access-Control-Allow-Origin', '*');
+  const email = String(req.body.email || '').trim().toLowerCase();
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return res.status(400).json({ error: 'bad_email' });
+  const key = process.env.UNISENDER_API_KEY || '';
+  const listId = process.env.NEWSLETTER_LIST_ID || '3';
+  if (!key) { console.warn('[subscribe] нет UNISENDER_API_KEY'); return res.json({ ok: true, skipped: true }); }
+  const form = new URLSearchParams({ format: 'json', api_key: key, list_ids: listId, 'fields[email]': email, double_optin: '3' });
+  const r = await fetch('https://api.unisender.com/ru/api/subscribe', {
+    method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: form.toString(),
+  });
+  const data = await r.json().catch(() => ({}));
+  if (data.error) { console.error('Unisender subscribe:', data.error); return res.status(500).json({ error: 'subscribe_failed' }); }
+  res.json({ ok: true });
+}));
+app.options('/api/subscribe', (req, res) => {
+  res.set('Access-Control-Allow-Origin', '*');
+  res.set('Access-Control-Allow-Headers', 'Content-Type');
+  res.status(204).end();
+});
+
 // ---------- ПРОФИЛЬ ----------
 app.post('/api/profile', requireAuth('api'), wrap(async (req, res) => {
   const name = String(req.body.name || '').trim().slice(0, 80);
