@@ -71,6 +71,7 @@ app.post('/api/auth/verify', wrap(async (req, res) => {
   if (!chk.ok) return res.status(401).json({ error: chk.reason });
   const user = await db.upsertUser({ email });
   setSession(res, user.id);
+  try { await db.recordLogin(user.id); } catch (e) { console.error('recordLogin:', e.message); }
   res.json({ ok: true });
 }));
 

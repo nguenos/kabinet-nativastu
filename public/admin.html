@@ -96,7 +96,7 @@
     <h2>Все покупательницы</h2>
     <div class="scroll">
       <table>
-        <thead><tr><th>Email</th><th>Имя</th><th>Доступы</th><th>Регистрация</th></tr></thead>
+        <thead><tr><th>Email</th><th>Имя</th><th>Доступы</th><th>Последний вход</th><th>Входов</th><th>Регистрация</th></tr></thead>
         <tbody id="rows"></tbody>
       </table>
     </div>
@@ -143,6 +143,8 @@ async function load(){
       <td class="email">${esc(u.email)}</td>
       <td>${esc(u.name)||'<span class="none">—</span>'}${u.phone?`<div style="font-size:11px;color:var(--muted);margin-top:2px">${esc(u.phone)}</div>`:''}</td>
       <td><div class="tags">${tags}</div></td>
+      <td class="when">${u.lastLogin?fmtDate(u.lastLogin):'<span class="none">—</span>'}</td>
+      <td>${u.loginCount||0}</td>
       <td class="when">${fmtDate(u.createdAt)}</td>
     </tr>`;
   }).join('');
