@@ -113,13 +113,13 @@
     <div class="grid" id="lockedGrid"></div>
   </div>
 
-  <div class="banner">
+  <div class="banner" id="subBanner">
     <div>
-      <div class="eyebrow">Следующий шаг</div>
-      <h3 class="bebas">Хотите <em class="salina">глубже?</em></h3>
-      <p>Полная консультация по вашему дому: карта зон, приоритеты и пошаговый план на 3 месяца.</p>
+      <div class="eyebrow">Новинки</div>
+      <h3 class="bebas">Узнавайте о новом <em class="salina">первыми</em></h3>
+      <p>Я напишу, когда выйдут новые практики, гайды и консультации. Без спама, только по делу.</p>
     </div>
-    <a class="btn pri" href="https://nativastu.com/consult/" target="_blank">Записаться · 36 800 ₽</a>
+    <button class="btn pri" type="button" id="subBtn" onclick="subscribeMe()">Подписаться</button>
   </div>
 </div>
 
@@ -195,6 +195,16 @@ function ownedAction(p, free, timed){
       : `<button class="btn pri" type="button" disabled>Документ готовится</button>`;
   }
   return `<a class="btn pri" href="/guide/${encodeURIComponent(p.slug)}">${(!free&&!timed&&p.progress>0)?'Продолжить':'Открыть'}</a>`;
+}
+function subscribeMe(){
+  var b=document.getElementById('subBtn'); if(!b) return;
+  b.disabled=true; b.textContent='Подписываю...';
+  fetch('/api/subscribe-me',{method:'POST'}).then(function(r){return r.json();}).then(function(res){
+    if(res&&res.ok){
+      document.getElementById('subBanner').innerHTML=
+        '<div><div class="eyebrow">Новинки</div><h3 class="bebas">Готово, вы <em class="salina">подписаны</em></h3><p>Я напишу, когда появится что-то новое.</p></div>';
+    } else throw new Error();
+  }).catch(function(){ b.disabled=false; b.textContent='Подписаться'; });
 }
 function expiredCard(p){
   const price = p.price>0 ? (p.price.toLocaleString('ru-RU')+' ₽') : 'бесплатно';

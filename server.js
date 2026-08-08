@@ -136,6 +136,22 @@ app.options('/api/subscribe', (req, res) => {
   res.set('Access-Control-Allow-Headers', 'Content-Type');
   res.status(204).end();
 });
+// Подписка в один клик из кабинета: берём почту вошедшего пользователя.
+app.post('/api/subscribe-me', requireAuth('api'), wrap(async (req, res) => {
+  const user = await db.findUserById(req.userId);
+  const email = user && user.email;
+  if (!email) return res.status(400).json({ error: 'no_email' });
+  const key = process.env.UNISENDER_API_KEY || '';
+  const listId = process.env.NEWSLETTER_LIST_ID || '3';
+  if (!key) return res.json({ ok: true, skipped: true });
+  const form = new URLSearchParams({ format: 'json', api_key: key, list_ids: listId, 'fields[email]': email, double_optin: '3' });
+  const r = await fetch('https://api.unisender.com/ru/api/subscribe', {
+    method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: form.toString(),
+  });
+  const data = await r.json().catch(() => ({}));
+  if (data.error) { console.error('Unisender subscribe-me:', data.error); return res.status(500).json({ error: 'subscribe_failed' }); }
+  res.json({ ok: true });
+}));
 
 // ---------- ПРОФИЛЬ ----------
 app.post('/api/profile', requireAuth('api'), wrap(async (req, res) => {
