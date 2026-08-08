@@ -42,6 +42,8 @@
   .tag button.del:hover{background:rgba(139,64,64,.12);}
   .tag button.lnk{color:var(--accent2);font-size:10px;letter-spacing:.3px;padding:3px 7px;background:var(--bg);border:1px solid var(--border);border-radius:8px;}
   .tag button.lnk:hover{border-color:var(--gold);color:var(--gold);}
+  .udel{border:none;background:none;cursor:pointer;color:var(--red);font-size:13px;margin-left:8px;opacity:.5;line-height:1;}
+  .udel:hover{opacity:1;}
   .tag .src{color:var(--muted);font-size:9px;text-transform:uppercase;letter-spacing:.5px;}
   .none{color:var(--muted);font-size:12px;}
   .scroll{overflow-x:auto;}
@@ -145,7 +147,7 @@ async function load(){
       <td><div class="tags">${tags}</div></td>
       <td class="when">${u.lastLogin?fmtDate(u.lastLogin):'<span class="none">—</span>'}</td>
       <td>${u.loginCount||0}</td>
-      <td class="when">${fmtDate(u.createdAt)}</td>
+      <td class="when">${fmtDate(u.createdAt)}<button class="udel" title="Удалить аккаунт полностью" data-user="${u.id}" data-email="${esc(u.email)}">🗑</button></td>
     </tr>`;
   }).join('');
   $('rows').innerHTML = rows;
@@ -164,6 +166,14 @@ async function load(){
     await fetch('/api/admin/set-link',{method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({userId:b.dataset.lu,productId:b.dataset.lp,link:link.trim()})});
     load();
+  }));
+  document.querySelectorAll('button.udel').forEach(b=>b.addEventListener('click', async ()=>{
+    const email=b.dataset.email;
+    if(!confirm('Удалить аккаунт '+email+' ПОЛНОСТЬЮ?\n\nБудут удалены все его доступы, отзывы и коды входа. Действие необратимо.')) return;
+    const r=await fetch('/api/admin/delete-user',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({userId:b.dataset.user})});
+    if(r.status===200){ load(); }
+    else { const e=await r.json().catch(()=>({})); alert(e.error==='is_admin'?'Это админский аккаунт — его удалить нельзя.':'Не удалось удалить.'); }
   }));
 }
 

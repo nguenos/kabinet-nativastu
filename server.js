@@ -294,6 +294,17 @@ app.post('/api/admin/revoke', requireAdmin('api'), wrap(async (req, res) => {
   res.json({ ok: true, removed });
 }));
 
+// Полное удаление аккаунта (для чистки тестовых) — вместе с покупками, отзывами и кодами входа.
+app.post('/api/admin/delete-user', requireAdmin('api'), wrap(async (req, res) => {
+  const userId = String(req.body.userId || '').trim();
+  if (!userId) return res.status(400).json({ error: 'no_user' });
+  const user = await db.findUserById(userId);
+  if (!user) return res.status(404).json({ error: 'not_found' });
+  if (isAdminEmail(user.email)) return res.status(400).json({ error: 'is_admin' }); // админа удалить нельзя
+  const result = await db.deleteUser(userId);
+  res.json({ ok: !!result.ok, email: result.email || user.email });
+}));
+
 // Личная ссылка на документ консультации (для конкретной ученицы).
 app.post('/api/admin/set-link', requireAdmin('api'), wrap(async (req, res) => {
   const userId = String(req.body.userId || '').trim();

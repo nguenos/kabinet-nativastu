@@ -175,6 +175,25 @@ function makePg() {
       const r = await q('SELECT * FROM users ORDER BY created_at DESC');
       return r.rows.map(mapUser);
     },
+    async deleteUser(userId) {
+      const u = await this.findUserById(userId);
+      if (!u) return { ok: false, reason: 'not_found' };
+      const client = await pool.connect();
+      try {
+        await client.query('BEGIN');
+        await client.query('DELETE FROM purchases WHERE user_id=$1', [userId]);
+        await client.query('DELETE FROM reviews WHERE user_id=$1', [userId]);
+        await client.query('DELETE FROM login_codes WHERE email=$1', [u.email]);
+        await client.query('DELETE FROM users WHERE id=$1', [userId]);
+        await client.query('COMMIT');
+      } catch (e) {
+        await client.query('ROLLBACK');
+        throw e;
+      } finally {
+        client.release();
+      }
+      return { ok: true, email: u.email };
+    },
     async putCode(email, code, ttlMs = 10 * 60 * 1000) {
       const e = norm(email);
       await q(
@@ -289,6 +308,16 @@ function makeFile() {
       if (rec) { rec.progress = Math.max(0, Math.min(100, progress)); save(); }
     },
     async allUsers() { return s.users.slice().sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1)); },
+    async deleteUser(userId) {
+      const u = s.users.find((x) => x.id === userId);
+      if (!u) return { ok: false, reason: 'not_found' };
+      s.purchases = s.purchases.filter((p) => p.userId !== userId);
+      s.reviews = s.reviews.filter((r) => r.userId !== userId);
+      s.codes = s.codes.filter((c) => c.email !== u.email);
+      s.users = s.users.filter((x) => x.id !== userId);
+      save();
+      return { ok: true, email: u.email };
+    },
     async putCode(email, code, ttlMs = 10 * 60 * 1000) {
       const e = norm(email);
       s.codes = s.codes.filter((c) => c.email !== e);
