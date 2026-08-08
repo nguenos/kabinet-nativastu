@@ -45,7 +45,7 @@ const products = [
     desc: 'Офис, кабинет, точка продаж или рабочее место дома. Разбираю сектора влияния на доход, репутацию и команду.',
     cover: 'g3', sym: '⌘', slug: 'consult-business', price: 53000,
     coverVideo: 'https://nativastu.com/media/business.mp4',
-    landing: 'https://nativastu.com/consult' },
+    landing: 'https://payform.ru/gwcdTdC/' },
   { id: 'sleep', title: 'Калькулятор сна', type: 'Инструмент',
     desc: 'Направление сна и качество жизни. Расчёт по сторонам света.',
     cover: 'g4', sym: '☾', slug: 'sleep-calculator', price: 0, free: true,
